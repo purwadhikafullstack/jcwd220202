@@ -2,6 +2,7 @@ require("dotenv/config");
 const express = require("express");
 const cors = require("cors");
 const { join } = require("path");
+const db = require("../models");
 
 const PORT = process.env.PORT || 8000;
 const app = express();
@@ -65,7 +66,9 @@ app.get("*", (req, res) => {
 
 //#endregion
 
-app.listen(PORT, (err) => {
+app.listen(PORT, async (err) => {
+  db.sequelize.sync({ alter: true });
+
   if (err) {
     console.log(`ERROR: ${err}`);
   } else {
