@@ -5,6 +5,10 @@ import LoginPage from "./pages/LoginPage"
 import LoginAdminPage from "./pages/LoginAdminPage"
 import ProfilePage from "./pages/ProfilePage"
 import AddressPage from "./pages/AddressPage"
+import Home from "./pages/Home"
+import AdminDashboard from "./pages/AdminDashboard"
+import CategoryList from "./pages/Category"
+import Register from "./pages/Register"
 import { useDispatch, useSelector } from "react-redux"
 import { axiosInstance } from "./api"
 import { useState } from "react"
@@ -72,9 +76,13 @@ const App = () => {
         <Link to="/login/admin">login admin</Link>
       </Box>
       <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/admin/dashboard" element={<AdminDashboard />} />
+        <Route path="/category" element={<CategoryList />} />
         <Route path="/login/user" element={<LoginPage />} />
         <Route path="/login/admin" element={<LoginAdminPage />} />
         <Route path="/address" element={<AddressPage />} />
+        <Route path="/register/user" element={<Register />} />
         {renderUserRoutes()}
         {renderAdminRoutes()}
       </Routes>

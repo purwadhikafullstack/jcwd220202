@@ -11,6 +11,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       User.belongsTo(models.Role);
       User.hasMany(models.Address)
+      User.hasOne(models.ReferralVoucher);
     }
   }
   User.init(
@@ -38,6 +39,7 @@ module.exports = (sequelize, DataTypes) => {
       is_verified: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
+        defaultValue: false,
       },
       referral_code: {
         type: DataTypes.STRING,
@@ -48,11 +50,11 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: true,
       },
       phone_number: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING,
         allowNull: false,
       },
       my_referral_code: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING,
         allowNull: false,
       },
     },
