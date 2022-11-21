@@ -3,23 +3,16 @@ const express = require("express");
 const cors = require("cors");
 const { join } = require("path");
 const db = require("../models");
-const registerRoute = require("./routes/registerRoute");
 const dotenv = require("dotenv");
+
 
 // dotenv.config();
 
 const PORT = process.env.PORT || 8000;
 const app = express();
-// app.use(
-//   cors({
-//     origin: [
-//       process.env.WHITELISTED_DOMAIN &&
-//         process.env.WHITELISTED_DOMAIN.split(","),
-//     ],
-//   })
-// );
-
-app.use(cors());
+app.use(
+  cors()
+);
 
 app.use(express.json());
 
@@ -27,7 +20,14 @@ app.use(express.json());
 
 // ===========================
 // NOTE : Add your routes here
+const registerRoute = require("./routes/registerRoute");
+const loginRoute = require("./routes/loginRoute.js")
+const profileRoute = require("./routes/userProfileRoute.js")
+const loginAdminRoute = require("./routes/loginAdminRoute.js")
 
+app.use('/user', loginRoute)
+app.use('/profile', profileRoute)
+app.use('/admin', loginAdminRoute)
 app.use("/register", registerRoute);
 
 app.get("/api", (req, res) => {

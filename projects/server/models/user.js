@@ -10,6 +10,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       User.belongsTo(models.Role);
+      User.hasMany(models.Address)
       User.hasOne(models.ReferralVoucher);
     }
   }
@@ -26,6 +27,14 @@ module.exports = (sequelize, DataTypes) => {
       password: {
         type: DataTypes.STRING,
         allowNull: false,
+      },
+      birth: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      gender: {
+        type: DataTypes.STRING,
+        allowNull: true,
       },
       is_verified: {
         type: DataTypes.BOOLEAN,
