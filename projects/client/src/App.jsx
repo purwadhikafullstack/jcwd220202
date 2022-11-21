@@ -1,11 +1,85 @@
-import { Box, Text } from "@chakra-ui/react";
+import { Box, Text } from "@chakra-ui/react"
+import { Link, Route, Routes } from "react-router-dom"
+import HomePage from "./pages/HomePage"
+import LoginPage from "./pages/LoginPage"
+import LoginAdminPage from "./pages/LoginAdminPage"
+import ProfilePage from "./pages/ProfilePage"
+import AddressPage from "./pages/AddressPage"
+import { useDispatch, useSelector } from "react-redux"
+import { axiosInstance } from "./api"
+import { useState } from "react"
+import { useEffect } from "react"
+import { login } from "./redux/features/authSlice"
 
 const App = () => {
-  return (
-    <Box>
-      <Text>Hello World!</Text>
-    </Box>
-  );
-};
+  const authSelector = useSelector((state) => state.auth)
+  const dispatch = useDispatch()
+  const [authCheck, setAuthCheck] = useState(false)
 
-export default App;
+  const keepUserLoggedIn = async () => {
+    try {
+      const auth_token = localStorage.getItem("auth_token")
+
+      if (!auth_token) {
+        setAuthCheck(true)
+        return
+      }
+
+      const response = await axiosInstance.get("/user/refreshToken")
+
+      dispatch(login(response.data.data))
+      localStorage.setItem("auth_token", response.data.token)
+      setAuthCheck(true)
+    } catch (err) {
+      console.log(err)
+      setAuthCheck(true)
+    }
+  }
+  const renderUserRoutes = () => {
+    if (authSelector.RoleId == "1") {
+      return (
+        <>
+          <Route path="/profile" element={<ProfilePage />} />
+        </>
+      )
+    }
+    return null
+  }
+
+  useEffect(() => {
+    keepUserLoggedIn()
+  }, [])
+
+  const renderAdminRoutes = () => {
+    if (authSelector.RoleId == "2") {
+      return (
+        <>
+          <Route path="/homepage" element={<HomePage />} />
+        </>
+      )
+    }
+    return null
+  }
+
+  if (!authCheck) return <div>LOADING...</div>
+
+  return (
+    <>
+      <Box width={"430px"} bgColor="grey">
+        <Text>Hello World!</Text>
+        <Link to="/profile">go to profile</Link>
+        <Link to="/login/user">login user</Link>
+        <Link to="/login/admin">login admin</Link>
+      </Box>
+      <Routes>
+        <Route path="/login/user" element={<LoginPage />} />
+        <Route path="/login/admin" element={<LoginAdminPage />} />
+        <Route path="/address" element={<AddressPage />} />
+        {renderUserRoutes()}
+        {renderAdminRoutes()}
+      </Routes>
+    </>
+  )
+}
+
+export default App
