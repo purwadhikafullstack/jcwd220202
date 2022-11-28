@@ -51,7 +51,6 @@ const AdminNavbar = () => {
     return (
         <>
             <Box
-                maxW={"430px"}
                 backgroundColor={"#E07A5F"}
                 height={"75px"}
                 position={"fixed"}

@@ -32,15 +32,16 @@ const Home = () => {
             <Box pt={"10px"}>
                 <Flex display={"flex"}>
                     <FormControl>
-                        <InputGroup size="md" w={"340px"}>
+                        <InputGroup size="md">
                             <InputRightElement
                                 pointerEvents="none"
                                 children={<SearchIcon color="F2CC8F" />}
                                 size="md"
+                                mr={"5"}
                             />
                             <Input
-                                w={"340px"}
                                 ml={"5"}
+                                mr={"5"}
                                 variant="outline"
                                 size="md"
                                 placeholder={``}
@@ -65,7 +66,7 @@ const Home = () => {
                             cursor: "pointer",
                         }}
                     >
-                        <Link to="/login">Login</Link>
+                        <Link to="/login/user">Login</Link>
                     </Box>
                 </Flex>
             </Box>

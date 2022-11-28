@@ -4,7 +4,6 @@ import grocerinLogo from "../assets/grocerin_logo_aja.png"
 const UpperBarAdmin = () => {
     return (
         <Box
-            maxW={"430px"}
             backgroundColor={"#D9D9D9"}
             height={"75px"}
             position={"fixed"}

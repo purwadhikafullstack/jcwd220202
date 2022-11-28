@@ -24,7 +24,7 @@ const items = [
     {
         icon: profile,
         label: "Profile",
-        path: "",
+        path: "/profile",
     },
 ]
 
@@ -54,7 +54,6 @@ const Navigation = () => {
     return (
         <>
             <Box
-                maxW={"430px"}
                 backgroundColor={"#E07A5F"}
                 height={"75px"}
                 position={"fixed"}
