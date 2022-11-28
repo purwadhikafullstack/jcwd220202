@@ -17,10 +17,11 @@ import {
 } from "@chakra-ui/react"
 import { useState } from "react"
 import { Link } from "react-router-dom"
-import { DragHandleIcon, SearchIcon } from "@chakra-ui/icons"
+import { SearchIcon } from "@chakra-ui/icons"
 import Navigation from "../components/NavigationBar"
 import { categories } from "../components/category"
 import other from "../assets/4square.png"
+import banner1 from "../assets/banner1.png"
 
 const Home = () => {
     const [keywordHandler, setKeywordHandler] = useState("")
@@ -68,8 +69,8 @@ const Home = () => {
                     </Box>
                 </Flex>
             </Box>
-            <Box h={"100px"} mt={"10px"} bgColor={"#F4F1DE"}>
-                Banner
+            <Box h={"200px"} mt={"10px"} bgColor={"#F4F1DE"}>
+                <Image src={banner1} w={"100%"} h={"100%"} />
             </Box>
             <SimpleGrid
                 columns={"4"}
