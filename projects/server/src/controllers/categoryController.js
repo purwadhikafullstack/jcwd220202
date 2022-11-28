@@ -9,7 +9,7 @@ const categoryController = {
       const icon_url = `http://localhost:8000/public/${req.file.filename}`;
 
       const newCategory = await db.Category.create({
-        category: category_name,
+        category_name: category_name,
         icon_url: icon_url,
       });
 
@@ -68,21 +68,6 @@ const categoryController = {
       console.log(error);
       return res.status(500).json({
         message: "Server Error deleting category",
-      });
-    }
-  },
-  showAllCategory: async (req, res) => {
-    try {
-      const seeAllCategory = await db.Category.findAll();
-
-      return res.status(200).json({
-        message: "Showing my items in cart",
-        data: seeAllCategory,
-      });
-    } catch (err) {
-      console.log(err);
-      return res.status(500).json({
-        message: "Server error get category data",
       });
     }
   },

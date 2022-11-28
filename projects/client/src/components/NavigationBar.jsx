@@ -24,7 +24,7 @@ const items = [
   {
     icon: profile,
     label: "Profile",
-    path: "",
+    path: "/profile",
   },
 ];
 

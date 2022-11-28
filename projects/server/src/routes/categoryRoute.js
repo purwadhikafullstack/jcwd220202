@@ -12,8 +12,10 @@ router.post(
   }).single("icon_url"),
   categoryController.createCategory
 );
-router.get("/", categoryController.showAllCategory);
+
 router.delete("/:id", categoryController.deleteCategory);
+
+router.get("/", categoryController.getAllCategory);
 
 router.patch(
   "/",

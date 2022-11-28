@@ -1,6 +1,5 @@
 import { Box, Text } from "@chakra-ui/react";
 import { Link, Route, Routes } from "react-router-dom";
-import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import LoginAdminPage from "./pages/LoginAdminPage";
 import ProfilePage from "./pages/ProfilePage";
@@ -64,27 +63,21 @@ const App = () => {
     keepUserLoggedIn();
   }, []);
 
-  const renderAdminRoutes = () => {
-    if (authSelector.RoleId == "2") {
-      return (
-        <>
-          <Route path="/homepage" element={<HomePage />} />
-        </>
-      );
-    }
-    return null;
-  };
+  // const renderAdminRoutes = () => {
+  //   if (authSelector.RoleId == "2") {
+  //     return (
+  //       <>
+  //         <Route path="/homepage" element={<HomePage />} />
+  //       </>
+  //     );
+  //   }
+  //   return null;
+  // };
 
   if (!authCheck) return <div>LOADING...</div>;
 
   return (
     <>
-      <Box bgColor="grey">
-        <Text>Hello World!</Text>
-        <Link to="/profile">go to profile</Link>
-        <Link to="/login/user">login user</Link>
-        <Link to="/login/admin">login admin</Link>
-      </Box>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
@@ -96,7 +89,7 @@ const App = () => {
         <Route path="/admin/category" element={<AdminCategory />} />
         <Route path="/add/category" element={<AddCategory />} />
         {renderUserRoutes()}
-        {renderAdminRoutes()}
+        {/* {renderAdminRoutes()} */}
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reentry-password" element={<ReentryPassword />} />
         <Route
