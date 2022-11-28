@@ -23,6 +23,8 @@ const AdminCategory = () => {
             const response = await axiosInstance.get("/add")
 
             console.log(response.data)
+
+            console.log(response.data)
             setCategory(response.data.data)
         } catch (err) {
             console.log(err)
