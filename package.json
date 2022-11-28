@@ -24,6 +24,7 @@
     "@chakra-ui/icons": "^2.0.12",
     "chakra-ui-bottom-navigation": "^2.0.1",
     "chart.js": "^4.0.1",
+    "multer": "^1.4.5-lts.1",
     "react-chartjs-2": "^5.0.1"
   }
 }

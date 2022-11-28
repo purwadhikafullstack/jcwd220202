@@ -4,13 +4,7 @@ import Navigation from "../components/NavigationBar"
 
 const CategoryList = () => {
     return (
-        <Box
-            w={"430px"}
-            h={"932px"}
-            maxW={"430px"}
-            maxH={"932px"}
-            bgColor={"#F4F1DE"}
-        >
+        <Box h={"932px"} bgColor={"#F4F1DE"}>
             <Box>
                 <Heading p={"30px"} size="md">
                     Category
