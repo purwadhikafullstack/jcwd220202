@@ -9,7 +9,6 @@ const upload = ({
         destination: (req, file, cb) => {
             cb(null, "public")
         },
-
         filename: (req, file, cb) => {
             cb(null, `${filePrefix}-${fileName}.${file.mimetype.split("/")[1]}`)
         },

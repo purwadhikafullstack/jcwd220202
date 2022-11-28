@@ -4,6 +4,7 @@ const cors = require("cors")
 const { join } = require("path")
 const db = require("../models")
 const dotenv = require("dotenv")
+const fs = require("fs")
 
 // dotenv.config();
 
@@ -21,11 +22,14 @@ const registerRoute = require("./routes/registerRoute")
 const loginRoute = require("./routes/loginRoute.js")
 const profileRoute = require("./routes/userProfileRoute.js")
 const loginAdminRoute = require("./routes/loginAdminRoute.js")
+const categoryRoute = require("./routes/categoryRoute.js")
 
 app.use("/user", loginRoute)
 app.use("/profile", profileRoute)
 app.use("/admin", loginAdminRoute)
 app.use("/register", registerRoute)
+app.use("/add", categoryRoute)
+
 app.use("/public", express.static("public"))
 
 app.get("/api", (req, res) => {
@@ -74,6 +78,10 @@ app.get("*", (req, res) => {
 
 app.listen(PORT, async (err) => {
     db.sequelize.sync({ alter: true })
+
+    if (!fs.existsSync("public")) {
+        fs.mkdirSync("public")
+    }
 
     if (err) {
         console.log(`ERROR: ${err}`)

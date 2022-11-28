@@ -3,28 +3,28 @@ import { useEffect, useState } from "react"
 import { axiosInstance } from "../api"
 
 const AddressList = ({}) => {
-  const [address, setAddress] = useState([])
+    const [address, setAddress] = useState([])
 
-  const fetchAddress = async () => {
-    try {
-      const response = await axiosInstance.get("/address")
+    const fetchAddress = async () => {
+        try {
+            const response = await axiosInstance.get("/address")
 
-      setAddress(response.data.data)
-    } catch (err) {
-      console.log(err)
+            setAddress(response.data.data)
+        } catch (err) {
+            console.log(err)
+        }
     }
-  }
 
-  useEffect(() => {
-    fetchAddress()
-  }, [])
+    useEffect(() => {
+        fetchAddress()
+    }, [])
 
-  return (
-    <>
-      <Text>{address}</Text>
-      <Button>klik!</Button>
-    </>
-  )
+    return (
+        <>
+            <Text>{address}</Text>
+            <Button>klik!</Button>
+        </>
+    )
 }
 
 export default AddressList
