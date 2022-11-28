@@ -2,27 +2,27 @@ import { Box, Grid, GridItem, Image, Text } from "@chakra-ui/react";
 import { useState } from "react";
 import homeLogo from "../assets/home.png";
 import productLogo from "../assets/product.png";
-import orderLogo from "../assets/order.png";
+import userLogo from "../assets/user.png";
 import otherLogo from "../assets/other_list.png";
-import OtherMenuBar from "./OtherMenuBar";
+import OtherMenuBarSuperAdm from "./OtherMenuBarSuperAdm";
 import { Link } from "react-router-dom";
 
-const AdminNavbar = () => {
+const SuperAdminNavbar = () => {
   const [menu, setMenu] = useState([
     {
       icon: homeLogo,
       text: "Home",
-      link: "/admin/dashboard",
+      link: "/super-admin/dashboard",
     },
     {
       icon: productLogo,
       text: "Product",
-      link: "/admin/product",
+      link: "/super-admin/product",
     },
     {
-      icon: orderLogo,
-      text: "Order",
-      link: "/admin/transaction",
+      icon: userLogo,
+      text: "User",
+      link: "/super-admin/user",
     },
   ]);
 
@@ -36,7 +36,6 @@ const AdminNavbar = () => {
     return menu.map((val) => {
       return (
         <GridItem h="65px" key={val.icon}>
-          {/* taro key di setiap map yang bersifat unik */}
           <Link to={val.link}>
             <Box display={"grid"}>
               <Image
@@ -82,10 +81,10 @@ const AdminNavbar = () => {
             </Box>
           </GridItem>
         </Grid>
-        <OtherMenuBar isOpen={modalIsOpen} closeModal={closeModal} />
+        <OtherMenuBarSuperAdm isOpen={modalIsOpen} closeModal={closeModal} />
       </Box>
     </>
   );
 };
 
-export default AdminNavbar;
+export default SuperAdminNavbar;

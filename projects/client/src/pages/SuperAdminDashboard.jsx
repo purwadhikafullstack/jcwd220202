@@ -1,16 +1,15 @@
 import { Box, Grid, GridItem, Image, Text } from "@chakra-ui/react";
-import AdminNavbar from "../components/AdminNavbar";
 import LineChart from "../components/LineChart";
-import UpperBarAdmin from "../components/UpperAdminBar";
 import shoppingPic from "../assets/login_logo.png";
+import SuperAdminNavbar from "../components/SuperAdminNavbar";
+import UpperBarSprAdm from "../components/UpperBarSprAdm";
 
-const AdminDashboard = () => {
+const SuperAdminDashboard = () => {
   return (
     <Box backgroundColor={"#F4F1DE"} height={"932px"}>
-      <UpperBarAdmin />
+      <UpperBarSprAdm />
       <Grid templateColumns="repeat(2, 1fr)" gap={4}>
         <GridItem
-          bg="tomato"
           marginTop={"130px"}
           marginLeft={"30px"}
           height={"80px"}
@@ -19,14 +18,13 @@ const AdminDashboard = () => {
           boxShadow={"1px 1px 1px grey"}
         >
           <Box marginLeft={"15px"} marginTop={"10px"} fontFamily={"roboto"}>
-            <Text fontSize={"16px"}>Available Order</Text>
+            <Text fontSize={"16px"}>User Available</Text>
             <Text fontSize={"24px"} fontWeight={"bold"}>
               0
             </Text>
           </Box>
         </GridItem>
         <GridItem
-          bg="tomato"
           marginTop={"130px"}
           marginRight={"30px"}
           height={"80px"}
@@ -35,7 +33,7 @@ const AdminDashboard = () => {
           boxShadow={"1px 1px 1px grey"}
         >
           <Box marginLeft={"15px"} marginTop={"10px"} fontFamily={"roboto"}>
-            <Text fontSize={"16px"}>Product to Send</Text>
+            <Text fontSize={"16px"}>Branch Available</Text>
             <Text fontSize={"24px"} fontWeight={"bold"}>
               0
             </Text>
@@ -43,8 +41,35 @@ const AdminDashboard = () => {
         </GridItem>
       </Grid>
       <Box
+        marginTop={"20px"}
+        bgColor={"white"}
+        height={"80px"}
+        mx={"110px"}
+        textAlign={"center"}
+        borderRadius={"10px"}
+        boxShadow={"1px 1px 1px grey"}
+        fontFamily={"roboto"}
+      >
+        <Text
+          pt={"10px"}
+          textAlign={"left"}
+          marginLeft={"15px"}
+          fontSize={"16px"}
+        >
+          Product In Store
+        </Text>
+        <Text
+          textAlign={"left"}
+          marginLeft={"15px"}
+          fontSize={"24px"}
+          fontWeight={"bold"}
+        >
+          0
+        </Text>
+      </Box>
+      <Box
         backgroundColor={"white"}
-        marginTop={"60px"}
+        marginTop={"30px"}
         padding={"5px"}
         marginX={"30px"}
         boxShadow={"1px 1px 1px grey"}
@@ -68,7 +93,7 @@ const AdminDashboard = () => {
           View more..
         </Text>
       </Box>
-      <Box display={"grid"} my={"20px"} zIndex={"base"}>
+      <Box display={"grid"} my={"10px"}>
         <Image
           src={shoppingPic}
           alt="logo"
@@ -77,10 +102,10 @@ const AdminDashboard = () => {
         />
       </Box>
       <Box>
-        <AdminNavbar />
+        <SuperAdminNavbar />
       </Box>
     </Box>
   );
 };
 
-export default AdminDashboard;
+export default SuperAdminDashboard;

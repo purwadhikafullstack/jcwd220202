@@ -1,14 +1,22 @@
 import {
   Box,
+  Button,
+  Image,
   Modal,
   ModalBody,
+  ModalCloseButton,
   ModalContent,
+  ModalFooter,
   ModalHeader,
   ModalOverlay,
   Text,
+  useDisclosure,
 } from "@chakra-ui/react";
+import { useState } from "react";
+import logoutLogo from "../assets/logout.png";
+import statisticLogo from "../assets/statistic.png";
 
-const OtherMenuBar = ({ isOpen, closeModal }) => {
+const OtherMenuBarSuperAdm = ({ isOpen, closeModal }) => {
   return (
     <>
       <Modal isOpen={isOpen} onClose={closeModal}>
@@ -17,6 +25,9 @@ const OtherMenuBar = ({ isOpen, closeModal }) => {
         <ModalContent
           position={"fixed"}
           height={"60%"}
+          //   bottom={"0"}
+          //   right={"0"}
+          //   left={"0"}
           bottom={"-20"}
           marginLeft={"60%"}
           fontFamily={"roboto"}
@@ -30,10 +41,24 @@ const OtherMenuBar = ({ isOpen, closeModal }) => {
           <ModalHeader>Other</ModalHeader>
           <ModalBody>
             <Box display={"flex"}>
-              <Text>Statistic</Text>
+              <Image src={statisticLogo} height={"40px"} />
+              <Text
+                marginLeft={"10px"}
+                marginTop={"10px"}
+                marginBottom={"10px"}
+              >
+                Statistic
+              </Text>
             </Box>
             <Box display={"flex"}>
-              <Text>Logout</Text>
+              <Image src={logoutLogo} height={"40px"} />
+              <Text
+                marginLeft={"10px"}
+                marginTop={"10px"}
+                marginBottom={"10px"}
+              >
+                Logout
+              </Text>
             </Box>
           </ModalBody>
         </ModalContent>
@@ -42,4 +67,4 @@ const OtherMenuBar = ({ isOpen, closeModal }) => {
   );
 };
 
-export default OtherMenuBar;
+export default OtherMenuBarSuperAdm;

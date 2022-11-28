@@ -3,7 +3,7 @@ const { check, validationResult } = require("express-validator");
 exports.validateUser = [
   check("email")
     .isEmail()
-    .withMessage("Invalid email address!")
+    .withMessage("Invalid email address")
     .trim()
     .not()
     .isEmpty()

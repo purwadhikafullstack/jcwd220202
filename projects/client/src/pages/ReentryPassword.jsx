@@ -18,9 +18,10 @@ import * as Yup from "yup";
 
 import backIcon from "../assets/back_icon.png";
 import grocerinLogoWithText from "../assets/grocerin_logo.png";
+import shoppingPic from "../assets/frozen_food_shopping.png";
 import { axiosInstance } from "../api";
 
-const Register = () => {
+const ReentryPassword = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
@@ -38,39 +39,16 @@ const Register = () => {
 
   const formik = useFormik({
     initialValues: {
-      email: "",
       password: "",
       confirmPassword: "",
-      phoneNumber: "",
-      referralCode: "",
     },
-    onSubmit: async ({ email, password, phoneNumber, referralCode }) => {
+    onSubmit: async ({ password }) => {
       try {
-        const response = await axiosInstance.post("/register/user", {
-          email: email,
-          password: password,
-          phone_number: phoneNumber,
-          referral_code: referralCode,
-        });
-
-        toast({
-          title: "Registration Successful",
-          description: response.data.message,
-          status: "success",
-        });
-
-        navigate("/login/user");
       } catch (error) {
         console.log(error.response);
-        toast({
-          title: "Registration Failed",
-          description: error.response.data.message,
-          status: "error",
-        });
       }
     },
     validationSchema: Yup.object({
-      email: Yup.string().required().email(),
       password: Yup.string()
         .required()
         .matches(
@@ -80,15 +58,6 @@ const Register = () => {
       confirmPassword: Yup.string()
         .required("please retype your password.")
         .oneOf([Yup.ref("password")], "Your passwords do not match."),
-      phoneNumber: Yup.string()
-        .required("phone number is a required field")
-        .matches(
-          /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/,
-          "Phone number is not valid"
-        )
-        .min(10, "phone number must be contained 10 to 14 characters")
-        .max(14, "phone number must be contained 10 to 14 characters"),
-      referralCode: Yup.string(),
     }),
     validateOnChange: false,
   });
@@ -119,6 +88,7 @@ const Register = () => {
             display={"block"}
             marginLeft={"auto"}
             marginRight={"auto"}
+            marginTop={"60px"}
           />
         </Box>
         <Box
@@ -127,24 +97,7 @@ const Register = () => {
           marginTop={0}
           fontFamily={"Roboto"}
         >
-          <form
-            onSubmit={formik.handleSubmit}
-            // isDisabled={formik.isSubmitting}
-          >
-            <FormControl mt={"10px"} isInvalid={formik.errors.email}>
-              <FormLabel fontWeight={"bold"}>Email</FormLabel>
-              <Input
-                type="text"
-                placeholder="Enter your email"
-                _placeholder={{ color: "black.500" }}
-                value={formik.values.email}
-                name="email"
-                borderRadius={"15px"}
-                bgColor={"#D9D9D9"}
-                onChange={formChangeHandler}
-              />
-              <FormErrorMessage>{formik.errors.email}</FormErrorMessage>
-            </FormControl>
+          <form onSubmit={formik.handleSubmit}>
             <FormControl mt={"10px"} isInvalid={formik.errors.password}>
               <FormLabel fontWeight={"bold"}>Password</FormLabel>
               <InputGroup>
@@ -210,43 +163,6 @@ const Register = () => {
                 {formik.errors.confirmPassword}
               </FormErrorMessage>
             </FormControl>
-            <FormControl mt={"10px"} isInvalid={formik.errors.phoneNumber}>
-              <FormLabel fontWeight={"bold"}>Phone Number</FormLabel>
-              <Input
-                type="text"
-                placeholder="Enter your phone number"
-                value={formik.values.phoneNumber}
-                name="phoneNumber"
-                borderRadius={"15px"}
-                _placeholder={{ color: "black.500" }}
-                bgColor={"#D9D9D9"}
-                onChange={formChangeHandler}
-              />
-              <FormErrorMessage>{formik.errors.phoneNumber}</FormErrorMessage>
-            </FormControl>
-            <FormControl mt={"10px"} isInvalid={formik.errors.referralCode}>
-              <FormLabel fontWeight={"bold"} display={"flex"}>
-                <Text>Referral Code</Text>
-                <Text
-                  marginLeft={"10px"}
-                  fontStyle={"italic"}
-                  color={"#E07A5F"}
-                >
-                  - Optional
-                </Text>
-              </FormLabel>
-              <Input
-                type="text"
-                placeholder="Enter referral code"
-                name="referralCode"
-                value={formik.values.referralCode}
-                borderRadius={"15px"}
-                _placeholder={{ color: "black.500" }}
-                bgColor={"#D9D9D9"}
-                onChange={formChangeHandler}
-              />
-              <FormErrorMessage>{formik.errors.referralCode}</FormErrorMessage>
-            </FormControl>
             <Box marginTop={"20px"} textAlign={"right"}>
               <Button
                 mt={"15px"}
@@ -263,9 +179,17 @@ const Register = () => {
             </Box>
           </form>
         </Box>
+        <Box display={"grid"} my={"50px"}>
+          <Image
+            src={shoppingPic}
+            alt="logo"
+            height={"200px"}
+            justifySelf={"center"}
+          />
+        </Box>
       </Box>
     </>
   );
 };
 
-export default Register;
+export default ReentryPassword;

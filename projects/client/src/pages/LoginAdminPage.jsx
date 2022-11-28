@@ -10,23 +10,27 @@ import {
   InputRightElement,
   Text,
   useToast,
-} from "@chakra-ui/react"
-import backIcon from "../assets/back_icon.png"
-import grocerinLogoWithText from "../assets/grocerin_logo.png"
-import { useFormik } from "formik"
-import { axiosInstance } from "../api"
-import { useDispatch } from "react-redux"
-import { login } from "../redux/features/authSlice"
-import { useState, useEffect } from "react"
-import { Link, useNavigate } from "react-router-dom"
+} from "@chakra-ui/react";
+import backIcon from "../assets/back_icon.png";
+import grocerinLogoWithText from "../assets/grocerin_logo.png";
+import shoppingPic from "../assets/frozen_food.png";
+import { useFormik } from "formik";
+import { axiosInstance } from "../api";
+import { useDispatch } from "react-redux";
+import { login } from "../redux/features/authSlice";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
-  const toast = useToast()
-  const dispatch = useDispatch()
-  const navigate = useNavigate()
+  const toast = useToast();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  const [show, setShow] = useState(false)
-  const handleClick = () => setShow(!show)
+  const [showPassword, setShowPassword] = useState(false);
+
+  const togglePassword = () => {
+    setShowPassword(!showPassword);
+  };
 
   const formik = useFormik({
     initialValues: {
@@ -35,13 +39,14 @@ const LoginPage = () => {
     },
     onSubmit: async ({ email, password }) => {
       try {
-        const response = await axiosInstance.post("/user/login", {
+        const response = await axiosInstance.post("/admin/login", {
           email,
           password,
-        })
-        console.log(response)
+        });
 
-        localStorage.setItem("auth_token", response.data.token)
+        console.log(response.data);
+
+        localStorage.setItem("auth_token", response.data.token);
         dispatch(
           login({
             username: response.data.data.username,
@@ -49,36 +54,50 @@ const LoginPage = () => {
             id: response.data.data.id,
             RoleId: response.data.data.RoleId,
           })
-        )
-        navigate('/homepage')
+        );
+
+        if (response.data.data.RoleId === 3) {
+          navigate("/super-admin/dashboard");
+
+          toast({
+            status: "success",
+            title: "Login success",
+            description: response.data.message,
+          });
+
+          return;
+        }
+
+        navigate("/admin/dashboard");
+
         toast({
           status: "success",
           title: "Login success",
           description: response.data.message,
-        })
+        });
       } catch (err) {
-        console.log(err)
+        console.log(err);
         toast({
           status: "error",
           title: "Login failed",
           description: err.response.data.message,
-        })
+        });
       }
     },
-  })
+  });
 
   const formChangeHandler = ({ target }) => {
-    const { name, value } = target
-    formik.setFieldValue(name, value)
-  }
+    const { name, value } = target;
+    formik.setFieldValue(name, value);
+  };
 
   return (
     <>
       <Box height={"932px"}>
-        <Box marginTop={"20px"} marginLeft={"20px"}>
+        {/* <Box marginTop={"20px"} marginLeft={"20px"}>
           <Image objectFit="cover" src={backIcon} alt="back" height={"40px"} />
-        </Box>
-        <Box>
+        </Box> */}
+        <Box marginTop={"70px"}>
           <Image
             src={grocerinLogoWithText}
             alt="logo"
@@ -95,7 +114,6 @@ const LoginPage = () => {
           marginTop={0}
           fontFamily={"roboto"}
         >
-          <Text>Admin Login</Text>
           <form onSubmit={formik.handleSubmit}>
             <FormControl mt={"10px"}>
               <FormLabel fontWeight={"bold"}>Email</FormLabel>
@@ -111,14 +129,14 @@ const LoginPage = () => {
               />
               <FormErrorMessage>{formik.errors.email}</FormErrorMessage>
             </FormControl>
-            <FormControl mt={"10px"}>
+            <FormControl mt={"10px"} isInvalid={formik.errors.password}>
               <FormLabel fontWeight={"bold"}>Password</FormLabel>
               <InputGroup>
                 <Input
+                  type={showPassword ? "text" : "password"}
                   value={formik.values.password}
-                  type={show ? "text" : "password"}
                   name="password"
-                  placeholder="Enter password"
+                  placeholder="Enter your password"
                   borderRadius={"15px"}
                   _placeholder={{ color: "black.500" }}
                   bgColor={"#D9D9D9"}
@@ -127,23 +145,33 @@ const LoginPage = () => {
                 <InputRightElement width="4.5rem">
                   <Button
                     size="sm"
-                    bg={"#1b3c4b"}
                     color={"white"}
                     borderRadius={"20px"}
                     bgColor={"#81B29A"}
                     fontSize={"16px"}
-                    onClick={handleClick}
+                    _hover={{
+                      bgColor: "#81B29A",
+                    }}
+                    onClick={togglePassword}
                   >
-                    Show
+                    {showPassword ? "Hide" : "Show"}
                   </Button>
                 </InputRightElement>
               </InputGroup>
               <FormErrorMessage>{formik.errors.password}</FormErrorMessage>
             </FormControl>
-
+            <Box
+              textAlign={"right"}
+              mt={"10px"}
+              fontSize={"14px"}
+              color={"#E07A5F"}
+              fontWeight={"bold"}
+            >
+              <Link to={"/forgot-password"}>Forgot Password</Link>
+            </Box>
             <Box marginTop={"20px"} textAlign={"right"}>
               <Button
-                mt={"15px"}
+                mt={"10px"}
                 color={"white"}
                 type="submit"
                 fontWeight={"bold"}
@@ -157,9 +185,17 @@ const LoginPage = () => {
             </Box>
           </form>
         </Box>
+        <Box display={"grid"} mt={"60px"}>
+          <Image
+            src={shoppingPic}
+            alt="logo"
+            height={"200px"}
+            justifySelf={"center"}
+          />
+        </Box>
       </Box>
     </>
-  )
-}
+  );
+};
 
-export default LoginPage
+export default LoginPage;

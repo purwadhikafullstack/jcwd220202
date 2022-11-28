@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  Flex,
   FormControl,
   FormErrorMessage,
   FormLabel,
@@ -8,25 +9,26 @@ import {
   Input,
   InputGroup,
   InputRightElement,
-  Text,
+  Spacer,
   useToast,
-} from "@chakra-ui/react"
-import backIcon from "../assets/back_icon.png"
-import grocerinLogoWithText from "../assets/grocerin_logo.png"
-import { useFormik } from "formik"
-import { axiosInstance } from "../api"
-import { useDispatch } from "react-redux"
-import { login } from "../redux/features/authSlice"
-import { useState, useEffect } from "react"
-import { Link, useNavigate } from "react-router-dom"
+} from "@chakra-ui/react";
+import backIcon from "../assets/back_icon.png";
+import grocerinLogoWithText from "../assets/grocerin_logo.png";
+import shoppingPic from "../assets/online_grocery.png";
+import { useFormik } from "formik";
+import { axiosInstance } from "../api";
+import { useDispatch } from "react-redux";
+import { login } from "../redux/features/authSlice";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
-  const toast = useToast()
-  const dispatch = useDispatch()
-  const navigate = useNavigate()
+  const toast = useToast();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  const [show, setShow] = useState(false)
-  const handleClick = () => setShow(!show)
+  const [show, setShow] = useState(false);
+  const handleClick = () => setShow(!show);
 
   const formik = useFormik({
     initialValues: {
@@ -38,10 +40,10 @@ const LoginPage = () => {
         const response = await axiosInstance.post("/user/login", {
           email,
           password,
-        })
-        console.log(response)
+        });
+        console.log(response);
 
-        localStorage.setItem("auth_token", response.data.token)
+        localStorage.setItem("auth_token", response.data.token);
         dispatch(
           login({
             username: response.data.data.username,
@@ -49,36 +51,42 @@ const LoginPage = () => {
             id: response.data.data.id,
             RoleId: response.data.data.RoleId,
           })
-        )
-        navigate('/profile')
+        );
+        navigate("/");
         toast({
           status: "success",
           title: "Login success",
           description: response.data.message,
-        })
+        });
       } catch (err) {
-        console.log(err)
+        console.log(err);
         toast({
           status: "error",
           title: "Login failed",
           description: err.response.data.message,
-        })
+        });
       }
     },
-  })
+  });
 
   const formChangeHandler = ({ target }) => {
-    const { name, value } = target
-    formik.setFieldValue(name, value)
-  }
+    const { name, value } = target;
+    formik.setFieldValue(name, value);
+  };
 
   return (
     <>
       <Box height={"932px"}>
         <Box marginTop={"20px"} marginLeft={"20px"}>
-          <Image objectFit="cover" src={backIcon} alt="back" height={"40px"} />
+          <Image
+            objectFit="cover"
+            src={backIcon}
+            alt="back"
+            height={"40px"}
+            onClick={() => navigate(-1)}
+          />
         </Box>
-        <Box>
+        <Box marginTop={"10px"}>
           <Image
             src={grocerinLogoWithText}
             alt="logo"
@@ -95,7 +103,6 @@ const LoginPage = () => {
           marginTop={0}
           fontFamily={"roboto"}
         >
-          <Text>User Login</Text>
           <form onSubmit={formik.handleSubmit}>
             <FormControl mt={"10px"}>
               <FormLabel fontWeight={"bold"}>Email</FormLabel>
@@ -118,7 +125,7 @@ const LoginPage = () => {
                   value={formik.values.password}
                   type={show ? "text" : "password"}
                   name="password"
-                  placeholder="Enter password"
+                  placeholder="Enter your password"
                   borderRadius={"15px"}
                   _placeholder={{ color: "black.500" }}
                   bgColor={"#D9D9D9"}
@@ -140,8 +147,23 @@ const LoginPage = () => {
               </InputGroup>
               <FormErrorMessage>{formik.errors.password}</FormErrorMessage>
             </FormControl>
-
-            <Box marginTop={"20px"} textAlign={"right"}>
+            <Box
+              marginTop={"10px"}
+              fontSize={"14px"}
+              fontWeight={"bold"}
+              color={"#E07A5F"}
+            >
+              <Flex>
+                <Link to={"/register/user"}>
+                  <Box>Register</Box>
+                </Link>
+                <Spacer />
+                <Link to={"/forgot-password"}>
+                  <Box>Forgot Password</Box>
+                </Link>
+              </Flex>
+            </Box>
+            <Box marginTop={"15px"} textAlign={"right"}>
               <Button
                 mt={"15px"}
                 color={"white"}
@@ -157,9 +179,17 @@ const LoginPage = () => {
             </Box>
           </form>
         </Box>
+        <Box display={"grid"} mt={"60px"}>
+          <Image
+            src={shoppingPic}
+            alt="logo"
+            height={"200px"}
+            justifySelf={"center"}
+          />
+        </Box>
       </Box>
     </>
-  )
-}
+  );
+};
 
-export default LoginPage
+export default LoginPage;

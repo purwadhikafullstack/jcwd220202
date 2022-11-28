@@ -1,7 +1,7 @@
 import { Box, Flex, Image, Spacer } from "@chakra-ui/react";
 import grocerinLogo from "../assets/grocerin_logo_aja.png";
 
-const UpperBarAdmin = () => {
+const UpperBarSprAdm = () => {
   return (
     <Box
       backgroundColor={"#81B29A"}
@@ -14,7 +14,7 @@ const UpperBarAdmin = () => {
       zIndex={"4"}
     >
       <Flex fontSize={"18px"} fontFamily={"roboto"}>
-        <Box margin={"25px"}>Branch Admin</Box>
+        <Box margin={"25px"}>Super Admin</Box>
         <Spacer />
         <Box>
           <Image
@@ -30,4 +30,4 @@ const UpperBarAdmin = () => {
   );
 };
 
-export default UpperBarAdmin;
+export default UpperBarSprAdm;

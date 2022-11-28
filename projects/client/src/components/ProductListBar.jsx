@@ -1,7 +1,11 @@
 import { Box, Flex, Image, Spacer } from "@chakra-ui/react";
 import grocerinLogo from "../assets/grocerin_logo_aja.png";
+import backIcon from "../assets/back_icon.png";
+import { useNavigate } from "react-router-dom";
 
-const UpperBarAdmin = () => {
+const ProductListBar = () => {
+  const navigate = useNavigate();
+
   return (
     <Box
       backgroundColor={"#81B29A"}
@@ -14,7 +18,17 @@ const UpperBarAdmin = () => {
       zIndex={"4"}
     >
       <Flex fontSize={"18px"} fontFamily={"roboto"}>
-        <Box margin={"25px"}>Branch Admin</Box>
+        <Box marginLeft={"10px"} marginTop={"18px"}>
+          <Image
+            objectFit="cover"
+            src={backIcon}
+            alt="back"
+            height={"40px"}
+            onClick={() => navigate(-1)}
+          />
+        </Box>
+        <Spacer />
+        <Box margin={"25px"}>Product</Box>
         <Spacer />
         <Box>
           <Image
@@ -30,4 +44,4 @@ const UpperBarAdmin = () => {
   );
 };
 
-export default UpperBarAdmin;
+export default ProductListBar;
