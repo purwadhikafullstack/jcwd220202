@@ -10,31 +10,31 @@ import {
   InputRightElement,
   Text,
   useToast,
-} from "@chakra-ui/react";
-import { useState } from "react";
-import { useFormik } from "formik";
-import { useNavigate } from "react-router-dom";
-import * as Yup from "yup";
+} from "@chakra-ui/react"
+import { useState } from "react"
+import { useFormik } from "formik"
+import { useNavigate } from "react-router-dom"
+import * as Yup from "yup"
 
-import backIcon from "../assets/back_icon.png";
-import grocerinLogoWithText from "../assets/grocerin_logo.png";
-import { axiosInstance } from "../api";
+import backIcon from "../assets/back_icon.png"
+import grocerinLogoWithText from "../assets/grocerin_logo.png"
+import { axiosInstance } from "../api"
 
 const Register = () => {
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   const togglePassword = () => {
-    setShowPassword(!showPassword);
-  };
+    setShowPassword(!showPassword)
+  }
 
   const toggleConfirmPassword = () => {
-    setShowConfirmPassword(!showConfirmPassword);
-  };
+    setShowConfirmPassword(!showConfirmPassword)
+  }
 
-  const toast = useToast();
+  const toast = useToast()
 
   const formik = useFormik({
     initialValues: {
@@ -51,22 +51,22 @@ const Register = () => {
           password: password,
           phone_number: phoneNumber,
           referral_code: referralCode,
-        });
+        })
 
         toast({
           title: "Registration Successful",
           description: response.data.message,
           status: "success",
-        });
+        })
 
-        navigate("/login/user");
+        navigate("/login/user")
       } catch (error) {
-        console.log(error.response);
+        console.log(error.response)
         toast({
           title: "Registration Failed",
           description: error.response.data.message,
           status: "error",
-        });
+        })
       }
     },
     validationSchema: Yup.object({
@@ -91,12 +91,11 @@ const Register = () => {
       referralCode: Yup.string(),
     }),
     validateOnChange: false,
-  });
-
+  })
   const formChangeHandler = ({ target }) => {
-    const { name, value } = target;
-    formik.setFieldValue(name, value);
-  };
+    const { name, value } = target
+    formik.setFieldValue(name, value)
+  }
 
   return (
     <>
@@ -265,7 +264,7 @@ const Register = () => {
         </Box>
       </Box>
     </>
-  );
-};
+  )
+}
 
-export default Register;
+export default Register

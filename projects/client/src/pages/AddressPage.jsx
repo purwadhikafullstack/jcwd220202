@@ -40,6 +40,7 @@ const AddressPage = () => {
         <AddressList
           key={val.id.toString()}
           address={val.address}
+          
         />
       )
     })

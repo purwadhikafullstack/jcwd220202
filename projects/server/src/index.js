@@ -24,6 +24,7 @@ const profileRoute = require("./routes/userProfileRoute.js");
 const loginAdminRoute = require("./routes/loginAdminRoute.js");
 const categoryRoute = require("./routes/categoryRoute");
 const adminProductRoute = require("./routes/adminProductRoute");
+const productRoute = require("./routes/productRoute.js")
 
 app.use("/user", loginRoute);
 app.use("/profile", profileRoute);
@@ -31,6 +32,7 @@ app.use("/admin", loginAdminRoute);
 app.use("/register", registerRoute);
 app.use("/category", categoryRoute);
 app.use("/admin-product", adminProductRoute);
+app.use("/product", productRoute);
 
 app.use("/public", express.static("public"));
 

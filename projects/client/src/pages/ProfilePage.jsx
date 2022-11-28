@@ -76,6 +76,71 @@ const ProfilePage = () => {
         formik.setFieldValue(name, value)
     }
 
+      <Button
+        w="50px"
+        h="30px"
+        bgColor="#81B29A"
+        onClick={() => setUpdateProfile(true)}
+      >
+        Edit
+      </Button>
+      {!updateProfile ? (
+        // display
+        <Stack spacing={3} margin="10">
+          <Text fontWeight={"bold"}>Username: {userData.username}</Text>
+          <Text fontWeight={"bold"}>Gender: {userData.gender}</Text>
+          <Text fontWeight={"bold"}>Date of Birth: {userData.birth}</Text>
+        </Stack>
+      ) : (
+        // Edit mode
+        <Stack spacing={3} margin="10">
+          <Text fontWeight={"bold"}>Username:</Text>
+          <Input
+            value={formik.values.username}
+            name="username"
+            onChange={formChangeHandler}
+            placeholder={userData.username}
+            size="md"
+            bgColor={"white"}
+          />
+          <Text fontWeight={"bold"}>Gender:</Text>
+          <Select
+            value={formik.values.gender}
+            name="gender"
+            onChange={formChangeHandler}
+            placeholder={"Select gender"}
+            bgColor={"white"}
+          >
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Others">Others</option>
+          </Select>
+          <Text fontWeight={"bold"}>Date of Birth:</Text>
+          <Input
+            value={formik.values.birth}
+            name="birth"
+            onChange={formChangeHandler}
+            placeholder={userData.birth}
+            size="md"
+            bgColor={"white"}
+          />
+          <Box marginTop={"20px"} textAlign={"center"}>
+            <Button
+              mt={"15px"}
+              color={"white"}
+              type="logout"
+              fontWeight={"bold"}
+              borderRadius={"20px"}
+              bgColor="#81B29A"
+              width={"100px"}
+              height={"35px"}
+              onClick={formik.handleSubmit}
+            >
+              Save
+            </Button>
+          </Box>
+        </Stack>
+      )}
     const logoutBtnHandler = () => {
         localStorage.removeItem("auth_token")
         dispatch(logout())

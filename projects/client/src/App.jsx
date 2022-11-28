@@ -23,6 +23,7 @@ import ProductListSprAdm from "./pages/ProductListSprAdm";
 import AddProductSprAdm from "./pages/AddProductSprAdm";
 import ProductDetailSprAdm from "./pages/ProductDetailSprAdm";
 import ProductDetailAdmin from "./pages/ProductDetailAdmin";
+import ProductPage from "./pages/ProductPage"
 
 const App = () => {
   const authSelector = useSelector((state) => state.auth);
@@ -86,6 +87,7 @@ const App = () => {
         <Route path="/login/admin" element={<LoginAdminPage />} />
         <Route path="/address" element={<AddressPage />} />
         <Route path="/register/user" element={<Register />} />
+        <Route path="/product" element={<ProductPage />} />
         <Route path="/admin/category" element={<AdminCategory />} />
         <Route path="/add/category" element={<AddCategory />} />
         {renderUserRoutes()}
