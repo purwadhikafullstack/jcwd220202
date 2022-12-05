@@ -77,6 +77,8 @@ const ProductPage = () => {
           product_name={product.product_name}
           product_price={product.product_price}
           distance={product.distance}
+          product_description= {product.product_description}
+          product_image= {product.product_image}
         />
       )
     })

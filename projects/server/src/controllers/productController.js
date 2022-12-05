@@ -59,6 +59,20 @@ const productController = {
       });
     }
   },
+  detailProductByPk: async (req, res) => {
+    try {
+      const detailProduct = await Products.findByPk(req.params.id);
+
+      return res.status(200).json({
+        message: "Showing product details",
+        data: detailProduct,
+      });
+    } catch (err) {
+      return res.status(500).json({
+        message: "Server error fetching details",
+      });
+    }
+  },
 };
 
 module.exports = productController;

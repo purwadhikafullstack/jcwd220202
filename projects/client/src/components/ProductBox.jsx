@@ -17,11 +17,18 @@ import { useSelector } from "react-redux"
 import { Link } from "react-router-dom"
 import { axiosInstance } from "../api"
 
-const ProductBox = ({ id, product_name, product_price, distance }) => {
+const ProductBox = ({
+  id,
+  product_name,
+  product_price,
+  distance,
+  product_description,
+  product_image,
+}) => {
   return (
     <>
       {/* ganti link ke product detail */}
-      <Link to="/category">
+      <Link to={`/product/${id}`}>
         <Card maxW="sm">
           <CardBody>
             <Image
@@ -31,7 +38,9 @@ const ProductBox = ({ id, product_name, product_price, distance }) => {
             />
             <Stack mt="6" spacing="3">
               <Heading size="md">{id}</Heading>
+
               <Heading size="md">{product_name}</Heading>
+
               <Text color="blue.600" fontSize="2xl">
                 {product_price.toLocaleString("ja-JP", {
                   style: "currency",
