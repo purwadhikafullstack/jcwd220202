@@ -17,7 +17,18 @@ module.exports = (sequelize, DataTypes) => {
     {
       stock: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        defaultValue: 0,
+        allowNull: true,
+      },
+      discount_amount_percentage: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0,
+        allowNull: true,
+      },
+      discount_amount_nominal: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0,
+        allowNull: true,
       },
     },
     {

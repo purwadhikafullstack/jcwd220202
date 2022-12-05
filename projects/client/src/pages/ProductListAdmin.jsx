@@ -21,15 +21,25 @@ import { axiosInstance } from "../api";
 import { useEffect, useState } from "react";
 import AdminNavbar from "../components/AdminNavbar";
 import ProductCardAdmin from "../components/ProductCardAdmin";
+import { useFormik } from "formik";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 const ProductListAdmin = () => {
   const [category, setCategory] = useState([]);
+  const [product, setProduct] = useState([]);
+  const [sortBy, setSortBy] = useState("product_name");
+  const [sortDir, setSortDir] = useState("ASC");
+  const [filter, setFilter] = useState("All");
+  const [currentSearch, setCurrentSearch] = useState("");
+  const [activePage, setActivePage] = useState(1);
+  const [totalCount, setTotalCount] = useState(0);
+  const [maxPage, setMaxPage] = useState(1);
 
   const optionsSort = [
-    { value: "A to Z", label: "A to Z" },
-    { value: "Z to A", label: "Z to A" },
-    { value: "Lowest to Highest price", label: "Lowest to Highest price" },
-    { value: "Highest to Lowest Price", label: "Highest to Lowest Price" },
+    { value: "product_name ASC", label: "A to Z" },
+    { value: "product_name DESC", label: "Z to A" },
+    { value: "product_price ASC", label: "Lowest to Highest price" },
+    { value: "product_price DESC", label: "Highest to Lowest Price" },
   ];
 
   const fetchCategory = async () => {
@@ -48,6 +58,8 @@ const ProductListAdmin = () => {
       label: val.category_name,
     };
   });
+
+  renderCategory.unshift({ value: "All", label: "All" });
 
   const colourStyles = {
     control: (base) => ({
@@ -88,16 +100,92 @@ const ProductListAdmin = () => {
     },
   };
 
+  const fetchAdminProduct = async () => {
+    const maxItemsPerPage = 12;
+
+    try {
+      const response = await axiosInstance.get("/admin-product/branch", {
+        params: {
+          _sortBy: sortBy,
+          _sortDir: sortDir,
+          CategoryId: filter,
+          product_name: currentSearch,
+          // _page: activePage,
+          // _limit: maxItemsPerPage,
+        },
+      });
+      // setActivePage(activePage + 1);
+
+      // setProduct([...product, ...response.data.data[0].ProductBranches]);
+      setProduct(response.data.data[0].ProductBranches);
+
+      // console.log(response.data.data[0].ProductBranches);
+      // setTotalCount(response.data.dataCount);
+      // setMaxPage(Math.ceil(response.data.dataCount / maxItemsPerPage));
+
+      // console.log(response.data.dataCount);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const sortProductHandler = (event) => {
+    setSortBy(event.value.split(" ")[0]);
+    setSortDir(event.value.split(" ")[1]);
+  };
+
+  const filterProductHandler = (event) => {
+    setFilter(event.value);
+  };
+
+  const formik = useFormik({
+    initialValues: {
+      search: "",
+    },
+    onSubmit: ({ search }) => {
+      setCurrentSearch(search);
+    },
+  });
+
+  const formChangeHandler = ({ target }) => {
+    const { name, value } = target;
+    formik.setFieldValue(name, value);
+  };
+
+  const renderAdminProduct = () => {
+    return product.map((val) => {
+      return (
+        <ProductCardAdmin
+          key={val.id.toString()}
+          product_image={val.Product.product_image}
+          product_name={val.Product.product_name}
+          product_price={val.Product.product_price}
+          CategoryId={val.Product.Category.category_name}
+          stock={val.stock}
+          discount_amount_nominal={val.discount_amount_nominal}
+          discount_amount_percentage={val.discount_amount_percentage}
+          ProductId={val.Product.id}
+        />
+      );
+    });
+  };
+
   useEffect(() => {
     fetchCategory();
   }, []);
 
+  useEffect(() => {
+    fetchAdminProduct();
+  }, [sortBy, sortDir, filter, currentSearch]);
+
   return (
     <Box
       backgroundColor={"#F4F1DE"}
-      height={"932px"}
+      height={"100vh"}
       fontFamily={"roboto"}
       fontSize={"16px"}
+      overflow={"scroll"}
+      pb={"120px"}
     >
       <Box>
         <ProductListBar />
@@ -108,10 +196,11 @@ const ProductListAdmin = () => {
             <FormControl>
               <InputGroup>
                 <Input
-                  type={"text"}
-                  name="password"
+                  name="search"
                   placeholder="Search Product"
                   _placeholder={{ color: "black.500" }}
+                  value={formik.values.search}
+                  onChange={formChangeHandler}
                   bgColor={"white"}
                   height={"40px"}
                   marginLeft={"6px"}
@@ -125,6 +214,7 @@ const ProductListAdmin = () => {
                     _hover={{
                       bgColor: "#F2CC8F",
                     }}
+                    onClick={formik.handleSubmit}
                   >
                     <Image
                       src={searchIcon}
@@ -158,6 +248,7 @@ const ProductListAdmin = () => {
                   options={optionsSort}
                   styles={colourStyles}
                   placeholder={"Sort"}
+                  onChange={sortProductHandler}
                 />
               </GridItem>
             </Grid>
@@ -181,6 +272,7 @@ const ProductListAdmin = () => {
                   options={renderCategory}
                   styles={colourStyles}
                   placeholder={"Filter"}
+                  onChange={filterProductHandler}
                 />
               </GridItem>
             </Grid>
@@ -188,9 +280,19 @@ const ProductListAdmin = () => {
           <GridItem w="100%" h="10"></GridItem>
         </Grid>
       </Box>
-      <Box>
-        <ProductCardAdmin />
-      </Box>
+      {/* <InfiniteScroll
+        dataLength={product.length}
+        next={fetchAdminProduct}
+        hasMore={activePage < maxPage}
+        loader={<h4>Loading...</h4>}
+        endMessage={
+          <p style={{ textAlign: "center", marginTop: "10px" }}>
+            <b>Yay! You have seen it all</b>
+          </p>
+        }
+      > */}
+      <Box>{renderAdminProduct()}</Box>
+      {/* </InfiniteScroll> */}
       <Box>
         <AdminNavbar />
       </Box>

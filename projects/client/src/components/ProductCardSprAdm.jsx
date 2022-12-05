@@ -8,20 +8,28 @@ const ProductCardSprAdm = ({
   product_description,
   product_image,
   CategoryId,
+  ProductId,
 }) => {
   const truncate = (string, length) => {
     if (string.length > length) return string.substring(0, length) + "...";
     else return string;
   };
 
-  const lengthTitle = 20;
+  const formatRupiah = (value) => {
+    return new Intl.NumberFormat("id-ID", {
+      style: "currency",
+      currency: "IDR",
+      minimumFractionDigits: 0,
+    }).format(value);
+  };
+
   const lengthDesc = 30;
 
   return (
     <>
       <Box marginTop={"20px"} mx={"20px"}>
         <Flex
-          height={"auto"}
+          maxHeight={"185px"}
           fontFamily={"roboto"}
           color={"black"}
           border={"2px solid #E07A5F"}
@@ -43,18 +51,42 @@ const ProductCardSprAdm = ({
             />
           </Box>
           <Box flex="2">
-            <Box marginY={"25px"}>
-              <Text fontWeight={"bold"}>
-                {truncate(product_name, lengthTitle) ||
-                  truncate("Batagor ori asli 100%", lengthTitle)}
+            <Box marginY={"25px"} p={"5px"}>
+              <Text
+                fontWeight={"bold"}
+                overflow={"hidden"}
+                textOverflow={"ellipsis"}
+                whiteSpace={"nowrap"}
+                width={"110px"}
+              >
+                {product_name || "Batagor ori asli 100%"}
               </Text>
-              <Text fontWeight={"bold"}>
-                {product_price || "Rp. 1.000.000"}
+              <Text
+                fontWeight={"bold"}
+                overflow={"hidden"}
+                textOverflow={"ellipsis"}
+                whiteSpace={"nowrap"}
+                width={"110px"}
+              >
+                {formatRupiah(product_price) || "Rp. 1.000.000"}
               </Text>
-              <Text fontWeight={"bold"} color={"#E07A5F"}>
+              <Text
+                fontWeight={"bold"}
+                color={"#E07A5F"}
+                fontSize={"15px"}
+                overflow={"hidden"}
+                textOverflow={"ellipsis"}
+                whiteSpace={"nowrap"}
+                width={"110px"}
+              >
                 {CategoryId || "snacks"}
               </Text>
-              <Text fontSize={"13px"} color={"black"}>
+              <Text
+                fontSize={"13px"}
+                color={"black"}
+                overflow={"hidden"}
+                textOverflow={"----"}
+              >
                 {truncate(product_description, lengthDesc) ||
                   truncate(
                     "Batagor merupakan lorem ipsum handnakdnknkaedaskaksnkanksnakskans",
@@ -64,7 +96,7 @@ const ProductCardSprAdm = ({
             </Box>
           </Box>
           <Box flex="1.2">
-            <Link to={`/super-admin/product/:id`}>
+            <Link to={`/super-admin/product/${ProductId}`}>
               <Button
                 borderRadius={"10px"}
                 my={"70px"}
@@ -74,7 +106,7 @@ const ProductCardSprAdm = ({
                   bgColor: "#81B29A",
                 }}
               >
-                See Details
+                Details
               </Button>
             </Link>
           </Box>

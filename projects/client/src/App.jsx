@@ -23,7 +23,7 @@ import ProductListSprAdm from "./pages/ProductListSprAdm";
 import AddProductSprAdm from "./pages/AddProductSprAdm";
 import ProductDetailSprAdm from "./pages/ProductDetailSprAdm";
 import ProductDetailAdmin from "./pages/ProductDetailAdmin";
-import ProductPage from "./pages/ProductPage"
+import ProductPage from "./pages/ProductPage";
 
 const App = () => {
   const authSelector = useSelector((state) => state.auth);

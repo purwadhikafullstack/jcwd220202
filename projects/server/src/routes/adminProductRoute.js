@@ -3,6 +3,7 @@ const { verifyToken } = require("../middlewares/loginMiddleware");
 const { uploadProduct } = require("../../lib/productUploader");
 const adminProductController = require("../controllers/adminProductController");
 const { validateAddProduct } = require("../middlewares/addProductMiddleware");
+const { validateEditProduct } = require("../middlewares/editProductMiddleware");
 
 const router = express.Router();
 
@@ -11,19 +12,63 @@ router.post(
   verifyToken,
   uploadProduct({
     acceptedFileTypes: ["png", "jpeg", "jpg"],
-    filePrefix: "PRODUCT",
+    // filePrefix: "PRODUCT",
   }).single("product_image"),
   validateAddProduct,
   adminProductController.createProduct
 );
 
-router.get("/", verifyToken, adminProductController.getAllProductSprAdm);
+router.get(
+  "/super-admin",
+  verifyToken,
+  adminProductController.getAllProductSprAdm
+);
+
+router.get(
+  "/branch",
+  verifyToken,
+  adminProductController.getAllProductByBranch
+);
+
+router.get(
+  "/super-admin/:id",
+  verifyToken,
+  adminProductController.getProductByIdSprAdm
+);
+
+router.patch(
+  "/super-admin/:id",
+  verifyToken,
+  uploadProduct({
+    acceptedFileTypes: ["png", "jpeg", "jpg"],
+    // filePrefix: "PRODUCT",
+  }).single("product_image"),
+  validateEditProduct,
+  adminProductController.editProductByIdSprAdm
+);
+
+router.get(
+  "/branch/:id",
+  verifyToken,
+  adminProductController.getProductByIdAdmin
+);
+
+router.patch(
+  "/branch/:id",
+  verifyToken,
+  adminProductController.editProductByIdAdmin
+);
+
+router.delete(
+  "/super-admin/:id",
+  adminProductController.deleteProductByIdSprAdm
+);
 
 router.post(
   "/upload",
   uploadProduct({
     acceptedFileTypes: ["png", "jpeg", "jpg"],
-    filePrefix: "PICTURE",
+    // filePrefix: "PICTURE",
   }).single("product_image"),
   (req, res) => {
     res.status(200).json({

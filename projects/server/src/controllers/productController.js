@@ -1,17 +1,17 @@
-const { Op } = require("sequelize")
-const db = require("../../models")
+const { Op } = require("sequelize");
+const db = require("../../models");
 
-Products = db.Product
+Products = db.Product;
 
 const productController = {
   showAllProducts: async (req, res) => {
     try {
-      const last_id = parseInt(req.query._lastId) || 0
-      const limit = parseInt(req.query._limit) || 6
-      const search = req.query._keywordHandler || ""
-      const order = req.query._sortDir || "DESC"
+      const last_id = parseInt(req.query._lastId) || 0;
+      const limit = parseInt(req.query._limit) || 6;
+      const search = req.query._keywordHandler || "";
+      const order = req.query._sortDir || "DESC";
 
-      let result = []
+      let result = [];
       if (last_id < 1) {
         const results = await Products.findAll({
           where: {
@@ -30,8 +30,8 @@ const productController = {
           },
           limit: limit,
           order: [["id", order]],
-        })
-        result = results
+        });
+        result = results;
       } else {
         const results = await Products.findAll({
           where: {
@@ -42,8 +42,8 @@ const productController = {
           },
           limit: limit,
           order: [["id", order]],
-        })
-        result = results
+        });
+        result = results;
       }
 
       return res.status(200).json({
@@ -51,14 +51,14 @@ const productController = {
         result: result,
         lastId: result.length ? result[result.length - 1].id : 0,
         hasMore: result.length >= limit ? true : false,
-      })
+      });
     } catch (error) {
-      console.log(error)
+      console.log(error);
       return res.status(500).json({
         message: "Server error showing products",
-      })
+      });
     }
   },
-}
+};
 
-module.exports = productController
+module.exports = productController;

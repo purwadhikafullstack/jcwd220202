@@ -30,7 +30,6 @@ module.exports = (sequelize, DataTypes) => {
       distance: {
         type: DataTypes.INTEGER,
         allowNull: true,
-        allowNull: false,
       },
       product_image: {
         type: DataTypes.STRING,

@@ -1,16 +1,20 @@
 const multer = require("multer");
 
 const uploadProduct = ({
-  filename = Date.now(),
-  filePrefix = "FILE",
+  // filename = Date.now(),
+  // filePrefix = "FILE",
   acceptedFileTypes = [],
 }) => {
   const diskStorage = multer.diskStorage({
     destination: (req, file, cb) => {
       cb(null, `public`);
     },
-    filename: (req, file, cb) => {
-      cb(null, `${filePrefix}-${filename}.${file.mimetype.split("/")[1]}`);
+    // filename: (req, file, cb) => {
+    //   cb(null, `${filePrefix}-${filename}.${file.mimetype.split("/")[1]}`);
+    // },
+    filename: function (req, file, cb) {
+      images = `${Date.now()}.${file.mimetype.split("/")[1]}`;
+      cb(null, images);
     },
   });
 

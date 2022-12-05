@@ -10,13 +10,14 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       Branch.hasMany(models.ProductBranch);
-     }
+      Branch.belongsTo(models.User);
+    }
   }
   Branch.init(
     {
       branch_name: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
       },
       branch_address: {
         type: DataTypes.STRING,

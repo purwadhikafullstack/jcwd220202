@@ -15,6 +15,7 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  Text,
   Textarea,
   useDisclosure,
   useToast,
@@ -73,7 +74,7 @@ const AddProductSprAdm = () => {
       product_price: "",
       product_description: "",
       product_image: null,
-      CategoryId: "",
+      CategoryId: null,
     },
     onSubmit: async ({
       product_description,
@@ -89,14 +90,14 @@ const AddProductSprAdm = () => {
         newProduct.append("product_price", product_price);
         newProduct.append("product_image", product_image);
         newProduct.append("product_description", product_description);
-        newProduct.append("CategoryId", CategoryId);
+        newProduct.append("CategoryId", CategoryId.value);
 
         const response = await axiosInstance.post("/admin-product", newProduct);
 
         formik.setFieldValue("product_name", "");
         formik.setFieldValue("product_price", "");
         formik.setFieldValue("product_image", null);
-        formik.setFieldValue("CategoryId", "");
+        formik.setFieldValue("CategoryId", null);
         formik.setFieldValue("product_description", "");
 
         toast({
@@ -104,6 +105,8 @@ const AddProductSprAdm = () => {
           description: response.data.message,
           status: "success",
         });
+
+        setSelectedImage(uploadProduct);
       } catch (error) {
         console.log(error);
         toast({
@@ -126,10 +129,12 @@ const AddProductSprAdm = () => {
       product_price: Yup.number()
         .min(1, "value must be greater than 0")
         .required("product price is a required field"),
-      CategoryId: Yup.number().required("category is a required field"),
+      CategoryId: Yup.mixed()
+        .nullable()
+        .required("category is a required field"),
       product_description: Yup.string()
         .min(1)
-        .max(200)
+        .max(240, "product description must not exceed 240 chars")
         .required("product description is a required field"),
     }),
     validateOnChange: false,
@@ -139,6 +144,11 @@ const AddProductSprAdm = () => {
     const { name, value } = target;
     formik.setFieldValue(name, value);
   };
+
+  // const truncate = (string, length) => {
+  //   if (string.length > length) return string.substring(0, length) + "...";
+  //   else return string;
+  // };
 
   useEffect(() => {
     fetchCategory();
@@ -162,6 +172,7 @@ const AddProductSprAdm = () => {
               alt="search"
               objectFit={"contain"}
               height={"100%"}
+              maxW={"300px"}
             />
           </Box>
           <Box h="auto" px={"30px"}>
@@ -198,7 +209,14 @@ const AddProductSprAdm = () => {
                 }}
                 _hover={{ bgColor: "#81B29A" }}
               >
-                {formik?.values?.product_image?.name || "Choose Image"}
+                <Text
+                  overflow={"hidden"}
+                  textOverflow={"ellipsis"}
+                  whiteSpace={"nowrap"}
+                  width={"250px"}
+                >
+                  {formik?.values?.product_image?.name || "Choose Image"}
+                </Text>
               </Button>
               <FormErrorMessage>{formik.errors.product_image}</FormErrorMessage>
             </FormControl>
@@ -236,12 +254,14 @@ const AddProductSprAdm = () => {
             <FormControl mt={"5px"} isInvalid={formik.errors.CategoryId}>
               <FormLabel fontWeight={"bold"}>Category:</FormLabel>
               <Select
+                value={formik.values.CategoryId || null}
                 options={renderCategory}
                 styles={colourStyles}
                 name="CategoryId"
-                onChange={(event) =>
-                  formik.setFieldValue("CategoryId", event.value)
-                }
+                onChange={(event) => {
+                  console.log(event);
+                  formik.setFieldValue("CategoryId", event);
+                }}
                 placeholder={"Select Category"}
               />
               <FormErrorMessage>{formik.errors.CategoryId}</FormErrorMessage>
@@ -258,6 +278,7 @@ const AddProductSprAdm = () => {
                 value={formik.values.product_description}
                 onChange={formChangeHandler}
                 name="product_description"
+                height={"90px"}
               />
               <FormErrorMessage>
                 {formik.errors.product_description}

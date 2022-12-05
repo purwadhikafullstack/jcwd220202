@@ -10,8 +10,6 @@ import {
   FormControl,
   FormErrorMessage,
   FormLabel,
-  Grid,
-  GridItem,
   Image,
   Input,
   InputGroup,
@@ -23,19 +21,196 @@ import {
   NumberInputField,
   NumberInputStepper,
   Text,
-  Textarea,
   useDisclosure,
+  useToast,
   VStack,
 } from "@chakra-ui/react";
 import ProductListBar from "../components/ProductListBar";
 import uploadProduct from "../assets/product_upload.png";
 import { useState } from "react";
 import Select from "react-select";
+import { axiosInstance } from "../api";
+import { useParams } from "react-router-dom";
+import { useEffect } from "react";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 
 const ProductDetailAdmin = () => {
   const [selectedImage, setSelectedImage] = useState(uploadProduct);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [editMode, setEditMode] = useState(false);
+  const [stockAndDiscount, setStockAndDiscount] = useState({});
+  const [productDetail, setProductDetail] = useState({});
+
+  const params = useParams();
+
+  const toast = useToast();
+
+  const fetchProductDetail = async () => {
+    try {
+      const response = await axiosInstance.get(
+        `/admin-product/branch/${params.id}`
+      );
+
+      setProductDetail(response.data.data);
+      setStockAndDiscount(response.data.data.ProductBranches[0]);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const formik = useFormik({
+    initialValues: {
+      stock: stockAndDiscount.stock,
+      discount_amount_nominal: stockAndDiscount.discount_amount_nominal,
+      discount_amount_percentage: stockAndDiscount.discount_amount_percentage,
+    },
+    enableReinitialize: true,
+    onSubmit: async ({
+      stock,
+      discount_amount_nominal,
+      discount_amount_percentage,
+    }) => {
+      try {
+        await axiosInstance.patch(`/admin-product/branch/${params.id}`, {
+          stock: stock,
+          discount_amount_nominal: discount_amount_nominal,
+          discount_amount_percentage: discount_amount_percentage,
+        });
+
+        fetchProductDetail();
+        setEditMode(false);
+
+        console.log("hello world");
+
+        toast({
+          title: "product updated",
+          status: "info",
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    validationSchema: Yup.object({
+      stock: Yup.number().required("at least put 0 if stock doesnt exist"),
+      discount_amount_nominal: Yup.number().required(
+        "at least put 0 if discount doesnt exist"
+      ),
+      discount_amount_percentage: Yup.number().required(
+        "at least put 0 if discount doesnt exist"
+      ),
+    }),
+    validateOnChange: false,
+  });
+
+  console.log(formik.values.stock);
+  console.log(formik.values.discount_amount_percentage);
+
+  const discountHandler = (value) => {
+    formik.setFieldValue("discount_amount_percentage", value);
+
+    formik.setFieldValue("discount_amount_nominal", 0);
+  };
+
+  const nominalHandler = ({ target }) => {
+    const { value } = target;
+    formik.setFieldValue("discount_amount_nominal", value);
+
+    formik.setFieldValue("discount_amount_percentage", 0);
+  };
+
+  const formChangeHandler = ({ target }) => {
+    const { name, value } = target;
+    formik.setFieldValue(name, value);
+  };
+
+  const formatRupiah = (value) => {
+    return new Intl.NumberFormat("id-ID", {
+      style: "currency",
+      currency: "IDR",
+      minimumFractionDigits: 0,
+    }).format(value);
+  };
+
+  const showDiscount = () => {
+    if (
+      stockAndDiscount.discount_amount_nominal === 0 &&
+      stockAndDiscount.discount_amount_percentage === 0
+    ) {
+      return (
+        <Box
+          bgColor={"white"}
+          borderRadius={"5px"}
+          border={"1px solid lightgrey"}
+          height={"40px"}
+          py={"8px"}
+          mt={"8px"}
+        >
+          <Text ml={"16px"}>{0}</Text>
+        </Box>
+      );
+    } else if (stockAndDiscount.discount_amount_nominal === 0) {
+      return (
+        <Box
+          bgColor={"white"}
+          borderRadius={"5px"}
+          border={"1px solid lightgrey"}
+          height={"40px"}
+          py={"8px"}
+          mt={"8px"}
+        >
+          <Text
+            ml={"16px"}
+          >{`${stockAndDiscount.discount_amount_percentage} %`}</Text>
+        </Box>
+      );
+    } else if (stockAndDiscount.discount_amount_percentage === 0) {
+      return (
+        <Box
+          bgColor={"white"}
+          borderRadius={"5px"}
+          border={"1px solid lightgrey"}
+          height={"40px"}
+          py={"8px"}
+          mt={"8px"}
+        >
+          <Text ml={"16px"}>
+            {formatRupiah(stockAndDiscount.discount_amount_nominal)}
+          </Text>
+        </Box>
+      );
+    }
+  };
+
+  const showStock = () => {
+    if (stockAndDiscount.stock === 0) {
+      return (
+        <Box
+          bgColor={"white"}
+          borderRadius={"5px"}
+          border={"1px solid lightgrey"}
+          height={"40px"}
+          py={"8px"}
+          mt={"8px"}
+        >
+          <Text ml={"16px"}>{0}</Text>
+        </Box>
+      );
+    } else {
+      return (
+        <Box
+          bgColor={"white"}
+          borderRadius={"5px"}
+          border={"1px solid lightgrey"}
+          height={"40px"}
+          py={"8px"}
+          mt={"8px"}
+        >
+          <Text ml={"16px"}>{stockAndDiscount?.stock || "stock"}</Text>
+        </Box>
+      );
+    }
+  };
 
   const startEdit = () => {
     setEditMode(true);
@@ -45,10 +220,14 @@ const ProductDetailAdmin = () => {
     setEditMode(false);
   };
 
+  useEffect(() => {
+    fetchProductDetail();
+  }, []);
+
   return (
     <Box
       backgroundColor={"#F4F1DE"}
-      height={"1150px"}
+      height={"1200px"}
       fontFamily={"roboto"}
       fontSize={"16px"}
     >
@@ -57,14 +236,16 @@ const ProductDetailAdmin = () => {
       </Box>
 
       {editMode ? (
+        // edit mode
         <Box display={"grid"}>
           <VStack spacing={4} align="stretch" mt={"90px"}>
             <Box h="300px" display={"flex"} justifyContent={"center"}>
               <Image
-                src={selectedImage}
+                src={productDetail?.product_image || selectedImage}
                 alt="search"
                 objectFit={"contain"}
                 height={"100%"}
+                maxW={"300px"}
               />
             </Box>
             <Box px={"30px"}>
@@ -86,7 +267,15 @@ const ProductDetailAdmin = () => {
                 py={"8px"}
                 mt={"8px"}
               >
-                <Text ml={"16px"}>{"Product Name"}</Text>
+                <Text
+                  ml={"16px"}
+                  overflow={"hidden"}
+                  textOverflow={"ellipsis"}
+                  whiteSpace={"nowrap"}
+                  width={"280px"}
+                >
+                  {productDetail?.product_name || "Loading..."}
+                </Text>
               </Box>
               <Box fontWeight={"bold"} display={"flex"} mt={"5px"}>
                 <Text>Product Price:</Text>
@@ -107,7 +296,11 @@ const ProductDetailAdmin = () => {
                 mt={"8px"}
                 display={"flex"}
               >
-                <Text ml={"16px"}>{"Product Name"}</Text>
+                <Text ml={"16px"}>
+                  {productDetail.product_price
+                    ? formatRupiah(productDetail?.product_price)
+                    : "Loading..."}
+                </Text>
               </Box>
               <Box fontWeight={"bold"} display={"flex"} mt={"5px"}>
                 <Text>Category:</Text>
@@ -127,7 +320,9 @@ const ProductDetailAdmin = () => {
                 py={"8px"}
                 mt={"8px"}
               >
-                <Text ml={"16px"}>{"Product Name"}</Text>
+                <Text ml={"16px"}>
+                  {productDetail?.Category?.category_name || "Loading..."}
+                </Text>
               </Box>
               <Box fontWeight={"bold"} display={"flex"} mt={"5px"}>
                 <Text>Description:</Text>
@@ -149,15 +344,24 @@ const ProductDetailAdmin = () => {
                 overflow={"scroll"}
                 maxWidth={"370px"}
               >
-                <Text mx={"16px"}>{"lorem"}</Text>
+                <Text mx={"16px"}>
+                  {productDetail.product_description || "Loading..."}
+                </Text>
               </Box>
-              <FormControl mt={"5px"} borderRadius={"5px"}>
+              <FormControl
+                mt={"5px"}
+                borderRadius={"5px"}
+                isInvalid={formik.errors.stock}
+              >
                 <FormLabel fontWeight={"bold"}>Stock:</FormLabel>
                 <NumberInput
                   min={0}
                   bgColor={"white"}
                   mt={"8px"}
                   borderRadius={"5px"}
+                  name="stock"
+                  value={formik.values.stock}
+                  onChange={(event) => formik.setFieldValue("stock", event)}
                 >
                   <NumberInputField placeholder="Enter product stock" />
                   <NumberInputStepper>
@@ -165,9 +369,12 @@ const ProductDetailAdmin = () => {
                     <NumberDecrementStepper />
                   </NumberInputStepper>
                 </NumberInput>
-                <FormErrorMessage>Error</FormErrorMessage>
+                <FormErrorMessage>{formik.errors.stock}</FormErrorMessage>
               </FormControl>
-              <FormControl mt={"5px"}>
+              <FormControl
+                mt={"5px"}
+                isInvalid={formik.errors.discount_amount_nominal}
+              >
                 <FormLabel fontWeight={"bold"} display={"flex"}>
                   <Text>Discount:</Text>
                   <Text
@@ -187,15 +394,23 @@ const ProductDetailAdmin = () => {
                     Rp.
                   </InputLeftAddon>
                   <Input
+                    type="number"
                     placeholder="Enter product discount"
                     _placeholder={{ color: "black.500" }}
-                    name="product_price"
+                    name="discount_amount_nominal"
                     bgColor={"white"}
+                    value={formik.values.discount_amount_nominal}
+                    onChange={nominalHandler}
                   />
                 </InputGroup>
-                <FormErrorMessage>Error</FormErrorMessage>
+                <FormErrorMessage>
+                  {formik.errors.discount_amount_nominal}
+                </FormErrorMessage>
               </FormControl>
-              <FormControl mt={"5px"} display={"flex"}>
+              <FormControl
+                mt={"5px"}
+                isInvalid={formik.errors.discount_amount_percentage}
+              >
                 <InputGroup>
                   <NumberInput
                     min={0}
@@ -203,9 +418,16 @@ const ProductDetailAdmin = () => {
                     mt={"10px"}
                     borderRadius={"5px"}
                     width={"100%"}
+                    name="discount_amount_percentage"
+                    placeholder="Enter product discount"
+                    // defaultValue={formik.values.discount_amount_percentage}
+                    value={formik.values.discount_amount_percentage}
+                    onChange={discountHandler}
+                    max={99}
                   >
                     <NumberInputField
                       width={"100%"}
+                      borderRightRadius={"0"}
                       placeholder="Enter product discount"
                     />
                     <NumberInputStepper>
@@ -222,7 +444,9 @@ const ProductDetailAdmin = () => {
                     %
                   </InputRightAddon>
                 </InputGroup>
-                <FormErrorMessage>Error</FormErrorMessage>
+                <FormErrorMessage>
+                  {formik.errors.discount_amount_percentage}
+                </FormErrorMessage>
               </FormControl>
             </Box>
             <Box display={"flex"} justifyContent={"center"}>
@@ -248,6 +472,7 @@ const ProductDetailAdmin = () => {
                 color={"white"}
                 marginX={"30px"}
                 width={"100%"}
+                onClick={formik.handleSubmit}
               >
                 Submit
               </Button>
@@ -255,14 +480,16 @@ const ProductDetailAdmin = () => {
           </VStack>
         </Box>
       ) : (
+        // not edit mode
         <Box display={"grid"}>
           <VStack spacing={4} align="stretch" mt={"90px"}>
             <Box h="300px" display={"flex"} justifyContent={"center"}>
               <Image
-                src={selectedImage}
+                src={productDetail.product_image || selectedImage}
                 alt="search"
                 objectFit={"contain"}
                 height={"100%"}
+                maxW={"300px"}
               />
             </Box>
             <Box px={"30px"}>
@@ -275,7 +502,15 @@ const ProductDetailAdmin = () => {
                 py={"8px"}
                 mt={"8px"}
               >
-                <Text ml={"16px"}>{"Product Name"}</Text>
+                <Text
+                  ml={"16px"}
+                  overflow={"hidden"}
+                  textOverflow={"ellipsis"}
+                  whiteSpace={"nowrap"}
+                  width={"280px"}
+                >
+                  {productDetail?.product_name || "Loading..."}
+                </Text>
               </Box>
               <Box fontWeight={"bold"} mt={"5px"}>
                 Product Price:
@@ -289,7 +524,11 @@ const ProductDetailAdmin = () => {
                 mt={"8px"}
                 display={"flex"}
               >
-                <Text ml={"16px"}>{"Product Name"}</Text>
+                <Text ml={"16px"}>
+                  {productDetail.product_price
+                    ? formatRupiah(productDetail?.product_price)
+                    : "Loading..."}
+                </Text>
               </Box>
               <Box fontWeight={"bold"} mt={"5px"}>
                 Category:
@@ -302,7 +541,9 @@ const ProductDetailAdmin = () => {
                 py={"8px"}
                 mt={"8px"}
               >
-                <Text ml={"16px"}>{"Product Name"}</Text>
+                <Text ml={"16px"}>
+                  {productDetail?.Category?.category_name || "Loading..."}
+                </Text>
               </Box>
               <Box fontWeight={"bold"} mt={"5px"}>
                 Description:
@@ -317,49 +558,20 @@ const ProductDetailAdmin = () => {
                 overflow={"scroll"}
                 maxWidth={"370px"}
               >
-                <Text mx={"16px"}>{"lorem"}</Text>
+                <Text mx={"16px"}>
+                  {productDetail?.product_description || "Loading..."}
+                </Text>
               </Box>
               <Box fontWeight={"bold"} mt={"5px"}>
                 Stock:
               </Box>
-              <Box
-                bgColor={"white"}
-                borderRadius={"5px"}
-                border={"1px solid lightgrey"}
-                height={"40px"}
-                py={"8px"}
-                mt={"8px"}
-              >
-                <Text ml={"16px"}>{"Product Name"}</Text>
-              </Box>
+              {showStock()}
               <Box fontWeight={"bold"} mt={"5px"}>
                 Discount:
               </Box>
-              <Box
-                bgColor={"white"}
-                borderRadius={"5px"}
-                border={"1px solid lightgrey"}
-                height={"40px"}
-                py={"8px"}
-                mt={"8px"}
-              >
-                <Text ml={"16px"}>{"Product Name"}</Text>
-              </Box>
+              {showDiscount()}
             </Box>
             <Box display={"flex"} justifyContent={"center"}>
-              <Button
-                bgColor={"#E07A5F"}
-                borderRadius={"15px"}
-                _hover={{
-                  bgColor: "#E07A5F",
-                }}
-                color={"white"}
-                width={"100%"}
-                marginLeft={"30px"}
-                onClick={onOpen}
-              >
-                Delete
-              </Button>
               <Button
                 bgColor={"#81B29A"}
                 borderRadius={"15px"}
@@ -378,7 +590,7 @@ const ProductDetailAdmin = () => {
         </Box>
       )}
 
-      {/* alert for delete */}
+      {/* alert for submit */}
       <AlertDialog isOpen={isOpen} onClose={onClose}>
         <AlertDialogOverlay>
           <AlertDialogContent
@@ -393,7 +605,7 @@ const ProductDetailAdmin = () => {
               ml={"10px"}
               mt={"10px"}
             >
-              Delete Product
+              Submit Edit
             </AlertDialogHeader>
 
             <AlertDialogBody ml={"10px"}>
@@ -420,13 +632,13 @@ const ProductDetailAdmin = () => {
                 borderRadius={"15px"}
                 bgColor={"#E07A5F"}
               >
-                Delete
+                Submit
               </Button>
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialogOverlay>
       </AlertDialog>
-      {/* alert for delete */}
+      {/* alert for submit edit */}
     </Box>
   );
 };

@@ -22,16 +22,23 @@ import { Link } from "react-router-dom";
 import Select from "react-select";
 import { axiosInstance } from "../api";
 import { useEffect, useState } from "react";
+import { useFormik } from "formik";
 
 const ProductListSprAdm = () => {
   const [category, setCategory] = useState([]);
   const [product, setProduct] = useState([]);
+  const [sortBy, setSortBy] = useState("product_name");
+  const [sortDir, setSortDir] = useState("ASC");
+  const [filter, setFilter] = useState("All");
+  const [currentSearch, setCurrentSearch] = useState("");
+  const [totalProducts, setTotalProducts] = useState(0);
+  const [activePage, setActivePage] = useState(1);
 
   const optionsSort = [
-    { value: "A to Z", label: "A to Z" },
-    { value: "Z to A", label: "Z to A" },
-    { value: "Lowest to Highest price", label: "Lowest to Highest price" },
-    { value: "Highest to Lowest Price", label: "Highest to Lowest Price" },
+    { value: "product_name ASC", label: "A to Z" },
+    { value: "product_name DESC", label: "Z to A" },
+    { value: "product_price ASC", label: "Lowest to Highest price" },
+    { value: "product_price DESC", label: "Highest to Lowest Price" },
   ];
 
   const fetchCategory = async () => {
@@ -50,6 +57,8 @@ const ProductListSprAdm = () => {
       label: val.category_name,
     };
   });
+
+  renderCategory.unshift({ value: "All", label: "All" });
 
   const colourStyles = {
     control: (base) => ({
@@ -74,7 +83,7 @@ const ProductListSprAdm = () => {
     menu: (base) => ({
       ...base,
       fontFamily: "roboto",
-      fontSize: "14px",
+      fontSize: "15px",
       width: "150px",
       color: "black",
     }),
@@ -91,19 +100,50 @@ const ProductListSprAdm = () => {
   };
 
   const fetchProducts = async () => {
+    const maxItemsPerPage = 25;
     try {
-      const response = await axiosInstance.get("/admin-product");
+      const response = await axiosInstance.get("/admin-product/super-admin", {
+        params: {
+          _sortBy: sortBy,
+          _sortDir: sortDir,
+          CategoryId: filter,
+          product_name: currentSearch,
+          _page: activePage,
+          _limit: maxItemsPerPage,
+        },
+      });
 
       setProduct(response.data.data);
-
-      console.log(response.data.data);
     } catch (error) {
       console.log(error);
     }
   };
 
+  const sortProductHandler = (event) => {
+    setSortBy(event.value.split(" ")[0]);
+    setSortDir(event.value.split(" ")[1]);
+  };
+
+  const filterProductHandler = (event) => {
+    setFilter(event.value);
+  };
+
+  const formik = useFormik({
+    initialValues: {
+      search: "",
+    },
+    onSubmit: ({ search }) => {
+      setCurrentSearch(search);
+    },
+  });
+
+  const formChangeHandler = ({ target }) => {
+    const { name, value } = target;
+    formik.setFieldValue(name, value);
+  };
+
   const renderProducts = () => {
-    return product.map((val) => {
+    return product.map((val, index) => {
       return (
         <ProductCardSprAdm
           key={val.id.toString()}
@@ -112,6 +152,7 @@ const ProductListSprAdm = () => {
           product_description={val.product_description}
           product_image={val.product_image}
           CategoryId={val.Category.category_name}
+          ProductId={val.id}
         />
       );
     });
@@ -123,14 +164,16 @@ const ProductListSprAdm = () => {
 
   useEffect(() => {
     fetchProducts();
-  }, []);
+  }, [sortBy, sortDir, filter, currentSearch]);
 
   return (
     <Box
       backgroundColor={"#F4F1DE"}
-      height={"932px"}
+      height={"100vh"}
       fontFamily={"roboto"}
       fontSize={"16px"}
+      overflow={"scroll"}
+      pb={"120px"}
     >
       <Box>
         <ProductListBar />
@@ -138,13 +181,14 @@ const ProductListSprAdm = () => {
       <Box>
         <Flex>
           <Box p={"2"} marginTop={"80px"} width={"100%"} mr={"8px"}>
-            <FormControl>
+            <FormControl isInvalid={formik.errors.search}>
               <InputGroup>
                 <Input
-                  type={"text"}
-                  name="password"
+                  name="search"
                   placeholder="Search Product"
                   _placeholder={{ color: "black.500" }}
+                  value={formik.values.search}
+                  onChange={formChangeHandler}
                   bgColor={"white"}
                   height={"40px"}
                   marginLeft={"6px"}
@@ -158,6 +202,7 @@ const ProductListSprAdm = () => {
                     _hover={{
                       bgColor: "#F2CC8F",
                     }}
+                    onClick={formik.handleSubmit}
                   >
                     <Image
                       src={searchIcon}
@@ -191,6 +236,7 @@ const ProductListSprAdm = () => {
                   options={optionsSort}
                   styles={colourStyles}
                   placeholder={"Sort"}
+                  onChange={sortProductHandler}
                 />
               </GridItem>
             </Grid>
@@ -214,6 +260,7 @@ const ProductListSprAdm = () => {
                   options={renderCategory}
                   styles={colourStyles}
                   placeholder={"Filter"}
+                  onChange={filterProductHandler}
                 />
               </GridItem>
             </Grid>
@@ -252,7 +299,9 @@ const ProductListSprAdm = () => {
           </Link>
         </Grid>
       </Box>
-      <Box>{renderProducts()}</Box>
+      <Box>
+        <Box>{renderProducts()}</Box>
+      </Box>
       <Box>
         <SuperAdminNavbar />
       </Box>

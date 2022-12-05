@@ -44,8 +44,6 @@ const LoginPage = () => {
           password,
         });
 
-        console.log(response.data);
-
         localStorage.setItem("auth_token", response.data.token);
         dispatch(
           login({
@@ -62,6 +60,7 @@ const LoginPage = () => {
           toast({
             status: "success",
             title: "Login success",
+            position: "top-right",
             description: response.data.message,
           });
 
@@ -73,6 +72,7 @@ const LoginPage = () => {
         toast({
           status: "success",
           title: "Login success",
+          position: "top-right",
           description: response.data.message,
         });
       } catch (err) {

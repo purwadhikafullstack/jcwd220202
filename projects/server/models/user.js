@@ -12,6 +12,7 @@ module.exports = (sequelize, DataTypes) => {
       User.belongsTo(models.Role);
       User.hasMany(models.Address);
       User.hasOne(models.ReferralVoucher);
+      User.hasOne(models.Branch);
     }
   }
   User.init(
@@ -51,7 +52,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       phone_number: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
       },
       my_referral_code: {
         type: DataTypes.STRING,
