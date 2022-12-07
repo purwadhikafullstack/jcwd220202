@@ -1,12 +1,7 @@
 import {
     Box,
     Button,
-    Flex,
-    FormControl,
     Image,
-    Input,
-    InputGroup,
-    InputRightElement,
     Menu,
     MenuButton,
     MenuItemOption,
@@ -15,97 +10,111 @@ import {
     Text,
     SimpleGrid,
 } from "@chakra-ui/react"
-import { useState } from "react"
 import { Link } from "react-router-dom"
-import { SearchIcon } from "@chakra-ui/icons"
 import Navigation from "../components/NavigationBar"
-import { categories } from "../components/category"
 import other from "../assets/4square.png"
-import banner1 from "../assets/banner1.png"
+import Carousel from "../components/Banner"
+import SearchBar from "../components/SearchBar"
+import { axiosInstance } from "../api"
+import { useEffect, useState } from "react"
 
 const Home = () => {
-    const [keywordHandler, setKeywordHandler] = useState("")
     const [order, setOrder] = useState("")
+    const [category, setCategory] = useState([])
+
+    const fetchCategory = async () => {
+        try {
+            const response = await axiosInstance.get(`/category`)
+
+            setCategory(response.data.data)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    useEffect(() => {
+        fetchCategory()
+    }, [])
 
     return (
-        <Box bgColor={"#81B29A"}>
-            <Box pt={"10px"}>
-                <Flex display={"flex"}>
-                    <FormControl>
-                        <InputGroup size="md">
-                            <InputRightElement
-                                pointerEvents="none"
-                                children={<SearchIcon color="F2CC8F" />}
-                                size="md"
-                                mr={"5"}
-                            />
-                            <Input
-                                ml={"5"}
-                                mr={"5"}
-                                variant="outline"
-                                size="md"
-                                placeholder={``}
-                                name="input"
-                                value={keywordHandler}
-                                onChange={(event) =>
-                                    setKeywordHandler(event.target.value)
-                                }
-                            />
-                        </InputGroup>
-                    </FormControl>
-                    <Box
-                        p={"2"}
-                        mr={"5"}
-                        color="#E07A5F"
-                        borderRadius="10px"
-                        as="b"
-                        _hover={{
-                            background: "white",
-                            color: "#E07A5F",
-                            transition: "all 1000ms ease",
-                            cursor: "pointer",
-                        }}
-                    >
-                        <Link to="/login/user">Login</Link>
-                    </Box>
-                </Flex>
+        <Box bgColor={"#81B29A"} h={"932px"} mt={"70px"}>
+            <SearchBar />
+            <Box h={"200px"} bgColor={"#F4F1DE"}>
+                <Carousel />
             </Box>
-            <Box h={"200px"} mt={"10px"} bgColor={"#F4F1DE"}>
-                <Image src={banner1} w={"100%"} h={"100%"} />
-            </Box>
-            <SimpleGrid
-                columns={"4"}
-                spacing={5}
-                textAlign={"center"}
-                alignItems={"center"}
-                bgColor={"white"}
-                p={"5"}
-                mt={"10px"}
-            >
-                {categories.slice(0, 7).map((item) => {
-                    return (
+            {category.length <= 8 ? (
+                <SimpleGrid
+                    columns={"4"}
+                    spacing={5}
+                    textAlign={"center"}
+                    alignItems={"center"}
+                    bgColor={"white"}
+                    p={"5"}
+                    mt={"10px"}
+                >
+                    {category.slice(0, 3).map((item) => {
+                        return (
+                            <Box display={"grid"}>
+                                <Image
+                                    justifySelf={"center"}
+                                    src={item.icon_url}
+                                    w={"50px"}
+                                    alignItems={"center"}
+                                />
+                                <Text fontSize={"xs"}>
+                                    {item.category_name}
+                                </Text>
+                            </Box>
+                        )
+                    })}
+                    <Link to={"/category"}>
                         <Box display={"grid"}>
                             <Image
                                 justifySelf={"center"}
-                                src={item.icon}
-                                w={"50px"}
+                                src={other}
+                                w={"40px"}
                                 alignItems={"center"}
                             />
-                            <Text fontSize={"xs"}>{item.name}</Text>
                         </Box>
-                    )
-                })}
-                <Link to={"/category"}>
-                    <Box display={"grid"}>
-                        <Image
-                            justifySelf={"center"}
-                            src={other}
-                            w={"40px"}
-                            alignItems={"center"}
-                        />
-                    </Box>
-                </Link>
-            </SimpleGrid>
+                    </Link>
+                </SimpleGrid>
+            ) : (
+                <SimpleGrid
+                    columns={"4"}
+                    spacing={5}
+                    textAlign={"center"}
+                    alignItems={"center"}
+                    bgColor={"white"}
+                    p={"5"}
+                    mt={"10px"}
+                >
+                    {category.slice(0, 7).map((item) => {
+                        return (
+                            <Box display={"grid"}>
+                                <Image
+                                    justifySelf={"center"}
+                                    src={item.icon_url}
+                                    w={"50px"}
+                                    alignItems={"center"}
+                                />
+                                <Text fontSize={"xs"}>
+                                    {item.category_name}
+                                </Text>
+                            </Box>
+                        )
+                    })}
+                    <Link to={"/category"}>
+                        <Box display={"grid"}>
+                            <Image
+                                justifySelf={"center"}
+                                src={other}
+                                w={"40px"}
+                                alignItems={"center"}
+                            />
+                        </Box>
+                    </Link>
+                </SimpleGrid>
+            )}
             <Box
                 h={"600px"}
                 bgColor={"#F4F1DE"}

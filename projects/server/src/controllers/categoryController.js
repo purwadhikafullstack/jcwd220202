@@ -1,90 +1,123 @@
-const { Op } = require("sequelize");
-const db = require("../../models");
+const { Op } = require("sequelize")
+const db = require("../../models")
 
 const categoryController = {
-  createCategory: async (req, res) => {
-    try {
-      const { category_name } = req.body;
+    createCategory: async (req, res) => {
+        try {
+            const { category_name } = req.body
 
-      const icon_url = `http://localhost:8000/public/${req.file.filename}`;
+            const findCategory = await db.Category.findOne({
+                where: {
+                    category_name: category_name,
+                },
+            })
 
-      const newCategory = await db.Category.create({
-        category_name: category_name,
-        icon_url: icon_url,
-      });
+            if (findCategory) {
+                return res.status(400).json({
+                    message: "category name already exist",
+                })
+            }
 
-      return res.status(201).json({
-        data: newCategory,
-        message: "Created Category",
-      });
-    } catch (err) {
-      console.log(err);
-      return res.status(500).json({
-        message: "Server error create category",
-      });
-    }
-  },
-  updateCategory: async (req, res) => {
-    try {
-      if (req.file) {
-        req.body.profile_picture = `http://localhost:8000/public/${req.file.filename}`;
-      }
+            const icon_url = `http://localhost:8000/public/${req.file.filename}`
 
-      const { category_name, icon_url } = req.body;
+            const newCategory = await db.Category.create({
+                category_name: category_name,
+                icon_url: icon_url,
+            })
 
-      await db.Category.update(
-        {
-          category: category_name,
-          icon_url: icon_url,
-        },
-        {
-          where: {
-            id: req.category.id,
-          },
+            return res.status(201).json({
+                data: newCategory,
+                message: "Created Category",
+            })
+        } catch (err) {
+            console.log(err)
+            return res.status(500).json({
+                message: "Server error create category",
+            })
         }
-      );
-      return res.status(200).json({
-        message: "Category updated",
-      });
-    } catch (err) {
-      console.log(err);
-      return res.status(500).json({
-        message: "Server error update category",
-      });
-    }
-  },
-  deleteCategory: async (req, res) => {
-    try {
-      await db.Category.destroy({
-        where: {
-          id: req.params.id,
-        },
-      });
+    },
+    updateCategory: async (req, res) => {
+        try {
+            if (req.file) {
+                req.body.profile_picture = `http://localhost:8000/public/${req.file.filename}`
+            }
 
-      return res.status(200).json({
-        message: "Category deleted",
-      });
-    } catch (error) {
-      console.log(error);
-      return res.status(500).json({
-        message: "Server Error deleting category",
-      });
-    }
-  },
-  getAllCategory: async (req, res) => {
-    try {
-      const findAllCategory = await db.Category.findAll();
+            const { category_name, icon_url } = req.body
 
-      return res.status(200).json({
-        message: "Get All Categories",
-        data: findAllCategory,
-      });
-    } catch (error) {
-      return res.status(500).json({
-        message: "server error",
-      });
-    }
-  },
-};
+            await db.Category.findOne({
+                where: {
+                    id: req.params.id,
+                },
+            })
 
-module.exports = categoryController;
+            await db.Category.update(
+                {
+                    category_name: category_name,
+                    icon_url: icon_url,
+                },
+                {
+                    where: {
+                        id: req.params.id,
+                    },
+                }
+            )
+
+            return res.status(200).json({
+                message: "Category updated",
+            })
+        } catch (err) {
+            console.log(err)
+            return res.status(500).json({
+                message: "Server error update category",
+            })
+        }
+    },
+    deleteCategory: async (req, res) => {
+        try {
+            await db.Category.destroy({
+                where: {
+                    id: req.params.id,
+                },
+            })
+
+            return res.status(200).json({
+                message: "Category deleted",
+            })
+        } catch (error) {
+            console.log(error)
+            return res.status(500).json({
+                message: "Server Error deleting category",
+            })
+        }
+    },
+    getAllCategory: async (req, res) => {
+        try {
+            const findAllCategory = await db.Category.findAll()
+
+            return res.status(200).json({
+                message: "Get All Categories",
+                data: findAllCategory,
+            })
+        } catch (error) {
+            return res.status(500).json({
+                message: "server error",
+            })
+        }
+    },
+    findCategoryByPk: async (req, res) => {
+        try {
+            const findCategory = await db.Category.findByPk(req.params.id)
+
+            return res.status(200).json({
+                message: "Showing category details",
+                data: findCategory,
+            })
+        } catch (err) {
+            return res.status(500).json({
+                message: "Server error fetching details",
+            })
+        }
+    },
+}
+
+module.exports = categoryController

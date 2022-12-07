@@ -1,29 +1,29 @@
-const express = require("express");
-const categoryController = require("../controllers/categoryController");
-const { upload } = require("../../lib/upload");
+const express = require("express")
+const categoryController = require("../controllers/categoryController")
+const { uploader } = require("../../lib/uploader")
 
-const router = express.Router();
+const router = express.Router()
 
 router.post(
-  "/",
-  upload({
-    acceptedFileTypes: ["png", "jpeg", "jpg"],
-    filePrefix: "POST",
-  }).single("icon_url"),
-  categoryController.createCategory
-);
+    "/",
+    uploader({
+        acceptedFileTypes: ["png", "jpeg", "jpg"],
+        filePrefix: "POST",
+    }).single("icon_url"),
+    categoryController.createCategory
+)
 
-router.delete("/:id", categoryController.deleteCategory);
-
-router.get("/", categoryController.getAllCategory);
+router.delete("/:id", categoryController.deleteCategory)
+router.get("/", categoryController.getAllCategory)
+router.get("/:id", categoryController.findCategoryByPk)
 
 router.patch(
-  "/",
-  upload({
-    acceptedFileTypes: ["png", "jpeg", "jpg"],
-    filePrefix: "PROF",
-  }).single("icon_url"),
-  categoryController.createCategory
-);
+    "/:id",
+    uploader({
+        acceptedFileTypes: ["png", "jpeg", "jpg"],
+        filePrefix: "PROF",
+    }).single("icon_url"),
+    categoryController.updateCategory
+)
 
-module.exports = router;
+module.exports = router
