@@ -1,9 +1,9 @@
 const express = require("express")
-const loginController = require("../controllers/geocodeController")
+const geocodeController = require("../controllers/geocodeController")
 const router = express.Router()
 
-router.get("/distance", loginController.distanceStoreToUser)
-router.get("/userloc", loginController.userLocation)
-router.post("/addresspick", loginController.userAddressSelect)
+// router.get("/distance/:id", geocodeController.distanceStoreToUser)
+router.get("/userloc", geocodeController.userLocation)
+router.post("/addresspick", geocodeController.userAddressSelect)
 
 module.exports = router

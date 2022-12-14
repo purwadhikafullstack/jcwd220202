@@ -14,12 +14,12 @@ const items = [
   {
     icon: cart,
     label: "Cart",
-    path: "",
+    path: "/user/cart",
   },
   {
     icon: order,
     label: "Order",
-    path: "",
+    path: "/user/order",
   },
   {
     icon: profile,
@@ -66,6 +66,7 @@ const Navigation = () => {
           {renderIcon()}
         </Grid>
       </Box>
+      
     </>
   );
 };

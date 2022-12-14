@@ -9,16 +9,21 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Cart.belongsTo(models.ProductBranch)
-      Cart.belongsTo(models.User)
-     }
+      Cart.belongsTo(models.ProductBranch);
+      Cart.belongsTo(models.User);
+    }
   }
   Cart.init(
     {
+      quantity: {
+        type: DataTypes.INTEGER,
+      },
+      total_product_price: {
+        type: DataTypes.INTEGER,
+      },
       is_checked: {
         type: DataTypes.BOOLEAN,
       },
-      
     },
     {
       sequelize,

@@ -27,6 +27,7 @@ const adminProductRoute = require("./routes/adminProductRoute");
 const productRoute = require("./routes/productRoute.js");
 const geocodeRoute = require("./routes/geocodeRoute");
 const createAdminRoute = require("./routes/createAdminRoute");
+const transactionRoute = require("./routes/transactionRoute");
 
 app.use("/user", loginRoute);
 app.use("/profile", profileRoute);
@@ -37,6 +38,7 @@ app.use("/admin-product", adminProductRoute);
 app.use("/product", productRoute);
 app.use("/geocode", geocodeRoute);
 app.use("/create-admin", createAdminRoute);
+app.use("/transaction", transactionRoute);
 
 app.use("/public", express.static("public"));
 

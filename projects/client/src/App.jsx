@@ -25,6 +25,8 @@ import ProductDetailSprAdm from "./pages/ProductDetailSprAdm";
 import ProductDetailAdmin from "./pages/ProductDetailAdmin";
 import ProductPage from "./pages/ProductPage";
 import ProductDetailUser from "./pages/ProductDetailUser"
+import CartUser from "./pages/CartPageUser"
+import OrderUser from "./pages/OrderUser"
 
 const App = () => {
   const authSelector = useSelector((state) => state.auth)
@@ -80,6 +82,13 @@ const App = () => {
 
   return (
     <>
+    <Box
+        maxWidth={"480px"}
+        margin={"auto"}
+        boxSizing={"border-box"}
+        border={"2px solid lightgrey"}
+        fontFamily={"roboto"}
+      >
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
@@ -109,7 +118,10 @@ const App = () => {
         />
         <Route path="/admin/product/:id" element={<ProductDetailAdmin />} />
         <Route path='/product/:id' element={<ProductDetailUser />} />
+        <Route path='/user/cart' element={<CartUser />} />
+        <Route path='/user/order' element={<OrderUser />} />
       </Routes>
+      </Box>
     </>
   )
 }
