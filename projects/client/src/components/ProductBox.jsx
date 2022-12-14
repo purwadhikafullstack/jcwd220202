@@ -11,11 +11,11 @@ import {
   Stack,
   Text,
   VStack,
-} from "@chakra-ui/react"
-import { useEffect, useState } from "react"
-import { useSelector } from "react-redux"
-import { Link } from "react-router-dom"
-import { axiosInstance } from "../api"
+} from "@chakra-ui/react";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+import { axiosInstance } from "../api";
 
 const ProductBox = ({
   id,
@@ -25,6 +25,14 @@ const ProductBox = ({
   product_description,
   product_image,
 }) => {
+
+  const formatRupiah = (value) => {
+    return new Intl.NumberFormat("id-ID", {
+      style: "currency",
+      currency: "IDR",
+      minimumFractionDigits: 0,
+    }).format(value);
+  };
   return (
     <>
       {/* ganti link ke product detail */}
@@ -32,7 +40,7 @@ const ProductBox = ({
         <Card maxW="sm">
           <CardBody>
             <Image
-              src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80"
+              src={product_image}
               alt="Green double couch with wooden legs"
               borderRadius="lg"
             />
@@ -42,17 +50,14 @@ const ProductBox = ({
               <Heading size="md">{product_name}</Heading>
 
               <Text color="blue.600" fontSize="2xl">
-                {product_price.toLocaleString("ja-JP", {
-                  style: "currency",
-                  currency: "JPY",
-                })}
+                {formatRupiah(product_price)}
               </Text>
             </Stack>
           </CardBody>
         </Card>
       </Link>
     </>
-  )
-}
+  );
+};
 
-export default ProductBox
+export default ProductBox;
