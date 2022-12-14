@@ -55,14 +55,14 @@ const LoginPage = () => {
         navigate("/");
         toast({
           status: "success",
-          title: "Login success",
+          title: "Login Success",
           description: response.data.message,
         });
       } catch (err) {
         console.log(err);
         toast({
           status: "error",
-          title: "Login failed",
+          title: "Login Failed",
           description: err.response.data.message,
         });
       }

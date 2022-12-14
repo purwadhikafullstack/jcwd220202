@@ -1,9 +1,9 @@
-import { Box, Grid, GridItem, Image, Text } from "@chakra-ui/react"
-import home from "../assets/home.png"
-import profile from "../assets/profile.png"
-import cart from "../assets/cart.png"
-import order from "../assets/order.png"
-import { Link } from "react-router-dom"
+import { Box, Grid, GridItem, Image, Text } from "@chakra-ui/react";
+import home from "../assets/home.png";
+import profile from "../assets/profile.png";
+import cart from "../assets/cart.png";
+import order from "../assets/order.png";
+import { Link } from "react-router-dom";
 
 const items = [
     {
@@ -26,7 +26,7 @@ const items = [
         label: "Profile",
         path: "/profile",
     },
-]
+];
 
 const Navigation = () => {
     const renderIcon = () => {
@@ -47,9 +47,9 @@ const Navigation = () => {
                         </Box>
                     </Link>
                 </GridItem>
-            )
-        })
-    }
+            );
+        });
+    };
 
     return (
         <>
@@ -61,13 +61,15 @@ const Navigation = () => {
                 right={"0"}
                 left={"0"}
                 fontWeight={"bold"}
+                margin={"auto"}
+                maxWidth={"480px"}
             >
                 <Grid templateColumns="repeat(4, 1fr)" gap={1} margin={"5px"}>
                     {renderIcon()}
                 </Grid>
             </Box>
         </>
-    )
-}
+    );
+};
 
-export default Navigation
+export default Navigation;

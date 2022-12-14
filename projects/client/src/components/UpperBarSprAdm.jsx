@@ -12,6 +12,8 @@ const UpperBarSprAdm = () => {
       left={"0"}
       fontWeight={"bold"}
       zIndex={"4"}
+      margin={"auto"}
+      maxWidth={"480px"}
     >
       <Flex fontSize={"18px"} fontFamily={"roboto"}>
         <Box margin={"25px"}>Super Admin</Box>

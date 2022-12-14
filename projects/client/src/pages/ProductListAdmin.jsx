@@ -9,20 +9,24 @@ import {
   Input,
   InputGroup,
   InputRightElement,
+  Text,
 } from "@chakra-ui/react";
 
 import searchIcon from "../assets/search.png";
 import filterIcon from "../assets/funnel.png";
 import sortIcon from "../assets/sort.png";
 import ProductListBar from "../components/ProductListBar";
-import { Link } from "react-router-dom";
 import Select from "react-select";
 import { axiosInstance } from "../api";
 import { useEffect, useState } from "react";
 import AdminNavbar from "../components/AdminNavbar";
 import ProductCardAdmin from "../components/ProductCardAdmin";
 import { useFormik } from "formik";
-import InfiniteScroll from "react-infinite-scroll-component";
+import ReactPaginate from "react-paginate";
+import "../style/pagination.css";
+import productNotFound from "../assets/feelsorry.png";
+
+const maxItemsPerPage = 12;
 
 const ProductListAdmin = () => {
   const [category, setCategory] = useState([]);
@@ -31,9 +35,8 @@ const ProductListAdmin = () => {
   const [sortDir, setSortDir] = useState("ASC");
   const [filter, setFilter] = useState("All");
   const [currentSearch, setCurrentSearch] = useState("");
+  const [totalProducts, setTotalProducts] = useState(0);
   const [activePage, setActivePage] = useState(1);
-  const [totalCount, setTotalCount] = useState(0);
-  const [maxPage, setMaxPage] = useState(1);
 
   const optionsSort = [
     { value: "product_name ASC", label: "A to Z" },
@@ -87,6 +90,7 @@ const ProductListAdmin = () => {
       fontSize: "14px",
       width: "150px",
       color: "black",
+      zIndex: 3,
     }),
     placeholder: (defaultStyles) => {
       return {
@@ -101,8 +105,6 @@ const ProductListAdmin = () => {
   };
 
   const fetchAdminProduct = async () => {
-    const maxItemsPerPage = 12;
-
     try {
       const response = await axiosInstance.get("/admin-product/branch", {
         params: {
@@ -110,23 +112,25 @@ const ProductListAdmin = () => {
           _sortDir: sortDir,
           CategoryId: filter,
           product_name: currentSearch,
-          // _page: activePage,
-          // _limit: maxItemsPerPage,
+          _page: activePage,
+          _limit: maxItemsPerPage,
         },
       });
-      // setActivePage(activePage + 1);
 
-      // setProduct([...product, ...response.data.data[0].ProductBranches]);
       setProduct(response.data.data[0].ProductBranches);
 
-      // console.log(response.data.data[0].ProductBranches);
-      // setTotalCount(response.data.dataCount);
-      // setMaxPage(Math.ceil(response.data.dataCount / maxItemsPerPage));
-
-      // console.log(response.data.dataCount);
+      setTotalProducts(response.data.dataCount);
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const maxPage = Math.ceil(totalProducts / maxItemsPerPage);
+
+  const handlePageClick = (data) => {
+    let currentPage = data.selected + 1;
+
+    setActivePage(currentPage);
   };
 
   const sortProductHandler = (event) => {
@@ -136,6 +140,8 @@ const ProductListAdmin = () => {
 
   const filterProductHandler = (event) => {
     setFilter(event.value);
+
+    setActivePage(1);
   };
 
   const formik = useFormik({
@@ -176,7 +182,7 @@ const ProductListAdmin = () => {
 
   useEffect(() => {
     fetchAdminProduct();
-  }, [sortBy, sortDir, filter, currentSearch]);
+  }, [sortBy, sortDir, filter, currentSearch, activePage]);
 
   return (
     <Box
@@ -280,19 +286,45 @@ const ProductListAdmin = () => {
           <GridItem w="100%" h="10"></GridItem>
         </Grid>
       </Box>
-      {/* <InfiniteScroll
-        dataLength={product.length}
-        next={fetchAdminProduct}
-        hasMore={activePage < maxPage}
-        loader={<h4>Loading...</h4>}
-        endMessage={
-          <p style={{ textAlign: "center", marginTop: "10px" }}>
-            <b>Yay! You have seen it all</b>
-          </p>
-        }
-      > */}
-      <Box>{renderAdminProduct()}</Box>
-      {/* </InfiniteScroll> */}
+      {!product.length ? null : (
+        <Box marginTop={"20px"}>
+          <ReactPaginate
+            previousLabel={"previous"}
+            nextLabel={"next"}
+            breakLabel={"..."}
+            pageCount={maxPage}
+            marginPagesDisplayed={5}
+            pageRangeDisplayed={2}
+            onPageChange={handlePageClick}
+            containerClassName={"pagination justify-content-center"}
+            pageClassName={"page-item"}
+            pageLinkClassName={"page-link"}
+            previousClassName={"page-item"}
+            previousLinkClassName={"page-link"}
+            nextClassName={"page-item"}
+            nextLinkClassName={"page-link"}
+            breakClassName={"page-item"}
+            breakLinkClassName={"page-link"}
+          />
+        </Box>
+      )}
+
+      {!product.length ? (
+        <Box display={"grid"} mt={"15vh"}>
+          <Text textAlign={"center"} fontWeight={"bold"}>
+            No item(s) found
+          </Text>
+          <Image
+            src={productNotFound}
+            alt="not found"
+            width={"70%"}
+            objectFit={"contain"}
+            justifySelf={"center"}
+          />
+        </Box>
+      ) : (
+        <Box>{renderAdminProduct()}</Box>
+      )}
       <Box>
         <AdminNavbar />
       </Box>

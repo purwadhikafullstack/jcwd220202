@@ -1,15 +1,50 @@
 import { Box, Grid, GridItem, Image, Text } from "@chakra-ui/react";
-import LineChart from "../components/LineChart";
 import shoppingPic from "../assets/login_logo.png";
 import SuperAdminNavbar from "../components/SuperAdminNavbar";
 import UpperBarSprAdm from "../components/UpperBarSprAdm";
+import LineChartSuperAdmin from "../components/LineChartSuperAdmin";
+import { useEffect, useState } from "react";
+import { axiosInstance } from "../api";
+import { Link } from "react-router-dom";
 
 const SuperAdminDashboard = () => {
+  const [countProduct, setCountProduct] = useState([]);
+  const [countBranch, setCountBranch] = useState([]);
+
+  const fetchProduct = async () => {
+    try {
+      const response = await axiosInstance.get("/admin-product/super-admin");
+
+      setCountProduct(response.data.dataCount);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const fetchBranch = async () => {
+    try {
+      const response = await axiosInstance.get("/admin-branch");
+
+      setCountBranch(response.data.dataCount);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchProduct();
+  }, []);
+
+  useEffect(() => {
+    fetchBranch();
+  }, []);
+
   return (
     <Box backgroundColor={"#F4F1DE"} height={"932px"}>
       <UpperBarSprAdm />
       <Grid templateColumns="repeat(2, 1fr)" gap={4}>
         <GridItem
+          bg="tomato"
           marginTop={"130px"}
           marginLeft={"30px"}
           height={"80px"}
@@ -17,12 +52,19 @@ const SuperAdminDashboard = () => {
           backgroundColor={"white"}
           boxShadow={"1px 1px 1px grey"}
         >
-          <Box marginLeft={"15px"} marginTop={"10px"} fontFamily={"roboto"}>
-            <Text fontSize={"16px"}>User Available</Text>
-            <Text fontSize={"24px"} fontWeight={"bold"}>
-              0
-            </Text>
-          </Box>
+          <Link to={"/super-admin/product"}>
+            <Box
+              marginLeft={"15px"}
+              marginTop={"10px"}
+              fontFamily={"roboto"}
+              _hover={{ color: "#E07A5F" }}
+            >
+              <Text fontSize={"16px"}>Product In Store</Text>
+              <Text fontSize={"24px"} fontWeight={"bold"}>
+                {countProduct || "Loading..."}
+              </Text>
+            </Box>
+          </Link>
         </GridItem>
         <GridItem
           marginTop={"130px"}
@@ -32,44 +74,24 @@ const SuperAdminDashboard = () => {
           backgroundColor={"white"}
           boxShadow={"1px 1px 1px grey"}
         >
-          <Box marginLeft={"15px"} marginTop={"10px"} fontFamily={"roboto"}>
-            <Text fontSize={"16px"}>Branch Available</Text>
-            <Text fontSize={"24px"} fontWeight={"bold"}>
-              0
-            </Text>
-          </Box>
+          <Link to={"/super-admin/user"}>
+            <Box
+              marginLeft={"15px"}
+              marginTop={"10px"}
+              fontFamily={"roboto"}
+              _hover={{ color: "#E07A5F" }}
+            >
+              <Text fontSize={"16px"}>Branch Available</Text>
+              <Text fontSize={"24px"} fontWeight={"bold"}>
+                {countBranch || "Loading..."}
+              </Text>
+            </Box>
+          </Link>
         </GridItem>
       </Grid>
       <Box
-        marginTop={"20px"}
-        bgColor={"white"}
-        height={"80px"}
-        mx={"110px"}
-        textAlign={"center"}
-        borderRadius={"10px"}
-        boxShadow={"1px 1px 1px grey"}
-        fontFamily={"roboto"}
-      >
-        <Text
-          pt={"10px"}
-          textAlign={"left"}
-          marginLeft={"15px"}
-          fontSize={"16px"}
-        >
-          Product In Store
-        </Text>
-        <Text
-          textAlign={"left"}
-          marginLeft={"15px"}
-          fontSize={"24px"}
-          fontWeight={"bold"}
-        >
-          0
-        </Text>
-      </Box>
-      <Box
         backgroundColor={"white"}
-        marginTop={"30px"}
+        marginTop={"60px"}
         padding={"5px"}
         marginX={"30px"}
         boxShadow={"1px 1px 1px grey"}
@@ -78,7 +100,7 @@ const SuperAdminDashboard = () => {
           height: "250px",
         }}
       >
-        <LineChart />
+        <LineChartSuperAdmin />
       </Box>
       <Box>
         <Text
@@ -93,7 +115,7 @@ const SuperAdminDashboard = () => {
           View more..
         </Text>
       </Box>
-      <Box display={"grid"} my={"10px"}>
+      <Box display={"grid"} my={"20px"} zIndex={"base"}>
         <Image
           src={shoppingPic}
           alt="logo"

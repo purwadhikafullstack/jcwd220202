@@ -1,5 +1,5 @@
-"use strict"
-const { Model } = require("sequelize")
+"use strict";
+const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class ProductBranch extends Model {
     /**
@@ -9,9 +9,10 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      ProductBranch.belongsTo(models.Product)
-      ProductBranch.belongsTo(models.Branch)
-      ProductBranch.hasMany(models.Cart)
+      ProductBranch.belongsTo(models.Product);
+      ProductBranch.belongsTo(models.Branch);
+      ProductBranch.hasMany(models.Cart);
+      ProductBranch.hasMany(models.TransactionItem);
     }
   }
   ProductBranch.init(
@@ -31,11 +32,17 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: 0,
         allowNull: true,
       },
+      is_DeletedInBranch: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
     },
     {
       sequelize,
       modelName: "ProductBranch",
+      paranoid: true,
+      timestamps: true,
     }
-  )
-  return ProductBranch
-}
+  );
+  return ProductBranch;
+};

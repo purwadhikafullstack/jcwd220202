@@ -11,6 +11,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       Product.hasMany(models.ProductBranch);
       Product.belongsTo(models.Category);
+      Product.hasMany(models.ProductHistory);
     }
   }
   Product.init(
@@ -35,10 +36,16 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
+      is_Deleted: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
     },
     {
       sequelize,
       modelName: "Product",
+      paranoid: true,
+      timestamps: true,
     }
   );
   return Product;

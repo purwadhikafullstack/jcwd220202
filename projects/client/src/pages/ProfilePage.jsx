@@ -26,57 +26,57 @@ import {
     Heading,
     Grid,
     GridItem,
-} from "@chakra-ui/react"
-import { useFormik } from "formik"
-import { axiosInstance } from "../api"
-import { useState, useEffect, useRef } from "react"
-import { Link, useNavigate } from "react-router-dom"
-import { useDispatch } from "react-redux"
-import { logout } from "../redux/features/authSlice"
-import Navigation from "../components/NavigationBar"
-import uploadProfile from "../assets/upload_image.png"
-import * as Yup from "yup"
-import backIcon from "../assets/back_icon.png"
-import grocerinLogo from "../assets/grocerin_logo_aja.png"
+} from "@chakra-ui/react";
+import { useFormik } from "formik";
+import { axiosInstance } from "../api";
+import { useState, useEffect, useRef } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { logout } from "../redux/features/authSlice";
+import Navigation from "../components/NavigationBar";
+import uploadProfile from "../assets/upload_image.png";
+import * as Yup from "yup";
+import backIcon from "../assets/back_icon.png";
+import grocerinLogo from "../assets/grocerin_logo_aja.png";
 
 const ProfilePage = () => {
-    const [userData, setUserData] = useState({})
-    const dispatch = useDispatch()
-    const navigate = useNavigate()
-    const toast = useToast()
-    const [updateProfile, setUpdateProfile] = useState(false)
-    const [selectedImage, setSelectedImage] = useState()
-    const inputFileRef = useRef(null)
-    const { isOpen, onOpen, onClose } = useDisclosure()
-    const [showPassword, setShowPassword] = useState(false)
-    const [showConfirmPassword, setShowConfirmPassword] = useState(false)
-    const [showNewPassword, setShowNewPassword] = useState(false)
+    const [userData, setUserData] = useState({});
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const toast = useToast();
+    const [updateProfile, setUpdateProfile] = useState(false);
+    const [selectedImage, setSelectedImage] = useState();
+    const inputFileRef = useRef(null);
+    const { isOpen, onOpen, onClose } = useDisclosure();
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+    const [showNewPassword, setShowNewPassword] = useState(false);
 
     const togglePassword = () => {
-        setShowPassword(!showPassword)
-    }
+        setShowPassword(!showPassword);
+    };
 
     const toggleNewPassword = () => {
-        setShowNewPassword(!showNewPassword)
-    }
+        setShowNewPassword(!showNewPassword);
+    };
 
     const toggleConfirmPassword = () => {
-        setShowConfirmPassword(!showConfirmPassword)
-    }
+        setShowConfirmPassword(!showConfirmPassword);
+    };
 
     const fetchProfile = async () => {
         try {
-            const response = await axiosInstance.get(`/profile`)
+            const response = await axiosInstance.get(`/profile`);
 
-            setUserData(response.data.data)
+            setUserData(response.data.data);
 
-            formik.setFieldValue("username", response.data.data.username)
-            formik.setFieldValue("gender", response.data.data.gender)
-            formik.setFieldValue("birth", response.data.data.birth)
+            formik.setFieldValue("username", response.data.data.username);
+            formik.setFieldValue("gender", response.data.data.gender);
+            formik.setFieldValue("birth", response.data.data.birth);
         } catch (err) {
-            console.log(err)
+            console.log(err);
         }
-    }
+    };
 
     const formik = useFormik({
         initialValues: {
@@ -87,22 +87,22 @@ const ProfilePage = () => {
         },
         onSubmit: async (values) => {
             try {
-                const userData = new FormData()
+                const userData = new FormData();
 
-                userData.append("username", values.username)
-                userData.append("gender", values.gender)
-                userData.append("birth", values.birth)
-                userData.append("profile_picture", values.profile_picture)
+                userData.append("username", values.username);
+                userData.append("gender", values.gender);
+                userData.append("birth", values.birth);
+                userData.append("profile_picture", values.profile_picture);
 
-                await axiosInstance.patch(`/profile`, userData)
+                await axiosInstance.patch(`/profile`, userData);
 
-                setUpdateProfile(false)
-                fetchProfile()
+                setUpdateProfile(false);
+                fetchProfile();
             } catch (err) {
-                console.log(err)
+                console.log(err);
             }
         },
-    })
+    });
 
     const formikPassword = useFormik({
         initialValues: {
@@ -115,20 +115,20 @@ const ProfilePage = () => {
                 const response = await axiosInstance.patch("/password/change", {
                     password: password,
                     newPassword: newPassword,
-                })
+                });
 
                 toast({
                     title: "Change Password Successful",
                     description: response.data.message,
                     status: "success",
-                })
+                });
             } catch (error) {
-                console.log(error.response)
+                console.log(error.response);
                 toast({
                     title: "Change Password Failed",
                     description: error.response.data.message,
                     status: "error",
-                })
+                });
             }
         },
         validationSchema: Yup.object({
@@ -146,31 +146,31 @@ const ProfilePage = () => {
                 ),
         }),
         validateOnChange: false,
-    })
+    });
 
     const formChangeHandler = ({ target }) => {
-        const { name, value } = target
-        formik.setFieldValue(name, value)
-    }
+        const { name, value } = target;
+        formik.setFieldValue(name, value);
+    };
 
     const formChangePasswordHandler = ({ target }) => {
-        const { name, value } = target
-        formikPassword.setFieldValue(name, value)
-    }
+        const { name, value } = target;
+        formikPassword.setFieldValue(name, value);
+    };
 
     const logoutBtnHandler = () => {
-        localStorage.removeItem("auth_token")
-        dispatch(logout())
-        navigate("/login/user")
+        localStorage.removeItem("auth_token");
+        dispatch(logout());
+        navigate("/login/user");
         toast({
             status: "info",
             title: "User logout",
-        })
-    }
+        });
+    };
 
     useEffect(() => {
-        fetchProfile()
-    }, [])
+        fetchProfile();
+    }, []);
 
     return (
         <Box height="932px" bgColor="#F4F1DE" fontFamily={"roboto"}>
@@ -284,18 +284,18 @@ const ProfilePage = () => {
                             formik.setFieldValue(
                                 "profile_picture",
                                 event.target.files[0]
-                            )
+                            );
 
                             if (
                                 !event.target.files.length &&
                                 event.target.files.length === 0
                             ) {
-                                return setSelectedImage(uploadProfile)
+                                return setSelectedImage(uploadProfile);
                             }
 
                             setSelectedImage(
                                 URL.createObjectURL(event.target.files[0])
-                            )
+                            );
                         }}
                         _placeholder={{ color: "black.500" }}
                         bgColor={"white"}
@@ -306,7 +306,7 @@ const ProfilePage = () => {
                         bgColor={"#81B29A"}
                         color={"white"}
                         onClick={() => {
-                            inputFileRef.current.click()
+                            inputFileRef.current.click();
                         }}
                         _hover={{ bgColor: "#81B29A" }}
                     >
@@ -584,7 +584,7 @@ const ProfilePage = () => {
             </Box>
             <Navigation />
         </Box>
-    )
-}
+    );
+};
 
-export default ProfilePage
+export default ProfilePage;
