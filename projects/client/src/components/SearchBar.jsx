@@ -5,17 +5,21 @@ import {
     Input,
     InputGroup,
     InputRightElement,
+    Image,
 } from "@chakra-ui/react"
 import { SearchIcon } from "@chakra-ui/icons"
 import { Link } from "react-router-dom"
 import { useState } from "react"
+import grocerinLogo from "../assets/grocerin_logo_aja.png"
+import { useSelector } from "react-redux"
 
 const SearchBar = () => {
     const [keywordHandler, setKeywordHandler] = useState("")
+    const authSelector = useSelector((state) => state.auth)
 
     return (
         <Box
-            pt={"15px"}
+            pt={"10px"}
             backgroundColor={"#81B29A"}
             height={"70px"}
             position={"fixed"}
@@ -26,7 +30,7 @@ const SearchBar = () => {
             zIndex={"4"}
         >
             <Flex display={"flex"}>
-                <FormControl>
+                <FormControl pt={"5px"}>
                     <InputGroup size="md">
                         <InputRightElement
                             pointerEvents="none"
@@ -48,21 +52,32 @@ const SearchBar = () => {
                         />
                     </InputGroup>
                 </FormControl>
-                <Box
-                    p={"2"}
-                    mr={"5"}
-                    color="#E07A5F"
-                    borderRadius="10px"
-                    as="b"
-                    _hover={{
-                        background: "white",
-                        color: "#E07A5F",
-                        transition: "all 1000ms ease",
-                        cursor: "pointer",
-                    }}
-                >
-                    <Link to="/login/user">Login</Link>
-                </Box>
+                {!authSelector.RoleId == "1" ? (
+                    <Box
+                        p={"2"}
+                        mr={"5"}
+                        color="#E07A5F"
+                        borderRadius="10px"
+                        as="b"
+                        _hover={{
+                            background: "white",
+                            color: "#E07A5F",
+                            transition: "all 1000ms ease",
+                            cursor: "pointer",
+                        }}
+                    >
+                        <Link to="/login/user">Login</Link>
+                    </Box>
+                ) : (
+                    <Image
+                        src={grocerinLogo}
+                        alt="logo"
+                        height={"50px"}
+                        display={"block"}
+                        marginLeft={"auto"}
+                        marginRight={5}
+                    />
+                )}
             </Flex>
         </Box>
     )

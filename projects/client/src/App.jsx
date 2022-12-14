@@ -1,4 +1,4 @@
-import { Box, Text } from "@chakra-ui/react"
+import { Box, Flex, Image, Spinner, Text } from "@chakra-ui/react"
 import { Link, Route, Routes } from "react-router-dom"
 import LoginPage from "./pages/LoginPage"
 import LoginAdminPage from "./pages/LoginAdminPage"
@@ -26,6 +26,9 @@ import ProductDetailAdmin from "./pages/ProductDetailAdmin"
 import ProductPage from "./pages/ProductPage"
 import ProductDetailUser from "./pages/ProductDetailUser"
 import NotFound from "./pages/404Page"
+import CategoryEdit from "./pages/EditCategory"
+import CreateBranch from "./pages/CreateBranchSprAdmin"
+import UserSprAdmin from "./pages/UserSprAdmin"
 
 const App = () => {
     const authSelector = useSelector((state) => state.auth)
@@ -55,70 +58,7 @@ const App = () => {
         if (authSelector.RoleId == "1") {
             return (
                 <>
-                    <Routes>
-                        <Route path="/" element={<Home />} />
-                        <Route
-                            path="/admin/dashboard"
-                            element={<AdminDashboard />}
-                        />
-                        <Route path="/category" element={<CategoryList />} />
-                        <Route path="/login/user" element={<LoginPage />} />
-                        <Route
-                            path="/login/admin"
-                            element={<LoginAdminPage />}
-                        />
-                        <Route path="/address" element={<AddressPage />} />
-                        <Route path="/register/user" element={<Register />} />
-                        <Route path="/product" element={<ProductPage />} />
-                        <Route
-                            path="/super-admin/category"
-                            element={<AdminCategory />}
-                        />
-                        <Route
-                            path="/super-admin/category/add"
-                            element={<AddCategory />}
-                        />
-                        {renderUserRoutes()}
-                        {/* {renderAdminRoutes()} */}
-                        <Route
-                            path="/forgot-password"
-                            element={<ForgotPassword />}
-                        />
-                        <Route
-                            path="/reentry-password"
-                            element={<ReentryPassword />}
-                        />
-                        <Route
-                            path="/super-admin/dashboard"
-                            element={<SuperAdminDashboard />}
-                        />
-                        <Route
-                            path="/admin/product"
-                            element={<ProductListAdmin />}
-                        />
-                        <Route path="/profile" element={<ProfilePage />} />
-                        <Route
-                            path="/super-admin/product"
-                            element={<ProductListSprAdm />}
-                        />
-                        <Route
-                            path="/super-admin/product/add"
-                            element={<AddProductSprAdm />}
-                        />
-                        <Route
-                            path="/super-admin/product/:id"
-                            element={<ProductDetailSprAdm />}
-                        />
-                        <Route
-                            path="/admin/product/:id"
-                            element={<ProductDetailAdmin />}
-                        />
-                        <Route
-                            path="/category/:id"
-                            element={<CategoryEdit />}
-                        />
-                        <Route path="/404" element={<NotFound />} />
-                    </Routes>
+                    <Route path="/profile" element={<ProfilePage />} />
                 </>
             )
         }
@@ -140,7 +80,30 @@ const App = () => {
     //   return null;
     // };
 
-    if (!authCheck) return <div>LOADING...</div>
+    if (!authCheck) {
+        return (
+            <Box textAlign={"center"}>
+                <Box mt={"30vh"}>
+                    <Text
+                        p="4"
+                        fontWeight={"light"}
+                        fontSize="4xl"
+                        fontFamily={"roboto"}
+                    >
+                        GROCERIN
+                    </Text>
+                    <Spinner
+                        thickness="3px"
+                        speed="0.7s"
+                        emptyColor="gray.200"
+                        color="#43615f"
+                        size="xl"
+                    />
+                </Box>
+            </Box>
+            // <div>Loading...</div>
+        )
+    }
 
     return (
         <>
@@ -153,8 +116,14 @@ const App = () => {
                 {/* <Route path="/address" element={<AddressPage />} /> */}
                 <Route path="/register/user" element={<Register />} />
                 <Route path="/product" element={<ProductPage />} />
-                <Route path="/admin/category" element={<AdminCategory />} />
-                <Route path="/add/category" element={<AddCategory />} />
+                <Route
+                    path="/super-admin/category"
+                    element={<AdminCategory />}
+                />
+                <Route
+                    path="/super-admin/category/add"
+                    element={<AddCategory />}
+                />
                 {renderUserRoutes()}
                 {/* {renderAdminRoutes()} */}
                 <Route path="/forgot-password" element={<ForgotPassword />} />
@@ -182,6 +151,13 @@ const App = () => {
                     element={<ProductDetailAdmin />}
                 />
                 <Route path="/product/:id" element={<ProductDetailUser />} />
+                <Route path="/404" element={<NotFound />} />
+                <Route path="/category/:id" element={<CategoryEdit />} />
+                <Route
+                    path="/super-admin/create-branch"
+                    element={<CreateBranch />}
+                />
+                <Route path="/super-admin/user" element={<UserSprAdmin />} />
             </Routes>
         </>
     )

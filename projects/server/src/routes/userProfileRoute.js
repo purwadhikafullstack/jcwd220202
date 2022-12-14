@@ -8,7 +8,7 @@ router.patch(
     "/",
     verifyToken,
     uploader({
-        acceptedFileTypes: ["png", "jpeg", "jpg"],
+        acceptedFileTypes: ["png", "gif", "jpg"],
         filePrefix: "PROF",
     }).single("profile_picture"),
     profileController.updateProfile

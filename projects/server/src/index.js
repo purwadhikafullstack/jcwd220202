@@ -29,6 +29,7 @@ const productRoute = require("./routes/productRoute.js")
 const geocodeRoute = require("./routes/geocodeRoute")
 const createAdminRoute = require("./routes/createAdminRoute")
 const passwordRoute = require("./routes/passwordRoute.js")
+const transactionRoute = require("./routes/transactionRoute.js")
 
 app.use("/user", loginRoute)
 app.use("/profile", profileRoute)
@@ -40,6 +41,7 @@ app.use("/product", productRoute)
 app.use("/geocode", geocodeRoute)
 app.use("/create-admin", createAdminRoute)
 app.use("/password", passwordRoute)
+app.use("/transaction", transactionRoute)
 
 app.use("/public", express.static("public"))
 

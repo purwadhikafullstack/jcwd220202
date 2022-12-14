@@ -52,7 +52,12 @@ const CategoryList = ({ no, category_name, onDelete, id }) => {
             </Tr>
             <AlertDialog isCentered isOpen={isOpen} onClose={onClose}>
                 <AlertDialogOverlay>
-                    <AlertDialogContent w={"400px"}>
+                    <AlertDialogContent
+                        w={"400px"}
+                        fontFamily={"roboto"}
+                        fontSize={"16px"}
+                        bgColor={"#F4F1DE"}
+                    >
                         <AlertDialogHeader fontSize="lg" fontWeight="bold">
                             Delete Post
                         </AlertDialogHeader>
@@ -62,9 +67,18 @@ const CategoryList = ({ no, category_name, onDelete, id }) => {
                         </AlertDialogBody>
 
                         <AlertDialogFooter>
-                            <Button onClick={onClose}>Cancel</Button>
                             <Button
-                                colorScheme="red"
+                                onClick={onClose}
+                                borderRadius={"15px"}
+                                bgColor={"#81B29A"}
+                                color={"white"}
+                            >
+                                Cancel
+                            </Button>
+                            <Button
+                                borderRadius={"15px"}
+                                bgColor={"#E07A5F"}
+                                color={"white"}
                                 onClick={confirmDeleteBtnHandler}
                                 ml={3}
                             >

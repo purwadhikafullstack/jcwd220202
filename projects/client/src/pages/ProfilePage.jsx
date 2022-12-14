@@ -22,6 +22,10 @@ import {
     FormLabel,
     InputGroup,
     InputRightElement,
+    VStack,
+    Heading,
+    Grid,
+    GridItem,
 } from "@chakra-ui/react"
 import { useFormik } from "formik"
 import { axiosInstance } from "../api"
@@ -32,6 +36,8 @@ import { logout } from "../redux/features/authSlice"
 import Navigation from "../components/NavigationBar"
 import uploadProfile from "../assets/upload_image.png"
 import * as Yup from "yup"
+import backIcon from "../assets/back_icon.png"
+import grocerinLogo from "../assets/grocerin_logo_aja.png"
 
 const ProfilePage = () => {
     const [userData, setUserData] = useState({})
@@ -125,6 +131,21 @@ const ProfilePage = () => {
                 })
             }
         },
+        validationSchema: Yup.object({
+            newPassword: Yup.string()
+                .required()
+                .matches(
+                    /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
+                    "Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and One Special Case Character"
+                ),
+            confirmPassword: Yup.string()
+                .required("please retype your password.")
+                .oneOf(
+                    [Yup.ref("newPassword")],
+                    "Your passwords do not match."
+                ),
+        }),
+        validateOnChange: false,
     })
 
     const formChangeHandler = ({ target }) => {
@@ -152,28 +173,68 @@ const ProfilePage = () => {
     }, [])
 
     return (
-        <Box height="932px" bgColor="#F4F1DE">
-            <Box ml={5}>
-                <Text fontSize={"lg"}>Hello, {userData.username}</Text>
-                <Box width="80px" height="100px">
+        <Box height="932px" bgColor="#F4F1DE" fontFamily={"roboto"}>
+            <Grid
+                templateColumns="repeat(3, 1fr)"
+                gap={6}
+                bgColor={"#81B29A"}
+                h={"75px"}
+            >
+                <GridItem>
+                    <Box marginTop={"20px"} marginLeft={"20px"}>
+                        <Image
+                            objectFit="cover"
+                            src={backIcon}
+                            alt="back"
+                            height={"40px"}
+                            onClick={() => navigate(-1)}
+                        />
+                    </Box>
+                </GridItem>
+                <GridItem>
+                    <Heading mt={5} textAlign={"center"} fontFamily={"roboto"}>
+                        Profile
+                    </Heading>
+                </GridItem>
+                <GridItem>
+                    <Image
+                        src={grocerinLogo}
+                        alt="logo"
+                        height={"50px"}
+                        display={"block"}
+                        marginLeft={"auto"}
+                        marginRight={8}
+                        mt={3}
+                    />
+                </GridItem>
+            </Grid>
+            <Box ml={5} pt={5}>
+                <Text fontSize={"lg"} as={"b"}>
+                    Hello, {userData.username}
+                </Text>
+                <Box display={"flex"} justifyContent={"center"}>
                     <Image
                         src={selectedImage || uploadProfile}
-                        height={"100%"}
-                        w={"100%"}
+                        width="100px"
+                        height="100px"
+                        borderRadius="full"
                     />
                 </Box>
-                <Button
-                    w="50px"
-                    h="30px"
-                    bgColor="#81B29A"
-                    onClick={() => setUpdateProfile(true)}
-                >
-                    Edit
-                </Button>
+                <Box display={"flex"} justifyContent={"right"} mx={10}>
+                    <Button
+                        w="50px"
+                        h="30px"
+                        bgColor="#81B29A"
+                        color={"white"}
+                        onClick={() => setUpdateProfile(true)}
+                    >
+                        Edit
+                    </Button>
+                </Box>
             </Box>
             {!updateProfile ? (
                 // display
-                <Stack spacing={3} margin="10">
+                <Stack spacing={3} margin="10" mt={0}>
                     <Text fontWeight={"bold"}>
                         Username: {userData.username}
                     </Text>
@@ -300,7 +361,11 @@ const ProfilePage = () => {
                     </Text>
                     <Modal isOpen={isOpen} onClose={onClose}>
                         <ModalOverlay />
-                        <ModalContent>
+                        <ModalContent
+                            mt={"150px"}
+                            w={"400px"}
+                            bgColor={"#F4F1DE"}
+                        >
                             <ModalHeader>Change Password</ModalHeader>
                             <ModalBody>
                                 <Box
@@ -479,15 +544,19 @@ const ProfilePage = () => {
                             </ModalBody>
                             <ModalFooter>
                                 <Button
-                                    colorScheme="blue"
+                                    borderRadius={"15px"}
+                                    bgColor={"#E07A5F"}
+                                    color={"white"}
                                     mr={3}
                                     onClick={onClose}
                                 >
                                     Cancel
                                 </Button>
                                 <Button
+                                    borderRadius={"15px"}
+                                    bgColor={"#81B29A"}
+                                    color={"white"}
                                     onClick={formikPassword.handleSubmit}
-                                    bgColor={"gray"}
                                 >
                                     Change Password
                                 </Button>

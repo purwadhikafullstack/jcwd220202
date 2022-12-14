@@ -21,13 +21,13 @@ const CategoryList = () => {
     }, [])
 
     return (
-        <Box h={"932px"} bgColor={"#F4F1DE"}>
+        <Box h={"932px"} bgColor={"#F4F1DE"} fontFamily={"roboto"}>
             <Box>
                 <Heading p={"30px"} size="md">
                     Category
                 </Heading>
                 <SimpleGrid
-                    mx={"10px"}
+                    px={"10px"}
                     columns={"4"}
                     spacing={5}
                     textAlign={"center"}
@@ -42,7 +42,7 @@ const CategoryList = () => {
                                     w={"50px"}
                                     alignItems={"center"}
                                 />
-                                <Text fontSize={"xs"}>
+                                <Text fontSize={"sm"}>
                                     {item.category_name}
                                 </Text>
                             </Box>
