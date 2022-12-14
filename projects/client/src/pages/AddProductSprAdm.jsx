@@ -8,21 +8,12 @@ import {
   Input,
   InputGroup,
   InputLeftAddon,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
   Text,
   Textarea,
-  useDisclosure,
   useToast,
   VStack,
 } from "@chakra-ui/react";
 
-import addIcon from "../assets/add.png";
 import ProductListBar from "../components/ProductListBar";
 import uploadProduct from "../assets/product_upload.png";
 import Select from "react-select";
@@ -35,7 +26,6 @@ const AddProductSprAdm = () => {
   const [category, setCategory] = useState([]);
   const [selectedImage, setSelectedImage] = useState(uploadProduct);
   const inputFileRef = useRef(null);
-  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const toast = useToast();
 
@@ -50,6 +40,7 @@ const AddProductSprAdm = () => {
   };
 
   const SUPPORTED_FORMATS = ["image/jpg", "image/jpeg", "image/png"];
+  const FILE_SIZE = 1282810;
 
   const fetchCategory = async () => {
     try {
@@ -124,6 +115,11 @@ const AddProductSprAdm = () => {
           "format",
           "extension file doesn't match",
           (value) => !value || (value && SUPPORTED_FORMATS.includes(value.type))
+        )
+        .test(
+          "file size",
+          "Uploaded file is too big.",
+          (value) => !value || (value && value.size <= FILE_SIZE)
         ),
       product_name: Yup.string().required("product name is a required field"),
       product_price: Yup.number()
@@ -259,8 +255,8 @@ const AddProductSprAdm = () => {
                 styles={colourStyles}
                 name="CategoryId"
                 onChange={(event) => {
-                  console.log(event);
-                  formik.setFieldValue("CategoryId", event);
+                  console.log(event.value);
+                  formik.setFieldValue("CategoryId", event.value);
                 }}
                 placeholder={"Select Category"}
               />

@@ -16,6 +16,8 @@ const ProductListBar = () => {
       left={"0"}
       fontWeight={"bold"}
       zIndex={"4"}
+      margin={"auto"}
+      maxWidth={"480px"}
     >
       <Flex fontSize={"18px"} fontFamily={"roboto"}>
         <Box marginLeft={"10px"} marginTop={"18px"}>

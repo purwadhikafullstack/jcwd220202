@@ -46,9 +46,12 @@ const ProductDetailUser = () => {
   };
 
   const addCartBtn = () => {
-    pustToCart()
+    pustToCart();
   };
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   useEffect(() => {
     fetchProductDetails();
   }, []);

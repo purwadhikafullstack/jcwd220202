@@ -18,29 +18,29 @@ import {
   Text,
   useToast,
   VStack,
-} from "@chakra-ui/react"
-import backIcon from "../assets/back_icon.png"
-import grocerinLogoWithText from "../assets/grocerin_logo.png"
-import { axiosInstance } from "../api"
-import { useDispatch } from "react-redux"
-import { useState, useEffect } from "react"
-import { Link, useNavigate } from "react-router-dom"
-import Navigation from "../components/NavigationBar"
-import ProductBox from "../components/ProductBox"
-import InfiniteScroll from "react-infinite-scroll-component"
+} from "@chakra-ui/react";
+import backIcon from "../assets/back_icon.png";
+import grocerinLogoWithText from "../assets/grocerin_logo.png";
+import { axiosInstance } from "../api";
+import { useDispatch } from "react-redux";
+import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import Navigation from "../components/NavigationBar";
+import ProductBox from "../components/ProductBox";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 const ProductPage = () => {
-  const toast = useToast()
-  const dispatch = useDispatch()
-  const navigate = useNavigate()
+  const toast = useToast();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  const [product, setProduct] = useState([])
-  const [keyword, setKeyword] = useState("")
-  const [keywordHandler, setKeywordHandler] = useState("")
-  const [lastId, setLastId] = useState(0)
-  const [limit, setLimit] = useState(5)
-  const [tempId, setTempId] = useState(0)
-  const [hasMore, setHasMore] = useState(true)
+  const [product, setProduct] = useState([]);
+  const [keyword, setKeyword] = useState("");
+  const [keywordHandler, setKeywordHandler] = useState("");
+  const [lastId, setLastId] = useState(0);
+  const [limit, setLimit] = useState(5);
+  const [tempId, setTempId] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
 
   const fetchProduct = async () => {
     try {
@@ -51,22 +51,22 @@ const ProductPage = () => {
           _limit: limit,
           _order: "",
         },
-      })
-      const nextProduct = response.data.result
-      setProduct([...product, ...nextProduct])
-      setTempId(response.data.lastId)
-      setHasMore(response.data.hasMore)
+      });
+      const nextProduct = response.data.result;
+      setProduct([...product, ...nextProduct]);
+      setTempId(response.data.lastId);
+      setHasMore(response.data.hasMore);
 
-      console.log(response.data.result)
+      console.log(response.data.result);
     } catch (err) {
-      console.log(err)
+      console.log(err);
     }
-  }
+  };
 
   const fetchMoreProduct = () => {
-    console.log("fetching prod")
-    setLastId(tempId)
-  }
+    console.log("fetching prod");
+    setLastId(tempId);
+  };
 
   const renderProduct = () => {
     return product.map((product, index) => {
@@ -77,23 +77,26 @@ const ProductPage = () => {
           product_name={product.product_name}
           product_price={product.product_price}
           distance={product.distance}
-          product_description= {product.product_description}
-          product_image= {product.product_image}
+          product_description={product.product_description}
+          product_image={product.product_image}
         />
-      )
-    })
-  }
+      );
+    });
+  };
 
   const searchKey = (event) => {
-    event.preventDefault()
-    setLastId(0)
-    setProduct([])
-    setKeyword(keywordHandler)
-  }
+    event.preventDefault();
+    setLastId(0);
+    setProduct([]);
+    setKeyword(keywordHandler);
+  };
 
   useEffect(() => {
-    fetchProduct()
-  }, [lastId, keyword])
+    fetchProduct();
+  }, [lastId, keyword]);
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   return (
     <Box bgColor={"#81B29A"}>
@@ -141,7 +144,6 @@ const ProductPage = () => {
 
         <Container w={"430px"} height={"400px"} bgColor="white">
           <Grid templateColumns={"repeat(3, 1fr"} mt={15}>
-            
             <GridItem>
               {!product.length ? (
                 <Alert status="warning">
@@ -170,7 +172,7 @@ const ProductPage = () => {
       </Box>
       {/* <Navigation /> */}
     </Box>
-  )
-}
+  );
+};
 
-export default ProductPage
+export default ProductPage;

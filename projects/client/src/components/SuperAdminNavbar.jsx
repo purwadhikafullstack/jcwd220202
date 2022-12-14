@@ -6,6 +6,8 @@ import userLogo from "../assets/user.png";
 import otherLogo from "../assets/other_list.png";
 import OtherMenuBarSuperAdm from "./OtherMenuBarSuperAdm";
 import { Link } from "react-router-dom";
+import { RemoveScrollBar, zeroRightClassName } from "react-remove-scroll-bar";
+import App from "../App";
 
 const SuperAdminNavbar = () => {
   const [menu, setMenu] = useState([
@@ -30,6 +32,14 @@ const SuperAdminNavbar = () => {
 
   const closeModal = () => {
     setModalIsOpen(false);
+
+    document.body.style.overflow = "unset";
+  };
+
+  const openModal = () => {
+    setModalIsOpen(true);
+
+    document.body.style.overflow = "hidden";
   };
 
   const renderIcon = () => {
@@ -44,7 +54,7 @@ const SuperAdminNavbar = () => {
                 height={"40px"}
                 justifySelf={"center"}
               />
-              <Text textAlign={"center"} fontFamily={"roboto"}>
+              <Text textAlign={"center"} fontFamily={"roboto"} color={"black"}>
                 {val.text}
               </Text>
             </Box>
@@ -64,11 +74,13 @@ const SuperAdminNavbar = () => {
         right={"0"}
         left={"0"}
         fontWeight={"bold"}
+        margin={"auto"}
+        maxWidth={"480px"}
       >
         <Grid templateColumns="repeat(4, 1fr)" gap={1} margin={"5px"}>
           {renderIcon()}
           <GridItem h="65px">
-            <Box display={"grid"} onClick={() => setModalIsOpen(true)}>
+            <Box display={"grid"} onClick={openModal}>
               <Image
                 src={otherLogo}
                 alt="logo"

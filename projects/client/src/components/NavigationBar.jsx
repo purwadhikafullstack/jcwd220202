@@ -61,6 +61,8 @@ const Navigation = () => {
         right={"0"}
         left={"0"}
         fontWeight={"bold"}
+        margin={"auto"}
+        maxWidth={"480px"}
       >
         <Grid templateColumns="repeat(4, 1fr)" gap={1} margin={"5px"}>
           {renderIcon()}

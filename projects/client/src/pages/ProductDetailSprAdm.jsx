@@ -51,6 +51,18 @@ const ProductDetailSprAdm = () => {
     setEditMode(false);
   };
 
+  const openDeleteAlert = () => {
+    onOpen();
+
+    document.body.style.overflow = "hidden";
+  };
+
+  const closeDeleteAlert = () => {
+    onClose();
+
+    document.body.style.overflow = "unset";
+  };
+
   const fetchProductDetail = async () => {
     try {
       const response = await axiosInstance.get(
@@ -97,13 +109,19 @@ const ProductDetailSprAdm = () => {
       await axiosInstance.delete(`/admin-product/super-admin/${params.id}`);
 
       navigate("/super-admin/product");
+      closeDeleteAlert();
       toast({
-        title: "Product deleted",
+        title: "Product Deleted",
         status: "info",
-        position: "top-right",
+        position: "top",
       });
     } catch (error) {
       console.log(error);
+      toast({
+        title: "Server Error",
+        status: "error",
+        position: "top",
+      });
     }
   };
 
@@ -116,6 +134,7 @@ const ProductDetailSprAdm = () => {
   };
 
   const SUPPORTED_FORMATS = ["image/jpg", "image/jpeg", "image/png"];
+  const FILE_SIZE = 1282810;
 
   const formik = useFormik({
     initialValues: {
@@ -159,24 +178,22 @@ const ProductDetailSprAdm = () => {
           productData.append("product_image", product_image);
         }
 
-        const editRes = await axiosInstance.patch(
+        await axiosInstance.patch(
           `/admin-product/super-admin/${productDetail.id}`,
           productData
         );
-
-        console.log(editRes);
 
         fetchProductDetail();
         setEditMode(false);
 
         toast({
-          title: "product updated",
+          title: "Product Updated",
           status: "info",
         });
       } catch (error) {
         console.log(error);
         toast({
-          title: "Product not edited",
+          title: "Product not Edited",
           description: error.response.data.message,
           status: "error",
         });
@@ -189,6 +206,11 @@ const ProductDetailSprAdm = () => {
           "format",
           "extension file doesn't match",
           (value) => !value || (value && SUPPORTED_FORMATS.includes(value.type))
+        )
+        .test(
+          "file size",
+          "Uploaded file is too big.",
+          (value) => !value || (value && value.size <= FILE_SIZE)
         ),
       product_name: Yup.string(),
       product_price: Yup.number().min(1, "value must be greater than 0"),
@@ -199,9 +221,6 @@ const ProductDetailSprAdm = () => {
     }),
     validateOnChange: false,
   });
-  // console.log(productDetail.product_price);
-  // console.log(formik.initialValues);
-  // console.log(formik.values.product_price);
 
   const formChangeHandler = ({ target }) => {
     const { name, value } = target;
@@ -323,7 +342,7 @@ const ProductDetailSprAdm = () => {
                   {formik.errors.product_price}
                 </FormErrorMessage>
               </FormControl>
-              <FormControl mt={"5px"}>
+              <FormControl mt={"5px"} isInvalid={formik.errors.CategoryId}>
                 <FormLabel fontWeight={"bold"}>Category:</FormLabel>
                 <Select
                   // value={formik.values.CategoryId || null}
@@ -338,8 +357,6 @@ const ProductDetailSprAdm = () => {
                   styles={colourStyles}
                   name="CategoryId"
                   onChange={(event) => {
-                    console.log(event);
-
                     formik.setFieldValue("CategoryId", event);
                   }}
                   placeholder={"Select Category"}
@@ -370,7 +387,7 @@ const ProductDetailSprAdm = () => {
                 bgColor={"#E07A5F"}
                 borderRadius={"15px"}
                 _hover={{
-                  bgColor: "#E07A5F",
+                  bg: "#E07A5F",
                 }}
                 color={"white"}
                 marginLeft={"30px"}
@@ -402,22 +419,24 @@ const ProductDetailSprAdm = () => {
           <VStack spacing={4} align="stretch" mt={"90px"}>
             <Box h="300px" display={"flex"} justifyContent={"center"}>
               <Image
-                src={productDetail?.product_image || selectedImage}
+                src={productDetail?.product_image || "Loading...'"}
                 alt="Picture"
                 objectFit={"contain"}
                 height={"100%"}
                 maxW={"300px"}
+                border={"1px solid #E07A5F"}
+                borderRadius={"5px"}
               />
             </Box>
             <Box px={"30px"}>
               <Box fontWeight={"bold"}>Product Name:</Box>
               <Box
                 bgColor={"white"}
-                borderRadius={"5px"}
-                border={"1px solid lightgrey"}
                 height={"40px"}
                 py={"8px"}
                 mt={"8px"}
+                border={"1px solid #E07A5F"}
+                borderRadius={"5px"}
               >
                 <Text
                   ml={"16px"}
@@ -434,8 +453,8 @@ const ProductDetailSprAdm = () => {
               </Box>
               <Box
                 bgColor={"white"}
+                border={"1px solid #E07A5F"}
                 borderRadius={"5px"}
-                border={"1px solid lightgrey"}
                 height={"40px"}
                 py={"8px"}
                 mt={"8px"}
@@ -452,8 +471,8 @@ const ProductDetailSprAdm = () => {
               </Box>
               <Box
                 bgColor={"white"}
+                border={"1px solid #E07A5F"}
                 borderRadius={"5px"}
-                border={"1px solid lightgrey"}
                 height={"40px"}
                 py={"8px"}
                 mt={"8px"}
@@ -467,13 +486,13 @@ const ProductDetailSprAdm = () => {
               </Box>
               <Box
                 bgColor={"white"}
+                border={"1px solid #E07A5F"}
                 borderRadius={"5px"}
-                border={"1px solid lightgrey"}
                 height={"120px"}
                 py={"8px"}
                 mt={"8px"}
-                overflow={"scroll"}
-                maxWidth={"370px"}
+                overflowY={"scroll"}
+                maxWidth={"420px"}
               >
                 <Text mx={"16px"}>
                   {productDetail.product_description || "Loading..."}
@@ -490,7 +509,7 @@ const ProductDetailSprAdm = () => {
                 color={"white"}
                 width={"100%"}
                 marginLeft={"30px"}
-                onClick={onOpen}
+                onClick={openDeleteAlert}
               >
                 Delete
               </Button>
@@ -513,16 +532,16 @@ const ProductDetailSprAdm = () => {
       )}
 
       {/* alert for delete */}
-      <AlertDialog isOpen={isOpen} onClose={onClose}>
+      <AlertDialog isOpen={isOpen} onClose={closeDeleteAlert}>
         <AlertDialogOverlay>
           <AlertDialogContent
-            mt={"150px"}
+            mt={"35vh"}
             fontFamily={"roboto"}
             fontSize={"16px"}
             bgColor={"#F4F1DE"}
           >
             <AlertDialogHeader
-              fontSize="lg"
+              fontSize={"16px"}
               fontWeight="bold"
               ml={"10px"}
               mt={"10px"}
@@ -536,12 +555,15 @@ const ProductDetailSprAdm = () => {
 
             <AlertDialogFooter display={"contents"}>
               <Button
-                onClick={onClose}
+                onClick={closeDeleteAlert}
                 mx={"30px"}
                 mt={"10px"}
                 borderRadius={"15px"}
                 bgColor={"#81B29A"}
                 color={"white"}
+                _hover={{
+                  bgColor: "green.500",
+                }}
               >
                 Cancel
               </Button>
@@ -553,6 +575,9 @@ const ProductDetailSprAdm = () => {
                 mb={"40px"}
                 borderRadius={"15px"}
                 bgColor={"#E07A5F"}
+                _hover={{
+                  bgColor: "red.500",
+                }}
               >
                 Delete
               </Button>

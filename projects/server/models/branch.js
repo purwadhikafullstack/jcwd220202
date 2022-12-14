@@ -11,6 +11,8 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       Branch.hasMany(models.ProductBranch);
       Branch.belongsTo(models.User);
+      Branch.hasMany(models.ProductHistory);
+      Branch.hasMany(models.Transaction);
     }
   }
   Branch.init(

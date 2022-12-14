@@ -4,6 +4,9 @@ const { uploadProduct } = require("../../lib/productUploader");
 const adminProductController = require("../controllers/adminProductController");
 const { validateAddProduct } = require("../middlewares/addProductMiddleware");
 const { validateEditProduct } = require("../middlewares/editProductMiddleware");
+const {
+  validateEditProductBranch,
+} = require("../middlewares/editProductBranchMiddleware");
 
 const router = express.Router();
 
@@ -61,7 +64,14 @@ router.patch(
 
 router.delete(
   "/super-admin/:id",
+  verifyToken,
   adminProductController.deleteProductByIdSprAdm
+);
+
+router.get(
+  "/super-admin/restore/:id",
+  verifyToken,
+  adminProductController.restoreProductById
 );
 
 router.post(
