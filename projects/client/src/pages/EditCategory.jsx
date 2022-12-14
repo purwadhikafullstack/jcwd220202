@@ -79,7 +79,7 @@ const CategoryEdit = () => {
     }, [])
 
     return (
-        <Box bgColor={"#81B29A"} h={"932px"}>
+        <Box bgColor={"#F4F1DE"} h={"932px"} fontFamily={"roboto"}>
             <UpperBarSprAdm />
             <Stack spacing={3} p={10} pt={"100px"}>
                 <FormControl isInvalid={formik.errors.category_name}>
@@ -108,6 +108,8 @@ const CategoryEdit = () => {
                     }}
                 />
                 <Button
+                    bgColor={"#81B29A"}
+                    color={"white"}
                     onClick={() => {
                         inputFileRef.current.click()
                     }}
@@ -119,6 +121,8 @@ const CategoryEdit = () => {
                     <Button
                         onClick={formik.handleSubmit}
                         isDisabled={formik.isSubmitting}
+                        bgColor={"#81B29A"}
+                        color={"white"}
                     >
                         Edit Category
                     </Button>

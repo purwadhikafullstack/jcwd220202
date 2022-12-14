@@ -39,7 +39,7 @@ const categoryController = {
     updateCategory: async (req, res) => {
         try {
             if (req.file) {
-                req.body.profile_picture = `http://localhost:8000/public/${req.file.filename}`
+                req.body.category_image = `http://localhost:8000/public/${req.file.filename}`
             }
 
             const { category_name, icon_url } = req.body

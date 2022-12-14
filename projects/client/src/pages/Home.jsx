@@ -37,7 +37,7 @@ const Home = () => {
     }, [])
 
     return (
-        <Box bgColor={"#81B29A"} h={"932px"} mt={"70px"}>
+        <Box bgColor={"#81B29A"} h={"932px"} mt={"70px"} fontFamily={"roboto"}>
             <SearchBar />
             <Box h={"200px"} bgColor={"#F4F1DE"}>
                 <Carousel />
