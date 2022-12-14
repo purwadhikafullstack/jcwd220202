@@ -260,7 +260,7 @@ const Home = () => {
                 w={"50px"}
                 alignItems={"center"}
               />
-              <Text fontSize={"xs"}>{item.name}</Text>
+              <Text fontSize={"xs"}>{item.category_name}</Text>F
             </Box>
           );
         })}
@@ -275,7 +275,13 @@ const Home = () => {
           </Box>
         </Link>
       </SimpleGrid>
-      <Box  bgColor={"#F4F1DE"} mt={"10px"} position={"relative"} h={"100vh"} overflow={"scroll"}>
+      <Box
+        bgColor={"#F4F1DE"}
+        mt={"10px"}
+        position={"relative"}
+        h={"100vh"}
+        overflow={"scroll"}
+      >
         <Box ml={"5"} mt={"5"} position={"absolute"}>
           <Grid templateColumns="repeat(3, 1fr)" gap={2} mx={"15px"}>
             <GridItem w="100%" h="10">

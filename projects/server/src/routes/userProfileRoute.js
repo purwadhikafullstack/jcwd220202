@@ -2,14 +2,13 @@ const express = require("express")
 const profileController = require("../controllers/profileController")
 const { verifyToken } = require("../middlewares/loginMiddleware")
 const router = express.Router()
-const { upload } = require("../../lib/upload")
+const { uploader } = require("../../lib/uploader")
 
-// router.patch("/", verifyToken, profileController.updateProfile)
 router.patch(
     "/",
     verifyToken,
-    upload({
-        acceptedFileTypes: ["png", "jpeg", "jpg"],
+    uploader({
+        acceptedFileTypes: ["png", "gif", "jpg"],
         filePrefix: "PROF",
     }).single("profile_picture"),
     profileController.updateProfile

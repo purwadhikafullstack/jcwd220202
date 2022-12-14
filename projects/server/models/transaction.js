@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
       Transaction.belongsTo(models.ReferralVoucher);
       Transaction.belongsTo(models.User);
       Transaction.belongsTo(models.Branch);
-    //   Transaction.belongsTo(models.Voucher);
+      Transaction.belongsTo(models.Voucher);
       Transaction.hasMany(models.TransactionItem);
     }
   }

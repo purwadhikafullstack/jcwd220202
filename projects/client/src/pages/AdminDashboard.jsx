@@ -1,6 +1,6 @@
 import { Box, Grid, GridItem, Image, Text } from "@chakra-ui/react";
 import AdminNavbar from "../components/AdminNavbar";
-import LineChart from "../components/LineChart";
+import LineChartAdmin from "../components/LineChartAdmin";
 import UpperBarAdmin from "../components/UpperAdminBar";
 import shoppingPic from "../assets/login_logo.png";
 
@@ -53,7 +53,7 @@ const AdminDashboard = () => {
           height: "250px",
         }}
       >
-        <LineChart />
+        <LineChartAdmin />
       </Box>
       <Box>
         <Text

@@ -8,9 +8,12 @@ const transactionController = {
     try {
       const conditionDouble = await db.Cart.findOne({
         where: {
-          [Op.and]: [{ ProductBranchId: req.body.ProductBranchId }, { UserId: req.user.id }],
+          [Op.and]: [
+            { ProductBranchId: req.body.ProductBranchId },
+            { UserId: req.user.id },
+          ],
         },
-      }); 
+      });
       if (conditionDouble) {
         return res.status(400).json({
           message: "Product already added",
@@ -21,7 +24,7 @@ const transactionController = {
           ProductBranchId,
           quantity,
           total_product_price,
-        })
+        });
 
         return res.status(200).json({
           message: "Added to cart",
@@ -41,17 +44,17 @@ const transactionController = {
     try {
       const userCart = await db.Cart.findAll({
         where: {
-          UserId: req.user.id
-        }, include: [
-          {model: db.ProductBranch, include: [{model: db.Product}]}
-        ]
-      })
-      
-      
+          UserId: req.user.id,
+        },
+        include: [
+          { model: db.ProductBranch, include: [{ model: db.Product }] },
+        ],
+      });
+
       return res.status(200).json({
         message: "Showing user cart",
-        data: userCart
-      })
+        data: userCart,
+      });
     } catch (err) {
       console.log(err);
       return res.status(500).json({
@@ -65,17 +68,17 @@ const transactionController = {
     try {
       const userCart = await db.Cart.findAll({
         where: {
-          UserId: req.user.id
-        }, include: [
-          {model: db.ProductBranch, include: [{model: db.Product}]}
-        ]
-      })
-      
-      
+          UserId: req.user.id,
+        },
+        include: [
+          { model: db.ProductBranch, include: [{ model: db.Product }] },
+        ],
+      });
+
       return res.status(200).json({
         message: "Showing user cart",
-        data: userCart
-      })
+        data: userCart,
+      });
     } catch (err) {
       console.log(err);
       return res.status(500).json({
@@ -85,11 +88,11 @@ const transactionController = {
   },
   checkoutItems: async (req, res) => {
     try {
-      const currentCart =  await db.Cart.findAll({
+      const currentCart = await db.Cart.findAll({
         where: {
-          UserId: req.user.id
-        }
-      })
+          UserId: req.user.id,
+        },
+      });
       // console.log(currentCart.id);
       // console.log(JSON.parse(JSON.stringify()))
       const createTransaction = await db.Transaction.create({
@@ -97,24 +100,23 @@ const transactionController = {
         total_price: 7777,
         total_quantity: 888,
         ProductBranchId: currentCart.ProductBranchId,
-      })
-      currentCart.map((val)=> {
-         db.TransactionItem.create({
+      });
+      currentCart.map((val) => {
+        db.TransactionItem.create({
           TransactionId: createTransaction.id,
           // applied_discount,
           current_price: 99999,
           ProductBranchId: val.ProductBranchId,
-         })
-      })
+        });
+      });
       return res.status(200).json({
-        message: "Product checked out"
-      })
-
+        message: "Product checked out",
+      });
     } catch (err) {
       console.log(err);
       return res.status(500).json({
-        message: "Server error handling cart"
-      })
+        message: "Server error handling cart",
+      });
     }
   },
 };

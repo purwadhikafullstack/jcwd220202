@@ -1,5 +1,6 @@
 const db = require("../../models");
 const { Op } = require("sequelize");
+const fs = require("fs");
 
 const adminProductController = {
   createProduct: async (req, res) => {
@@ -79,6 +80,7 @@ const adminProductController = {
       ) {
         if (!Number(CategoryId)) {
           const getAllProducts = await db.Product.findAndCountAll({
+            paranoid: false,
             limit: Number(_limit),
             offset: (_page - 1) * _limit,
             include: [{ model: db.Category }],
@@ -102,6 +104,7 @@ const adminProductController = {
         }
 
         const getAllProducts = await db.Product.findAndCountAll({
+          paranoid: false,
           limit: Number(_limit),
           offset: (_page - 1) * _limit,
           include: [{ model: db.Category }],
@@ -126,6 +129,7 @@ const adminProductController = {
       }
 
       const getAllProducts = await db.Product.findAndCountAll({
+        paranoid: false,
         limit: Number(_limit),
         offset: (_page - 1) * _limit,
         include: [{ model: db.Category }],
@@ -176,9 +180,11 @@ const adminProductController = {
             include: [
               {
                 model: db.ProductBranch,
+                // paranoid: false,
                 include: [
                   {
                     model: db.Product,
+                    // paranoid: false,
                     where: {
                       [Op.or]: [
                         {
@@ -231,9 +237,11 @@ const adminProductController = {
           include: [
             {
               model: db.ProductBranch,
+              // paranoid: false,
               include: [
                 {
                   model: db.Product,
+                  // paranoid: false,
                   where: {
                     [Op.or]: [
                       {
@@ -283,9 +291,11 @@ const adminProductController = {
         include: [
           {
             model: db.ProductBranch,
+            // paranoid: false,
             include: [
               {
                 model: db.Product,
+                // paranoid: false,
                 include: [{ model: db.Category }],
               },
             ],
@@ -364,6 +374,12 @@ const adminProductController = {
         });
       }
 
+      if (req.body.product_image) {
+        const findProduct = await db.Product.findByPk(req.params.id);
+
+        fs.unlinkSync(`public/${findProduct.product_image.split("/")[4]}`);
+      }
+
       await db.Product.update(
         { ...req.body },
         {
@@ -374,6 +390,8 @@ const adminProductController = {
       );
 
       const findProductById = await db.Product.findByPk(req.params.id);
+
+      // delete foto yg sebelumnya
 
       return res.status(200).json({
         message: "product data edited",
@@ -431,13 +449,15 @@ const adminProductController = {
       const { discount_amount_nominal, discount_amount_percentage, stock } =
         req.body;
 
-      console.log(req.body);
+      if (stock < 0) {
+        return res.status(400).json({
+          message: "stock can't go under 0",
+        });
+      }
 
       const findAdmin = await db.User.findByPk(req.user.id, {
         include: [{ model: db.Branch }],
       });
-
-      console.log(findAdmin);
 
       if (findAdmin.RoleId !== 2) {
         return res.status(400).json({
@@ -446,6 +466,29 @@ const adminProductController = {
       }
 
       const parseAdmin = JSON.parse(JSON.stringify(findAdmin));
+
+      const findProductWillUpdated = await db.ProductBranch.findOne({
+        where: {
+          BranchId: parseAdmin.Branch.id,
+          ProductId: req.params.id,
+        },
+      });
+
+      if (stock === findProductWillUpdated.stock) {
+        return res.status(200).json({
+          message: "product updated but not including the history",
+        });
+      }
+
+      const stock_movement = stock - findProductWillUpdated.stock;
+
+      await db.ProductHistory.create({
+        BranchId: parseAdmin.Branch.id,
+        ProductId: req.params.id,
+        initial_stock: findProductWillUpdated.stock,
+        stock_movement: stock_movement,
+        remarks: "Warehouse Activity",
+      });
 
       if (discount_amount_nominal > 0 && discount_amount_percentage > 0) {
         return res.status(400).json({
@@ -482,6 +525,31 @@ const adminProductController = {
           ],
         });
 
+        const findHistory = await db.ProductHistory.findAll({
+          where: {
+            remarks: "Warehouse Activity",
+            ProductId: req.params.id,
+            BranchId: parseAdmin.Branch.id,
+          },
+        });
+
+        const parseFindHistory = JSON.parse(JSON.stringify(findHistory));
+
+        const parseFindProductById = JSON.parse(
+          JSON.stringify(findProductById)
+        );
+
+        await db.ProductHistory.update(
+          {
+            current_stock: parseFindProductById.ProductBranches[0].stock,
+          },
+          {
+            where: {
+              id: parseFindHistory[parseFindHistory.length - 1].id,
+            },
+          }
+        );
+
         return res.status(200).json({
           message: "discount and stock edited ",
           data: findProductById,
@@ -517,6 +585,31 @@ const adminProductController = {
           ],
         });
 
+        const findHistory = await db.ProductHistory.findAll({
+          where: {
+            remarks: "Warehouse Activity",
+            ProductId: req.params.id,
+            BranchId: parseAdmin.Branch.id,
+          },
+        });
+
+        const parseFindHistory = JSON.parse(JSON.stringify(findHistory));
+
+        const parseFindProductById = JSON.parse(
+          JSON.stringify(findProductById)
+        );
+
+        await db.ProductHistory.update(
+          {
+            current_stock: parseFindProductById.ProductBranches[0].stock,
+          },
+          {
+            where: {
+              id: parseFindHistory[parseFindHistory.length - 1].id,
+            },
+          }
+        );
+
         return res.status(200).json({
           message: "discount and stock edited ",
           data: findProductById,
@@ -533,11 +626,33 @@ const adminProductController = {
     try {
       const { id } = req.params;
 
+      // const findProduct = await db.Product.findByPk(id);
+
+      // fs.unlinkSync(`public/${findProduct.product_image.split("/")[4]}`);
+
+      await db.ProductBranch.update(
+        { is_DeletedInBranch: true },
+        {
+          where: {
+            ProductId: id,
+          },
+        }
+      );
+
       await db.ProductBranch.destroy({
         where: {
           ProductId: id,
         },
       });
+
+      await db.Product.update(
+        { is_Deleted: true },
+        {
+          where: {
+            id: id,
+          },
+        }
+      );
 
       await db.Product.destroy({
         where: {
@@ -552,6 +667,50 @@ const adminProductController = {
       console.log(error);
       return res.status(500).json({
         message: "Server error",
+      });
+    }
+  },
+  restoreProductById: async (req, res) => {
+    try {
+      const { id } = req.params;
+
+      await db.ProductBranch.restore({
+        where: {
+          ProductId: id,
+        },
+      });
+
+      await db.ProductBranch.update(
+        { is_DeletedInBranch: false },
+        {
+          where: {
+            ProductId: id,
+          },
+        }
+      );
+
+      await db.Product.restore({
+        where: {
+          id: id,
+        },
+      });
+
+      await db.Product.update(
+        { is_Deleted: false },
+        {
+          where: {
+            id: id,
+          },
+        }
+      );
+
+      return res.status(200).json({
+        message: "data restored",
+      });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({
+        message: "server error",
       });
     }
   },

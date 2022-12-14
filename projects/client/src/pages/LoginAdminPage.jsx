@@ -59,8 +59,8 @@ const LoginPage = () => {
 
           toast({
             status: "success",
-            title: "Login success",
-            position: "top-right",
+            title: "Login Success",
+            position: "top",
             description: response.data.message,
           });
 
@@ -71,15 +71,15 @@ const LoginPage = () => {
 
         toast({
           status: "success",
-          title: "Login success",
-          position: "top-right",
+          title: "Login Success",
+          position: "top",
           description: response.data.message,
         });
       } catch (err) {
         console.log(err);
         toast({
           status: "error",
-          title: "Login failed",
+          title: "Login Failed",
           description: err.response.data.message,
         });
       }

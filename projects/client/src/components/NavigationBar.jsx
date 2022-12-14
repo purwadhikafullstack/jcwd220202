@@ -66,7 +66,6 @@ const Navigation = () => {
           {renderIcon()}
         </Grid>
       </Box>
-      
     </>
   );
 };

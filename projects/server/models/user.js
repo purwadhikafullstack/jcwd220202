@@ -14,6 +14,7 @@ module.exports = (sequelize, DataTypes) => {
       User.hasOne(models.ReferralVoucher);
       User.hasMany(models.Cart);
       User.hasOne(models.Branch);
+      User.hasMany(models.Transaction);
     }
   }
   User.init(

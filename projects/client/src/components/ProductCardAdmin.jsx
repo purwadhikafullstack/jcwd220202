@@ -13,12 +13,10 @@ const ProductCardAdmin = ({
   discount_amount_percentage,
   ProductId,
 }) => {
-  const truncate = (string, length) => {
-    if (string.length > length) return string.substring(0, length) + "...";
-    else return string;
-  };
-
-  const params = useParams();
+  // const truncate = (string, length) => {
+  //   if (string.length > length) return string.substring(0, length) + "...";
+  //   else return string;
+  // };
 
   const formatRupiah = (value) => {
     return new Intl.NumberFormat("id-ID", {
@@ -28,8 +26,82 @@ const ProductCardAdmin = ({
     }).format(value);
   };
 
+  const showPrice = () => {
+    if (discount_amount_nominal === 0 && discount_amount_percentage === 0) {
+      return (
+        <Text
+          fontWeight={"bold"}
+          overflow={"hidden"}
+          textOverflow={"ellipsis"}
+          whiteSpace={"nowrap"}
+          width={"110px"}
+        >
+          {formatRupiah(product_price) || "Rp. 1.000.000"}
+        </Text>
+      );
+    }
+
+    if (discount_amount_nominal === 0) {
+      const countDiscount =
+        product_price - (product_price * discount_amount_percentage) / 100;
+
+      return (
+        <>
+          <Text
+            fontWeight={"bold"}
+            overflow={"hidden"}
+            textOverflow={"ellipsis"}
+            whiteSpace={"nowrap"}
+            width={"110px"}
+            textDecoration={"line-through"}
+          >
+            {formatRupiah(product_price) || "Rp. 1.000.000"}
+          </Text>
+          <Text
+            fontWeight={"bold"}
+            overflow={"hidden"}
+            textOverflow={"ellipsis"}
+            whiteSpace={"nowrap"}
+            width={"110px"}
+          >
+            {formatRupiah(countDiscount) || "Rp. 1.000.000"}
+          </Text>
+        </>
+      );
+    }
+
+    if (discount_amount_percentage === 0) {
+      const countDiscount = product_price - discount_amount_nominal;
+
+      return (
+        <>
+          <Text
+            fontWeight={"bold"}
+            overflow={"hidden"}
+            textOverflow={"ellipsis"}
+            whiteSpace={"nowrap"}
+            width={"110px"}
+            textDecoration={"line-through"}
+          >
+            {formatRupiah(product_price) || "Rp. 1.000.000"}
+          </Text>
+          <Text
+            fontWeight={"bold"}
+            overflow={"hidden"}
+            textOverflow={"ellipsis"}
+            whiteSpace={"nowrap"}
+            width={"110px"}
+          >
+            {formatRupiah(countDiscount) < 0
+              ? 0
+              : formatRupiah(countDiscount) || "Rp. 1.000.000"}
+          </Text>
+        </>
+      );
+    }
+  };
+
   const showDiscount = () => {
-    // console.log(discount_amount_percentage);
     if (discount_amount_nominal === 0 && discount_amount_percentage === 0) {
       return (
         <Text
@@ -133,25 +205,17 @@ const ProductCardAdmin = ({
             />
           </Box>
           <Box flex="2">
-            <Box marginY={"25px"} p={"5px"}>
+            <Box marginY={"20px"} p={"5px"}>
               <Text
                 fontWeight={"bold"}
                 overflow={"hidden"}
                 textOverflow={"ellipsis"}
                 whiteSpace={"nowrap"}
-                width={"120px"}
+                maxWidth={"130px"}
               >
                 {product_name || "Batagor ori asli 100%"}
               </Text>
-              <Text
-                fontWeight={"bold"}
-                overflow={"hidden"}
-                textOverflow={"ellipsis"}
-                whiteSpace={"nowrap"}
-                width={"110px"}
-              >
-                {"Rp. 1.000.000"}
-              </Text>
+              {showPrice()}
               <Text
                 fontWeight={"bold"}
                 color={"#E07A5F"}
@@ -159,7 +223,7 @@ const ProductCardAdmin = ({
                 overflow={"hidden"}
                 textOverflow={"ellipsis"}
                 whiteSpace={"nowrap"}
-                width={"120px"}
+                maxWidth={"130px"}
               >
                 {CategoryId || "Snacks"}
               </Text>
@@ -172,10 +236,11 @@ const ProductCardAdmin = ({
               <Button
                 borderRadius={"10px"}
                 my={"70px"}
-                marginRight={"5px"}
+                marginRight={"10px"}
                 bgColor={"#81B29A"}
                 _hover={{
                   bgColor: "#81B29A",
+                  color: "white",
                 }}
               >
                 Details

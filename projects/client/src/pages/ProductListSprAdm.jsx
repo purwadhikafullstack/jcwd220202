@@ -9,6 +9,9 @@ import {
   Input,
   InputGroup,
   InputRightElement,
+  ListItem,
+  OrderedList,
+  Text,
 } from "@chakra-ui/react";
 
 import searchIcon from "../assets/search.png";
@@ -23,6 +26,11 @@ import Select from "react-select";
 import { axiosInstance } from "../api";
 import { useEffect, useState } from "react";
 import { useFormik } from "formik";
+import ReactPaginate from "react-paginate";
+import "../style/pagination.css";
+import productNotFound from "../assets/feelsorry.png";
+
+const maxItemsPerPage = 12;
 
 const ProductListSprAdm = () => {
   const [category, setCategory] = useState([]);
@@ -86,6 +94,7 @@ const ProductListSprAdm = () => {
       fontSize: "15px",
       width: "150px",
       color: "black",
+      zIndex: 3,
     }),
     placeholder: (defaultStyles) => {
       return {
@@ -100,7 +109,6 @@ const ProductListSprAdm = () => {
   };
 
   const fetchProducts = async () => {
-    const maxItemsPerPage = 25;
     try {
       const response = await axiosInstance.get("/admin-product/super-admin", {
         params: {
@@ -114,9 +122,19 @@ const ProductListSprAdm = () => {
       });
 
       setProduct(response.data.data);
+
+      setTotalProducts(response.data.dataCount);
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const maxPage = Math.ceil(totalProducts / maxItemsPerPage);
+
+  const handlePageClick = (data) => {
+    let currentPage = data.selected + 1;
+
+    setActivePage(currentPage);
   };
 
   const sortProductHandler = (event) => {
@@ -126,6 +144,8 @@ const ProductListSprAdm = () => {
 
   const filterProductHandler = (event) => {
     setFilter(event.value);
+
+    setActivePage(1);
   };
 
   const formik = useFormik({
@@ -153,6 +173,8 @@ const ProductListSprAdm = () => {
           product_image={val.product_image}
           CategoryId={val.Category.category_name}
           ProductId={val.id}
+          is_Deleted={val.is_Deleted}
+          fetchProducts={fetchProducts}
         />
       );
     });
@@ -164,7 +186,7 @@ const ProductListSprAdm = () => {
 
   useEffect(() => {
     fetchProducts();
-  }, [sortBy, sortDir, filter, currentSearch]);
+  }, [sortBy, sortDir, filter, currentSearch, activePage]);
 
   return (
     <Box
@@ -290,6 +312,7 @@ const ProductListSprAdm = () => {
                     textAlign={"center"}
                     fontWeight={"bold"}
                     fontSize={"15px"}
+                    color={"black"}
                   >
                     Product
                   </Box>
@@ -299,9 +322,44 @@ const ProductListSprAdm = () => {
           </Link>
         </Grid>
       </Box>
-      <Box>
+      {!product.length ? null : (
+        <Box marginTop={"20px"}>
+          <ReactPaginate
+            previousLabel={"previous"}
+            nextLabel={"next"}
+            breakLabel={"..."}
+            pageCount={maxPage}
+            marginPagesDisplayed={5}
+            pageRangeDisplayed={1}
+            onPageChange={handlePageClick}
+            containerClassName={"pagination justify-content-center"}
+            pageClassName={"page-item"}
+            pageLinkClassName={"page-link"}
+            previousClassName={"page-item"}
+            previousLinkClassName={"page-link"}
+            nextClassName={"page-item"}
+            nextLinkClassName={"page-link"}
+            breakClassName={"page-item"}
+            breakLinkClassName={"page-link"}
+          />
+        </Box>
+      )}
+      {!product.length ? (
+        <Box display={"grid"} mt={"15vh"}>
+          <Text textAlign={"center"} fontWeight={"bold"}>
+            No item(s) found
+          </Text>
+          <Image
+            src={productNotFound}
+            alt="not found"
+            width={"70%"}
+            objectFit={"contain"}
+            justifySelf={"center"}
+          />
+        </Box>
+      ) : (
         <Box>{renderProducts()}</Box>
-      </Box>
+      )}
       <Box>
         <SuperAdminNavbar />
       </Box>

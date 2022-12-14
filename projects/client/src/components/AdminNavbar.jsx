@@ -1,4 +1,20 @@
-import { Box, Grid, GridItem, Image, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Drawer,
+  DrawerBody,
+  DrawerContent,
+  DrawerHeader,
+  DrawerOverlay,
+  Grid,
+  GridItem,
+  Image,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+  Text,
+  useDisclosure,
+} from "@chakra-ui/react";
 import { useState } from "react";
 import homeLogo from "../assets/home.png";
 import productLogo from "../assets/product.png";
@@ -27,9 +43,18 @@ const AdminNavbar = () => {
   ]);
 
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const closeModal = () => {
     setModalIsOpen(false);
+
+    document.body.style.overflow = "unset";
+  };
+
+  const openModal = () => {
+    setModalIsOpen(true);
+
+    document.body.style.overflow = "hidden";
   };
 
   const renderIcon = () => {
@@ -45,7 +70,7 @@ const AdminNavbar = () => {
                 height={"40px"}
                 justifySelf={"center"}
               />
-              <Text textAlign={"center"} fontFamily={"roboto"}>
+              <Text textAlign={"center"} fontFamily={"roboto"} color={"black"}>
                 {val.text}
               </Text>
             </Box>
@@ -65,11 +90,13 @@ const AdminNavbar = () => {
         right={"0"}
         left={"0"}
         fontWeight={"bold"}
+        maxWidth={"480px"}
+        margin={"auto"}
       >
         <Grid templateColumns="repeat(4, 1fr)" gap={1} margin={"5px"}>
           {renderIcon()}
-          <GridItem h="65px">
-            <Box display={"grid"} onClick={() => setModalIsOpen(true)}>
+          <GridItem h="65px" display={"grid"} onClick={openModal}>
+            <Box display={"grid"}>
               <Image
                 src={otherLogo}
                 alt="logo"

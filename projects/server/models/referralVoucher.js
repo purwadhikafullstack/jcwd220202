@@ -10,6 +10,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       ReferralVoucher.belongsTo(models.User);
+      ReferralVoucher.hasOne(models.Transaction);
     }
   }
   ReferralVoucher.init(
