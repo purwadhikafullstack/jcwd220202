@@ -371,11 +371,11 @@ const ProductDetailSprAdm = () => {
                 <Textarea
                   placeholder="Write product description"
                   bgColor={"white"}
-                  overflow={"scroll"}
+                  overflowY={"scroll"}
                   name="product_description"
                   value={formik.values.product_description}
                   onChange={formChangeHandler}
-                  height={"90px"}
+                  height={"120px"}
                 />
                 <FormErrorMessage>
                   {formik.errors.product_description}

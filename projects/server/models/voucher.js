@@ -10,6 +10,9 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       Voucher.hasOne(models.Transaction);
+      Voucher.belongsTo(models.Branch);
+      Voucher.belongsTo(models.VoucherType);
+      Voucher.belongsTo(models.Product);
     }
   }
   Voucher.init(
@@ -17,8 +20,30 @@ module.exports = (sequelize, DataTypes) => {
       voucher_name: {
         type: DataTypes.STRING,
       },
-      discount_amount: {
+      discount_amount_nominal: {
         type: DataTypes.INTEGER,
+      },
+      discount_amount_percentage: {
+        type: DataTypes.INTEGER,
+      },
+      voucher_start_date: {
+        type: DataTypes.DATE,
+      },
+      voucher_end_date: {
+        type: DataTypes.DATE,
+      },
+      minimum_payment: {
+        type: DataTypes.INTEGER,
+      },
+      minimum_transaction_done: {
+        type: DataTypes.INTEGER,
+      },
+      quantity: {
+        type: DataTypes.INTEGER,
+      },
+      is_expired: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
       },
     },
     {

@@ -29,13 +29,15 @@ import AdminTransaction from "./pages/AdminTransaction";
 import AdminTransactionDetail from "./pages/AdminTransactionDetail";
 import AdminProductMutation from "./pages/AdminProductMutation";
 import grocerinLogo from "./assets/GROCERIN.png";
+import VoucherAdmin from "./pages/VoucherAdmin";
 import "./style/index.css";
 import NotFound from "./pages/404Page";
-import CategoryEdit from "./pages/EditCategory";
 import CreateBranch from "./pages/CreateBranchSprAdmin";
 import UserSprAdmin from "./pages/UserSprAdmin";
 import CartUser from "./pages/CartPageUser";
 import OrderUser from "./pages/OrderUser";
+import AddVoucherAdmin from "./pages/AddVoucherAdmin";
+import CategoryEdit from "./pages/EditCategory";
 
 const App = () => {
   const authSelector = useSelector((state) => state.auth);
@@ -132,6 +134,7 @@ const App = () => {
           <Route path="/product" element={<ProductPage />} />
           <Route path="/super-admin/category" element={<AdminCategory />} />
           <Route path="/super-admin/category/add" element={<AddCategory />} />
+          <Route path="/category/:id" element={<CategoryEdit />} />
           {/* {renderUserRoutes()} */}
           {/* {renderAdminRoutes()} */}
           <Route path="/forgot-password" element={<ForgotPassword />} />
@@ -162,7 +165,6 @@ const App = () => {
             path="/admin/product-mutation"
             element={<AdminProductMutation />}
           />
-
           <Route path="/404" element={<NotFound />} />
           <Route path="/super-admin/category/:id" element={<CategoryEdit />} />
           <Route path="/super-admin/create-branch" element={<CreateBranch />} />
@@ -170,6 +172,8 @@ const App = () => {
 
           <Route path="/user/cart" element={<CartUser />} />
           <Route path="/user/order" element={<OrderUser />} />
+          <Route path="/admin/voucher" element={<VoucherAdmin />} />
+          <Route path="/admin/voucher/:url" element={<AddVoucherAdmin />} />
         </Routes>
       </Box>
     </>

@@ -1,4 +1,4 @@
-import { Box, Grid, GridItem, Image, Text } from "@chakra-ui/react";
+import { Box, Grid, GridItem, Image, Text, VStack } from "@chakra-ui/react";
 import shoppingPic from "../assets/login_logo.png";
 import SuperAdminNavbar from "../components/SuperAdminNavbar";
 import UpperBarSprAdm from "../components/UpperBarSprAdm";
@@ -6,6 +6,8 @@ import LineChartSuperAdmin from "../components/LineChartSuperAdmin";
 import { useEffect, useState } from "react";
 import { axiosInstance } from "../api";
 import { Link } from "react-router-dom";
+import productInBox from "../assets/checkingbox.png";
+import branchAvailable from "../assets/opened.png";
 
 const SuperAdminDashboard = () => {
   const [countProduct, setCountProduct] = useState([]);
@@ -13,7 +15,7 @@ const SuperAdminDashboard = () => {
 
   const fetchProduct = async () => {
     try {
-      const response = await axiosInstance.get("/admin-product/super-admin");
+      const response = await axiosInstance.get("/admin-product/active");
 
       setCountProduct(response.data.dataCount);
     } catch (error) {
@@ -33,65 +35,101 @@ const SuperAdminDashboard = () => {
 
   useEffect(() => {
     fetchProduct();
-  }, []);
-
-  useEffect(() => {
     fetchBranch();
+    window.scrollTo(0, 0);
   }, []);
 
   return (
-    <Box backgroundColor={"#F4F1DE"} height={"932px"}>
+    <Box backgroundColor={"#F4F1DE"} height={"1000px"}>
       <UpperBarSprAdm />
-      <Grid templateColumns="repeat(2, 1fr)" gap={4}>
-        <GridItem
-          bg="tomato"
-          marginTop={"130px"}
-          marginLeft={"30px"}
-          height={"80px"}
+      <Box
+        ml={"30px"}
+        pt={"100px"}
+        fontWeight={"bold"}
+        borderBottom={"3px solid #E07A5F"}
+        mr={"30px"}
+        height={"140px"}
+      >
+        What's In Store
+      </Box>
+      <VStack spacing={4} mx={"30px"} mt={"20px"}>
+        <Box
+          height={"120px"}
           borderRadius={"10px"}
           backgroundColor={"white"}
-          boxShadow={"1px 1px 1px grey"}
+          boxShadow={"2px 2px 2px grey"}
+          display={"flex"}
+          width={"100%"}
+          justifyContent={"space-evenly"}
         >
+          <Box width={"120px"} mt={"10px"}>
+            <Image
+              src={productInBox}
+              alt="voucher type"
+              width={"100px"}
+              objectFit={"contain"}
+            />
+          </Box>
           <Link to={"/super-admin/product"}>
             <Box
-              marginLeft={"15px"}
-              marginTop={"10px"}
-              fontFamily={"roboto"}
+              width={"120px"}
+              mt={"35px"}
               _hover={{ color: "#E07A5F" }}
+              color={"black"}
             >
               <Text fontSize={"16px"}>Product In Store</Text>
-              <Text fontSize={"24px"} fontWeight={"bold"}>
+              <Text fontSize={"20px"} fontWeight={"bold"}>
                 {countProduct || "Loading..."}
               </Text>
             </Box>
           </Link>
-        </GridItem>
-        <GridItem
-          marginTop={"130px"}
-          marginRight={"30px"}
-          height={"80px"}
+        </Box>
+        <Box
+          height={"120px"}
           borderRadius={"10px"}
           backgroundColor={"white"}
-          boxShadow={"1px 1px 1px grey"}
+          boxShadow={"2px 2px 2px grey"}
+          display={"flex"}
+          width={"100%"}
+          // maxWidth={"385px"}
+          justifyContent={"space-evenly"}
         >
+          <Box width={"120px"}>
+            <Image
+              src={branchAvailable}
+              alt="voucher type"
+              width={"120px"}
+              objectFit={"contain"}
+            />
+          </Box>
           <Link to={"/super-admin/user"}>
             <Box
-              marginLeft={"15px"}
-              marginTop={"10px"}
-              fontFamily={"roboto"}
+              width={"120px"}
+              mt={"35px"}
               _hover={{ color: "#E07A5F" }}
+              color={"black"}
             >
               <Text fontSize={"16px"}>Branch Available</Text>
-              <Text fontSize={"24px"} fontWeight={"bold"}>
+              <Text fontSize={"20px"} fontWeight={"bold"}>
                 {countBranch || "Loading..."}
               </Text>
             </Box>
           </Link>
-        </GridItem>
-      </Grid>
+        </Box>
+      </VStack>
+      <Box
+        ml={"30px"}
+        mt={"20px"}
+        fontWeight={"bold"}
+        borderBottom={"3px solid #E07A5F"}
+        mr={"30px"}
+        height={"40px"}
+      >
+        Insight
+      </Box>
       <Box
         backgroundColor={"white"}
-        marginTop={"60px"}
+        marginTop={"20px"}
         padding={"5px"}
         marginX={"30px"}
         boxShadow={"1px 1px 1px grey"}
@@ -114,14 +152,6 @@ const SuperAdminDashboard = () => {
         >
           View more..
         </Text>
-      </Box>
-      <Box display={"grid"} my={"20px"} zIndex={"base"}>
-        <Image
-          src={shoppingPic}
-          alt="logo"
-          height={"200px"}
-          justifySelf={"center"}
-        />
       </Box>
       <Box>
         <SuperAdminNavbar />

@@ -19,6 +19,7 @@ import { useNavigate } from "react-router-dom";
 import logoutLogo from "../assets/logout.png";
 import statisticLogo from "../assets/statistic.png";
 import { logout } from "../redux/features/authSlice";
+import categoryLogo from "../assets/categoryIcon.png";
 
 const OtherMenuBarSuperAdm = ({ isOpen, closeModal }) => {
   const dispatch = useDispatch();
@@ -36,36 +37,66 @@ const OtherMenuBarSuperAdm = ({ isOpen, closeModal }) => {
     });
   };
 
+  const toSuperAdminStatistic = () => {
+    navigate("/super-admin/statistic");
+
+    closeModal();
+  };
+
+  const toCategory = () => {
+    navigate("/super-admin/category");
+
+    closeModal();
+  };
+
   return (
     <>
       <Modal isOpen={isOpen} onClose={closeModal}>
         {/* ini yang disamadenganin adalah props yang akan dipassing */}
         <ModalOverlay />
         <ModalContent
-          // position={"fixed"}
+          position={"fixed"}
           height={"50vh"}
-          justifyContent={"right"}
+          marginX={"auto"}
           mt={"35vh"}
-          // right={"0"}
-          // left={"0"}
+          right={"0"}
+          left={"0"}
           fontFamily={"roboto"}
           fontSize={"16px"}
           fontWeight={"bold"}
-          border={"5px solid"}
+          border={"2px solid"}
           borderRadius={"15px"}
           borderColor={"white"}
           backgroundColor={"#E07A5F"}
+          overflowY={"scroll"}
+          sx={{
+            "::-webkit-scrollbar": {
+              display: "none",
+            },
+          }}
         >
           <ModalHeader>Other</ModalHeader>
           <ModalBody>
-            <Box display={"flex"} p={"5px"}>
+            <Box display={"flex"} p={"5px"} onClick={toSuperAdminStatistic}>
               <Image src={statisticLogo} height={"40px"} />
               <Text
                 marginLeft={"10px"}
                 marginTop={"10px"}
                 marginBottom={"10px"}
+                color={"black"}
               >
                 Statistic
+              </Text>
+            </Box>
+            <Box display={"flex"} p={"5px"} onClick={toCategory}>
+              <Image src={categoryLogo} height={"40px"} />
+              <Text
+                marginLeft={"10px"}
+                marginTop={"10px"}
+                marginBottom={"10px"}
+                color={"black"}
+              >
+                Category
               </Text>
             </Box>
             <Box

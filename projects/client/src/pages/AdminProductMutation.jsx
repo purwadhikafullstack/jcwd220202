@@ -12,10 +12,10 @@ import {
   Text,
 } from "@chakra-ui/react";
 import searchIcon from "../assets/search.png";
-import filterIcon from "../assets/funnel.png";
 import sortIcon from "../assets/sort.png";
 import Select from "react-select";
 import ReactPaginate from "react-paginate";
+import "../style/pagination.css";
 import AdminNavbar from "../components/AdminNavbar";
 import ProductMutationListBar from "../components/ProductMutationListBar";
 import AdminProductMutationCard from "../components/AdminProductMutationCard";
@@ -66,8 +66,6 @@ const AdminProductMutation = () => {
       console.log(error);
     }
   };
-
-  console.log(productHistory);
 
   const maxPage = Math.ceil(totalProductHistory / maxItemsPerPage);
 
@@ -157,7 +155,7 @@ const AdminProductMutation = () => {
 
   useEffect(() => {
     fetchProduHistory();
-  }, [sortBy, sortDir, currentSearch, activePage, startDate, endDate]);
+  }, [sortBy, sortDir, currentSearch, activePage, endDate, startDate]);
 
   return (
     <Box
@@ -269,13 +267,18 @@ const AdminProductMutation = () => {
                   width: "280px",
                 }}
                 onChange={(value) => {
-                  const newStartDate = moment(new Date(value)).format(
+                  let newStartDate = moment(new Date(value)).format(
                     "YYYY-MM-DD"
                   );
+
+                  if (newStartDate === "1970-01-01") {
+                    newStartDate = null;
+                  }
+
                   setStartDate(newStartDate);
-                  setActivePage(1);
+                  console.log(newStartDate);
                 }}
-                allowClear={false}
+                // allowClear={false}
               />
             </Box>
           </GridItem>
@@ -293,13 +296,16 @@ const AdminProductMutation = () => {
                   width: "280px",
                 }}
                 onChange={(value) => {
-                  const newEndDate = moment(new Date(value))
+                  let newEndDate = moment(new Date(value))
                     .add(1, "days")
                     .format("YYYY-MM-DD");
+
+                  if (newEndDate === "1970-01-02") {
+                    newEndDate = null;
+                  }
                   setEndDate(newEndDate);
-                  setActivePage(1);
                 }}
-                allowClear={false}
+                // allowClear={false}
               />
             </Box>
           </GridItem>

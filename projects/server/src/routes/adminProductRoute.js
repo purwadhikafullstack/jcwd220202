@@ -87,4 +87,6 @@ router.post(
     }
 );
 
+router.get("/active", verifyToken, adminProductController.getActiveProduct);
+
 module.exports = router;

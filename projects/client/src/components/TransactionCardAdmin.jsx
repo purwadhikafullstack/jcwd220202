@@ -20,14 +20,13 @@ const TransactionCardAdmin = ({
   transaction_status,
 }) => {
   const showFirstItem = TransactionItems.map((val) => {
-    const countDiscount =
-      (val.current_price - val.applied_discount) * val.quantity;
+    const countDiscount = val.current_price - val.applied_discount;
 
     return {
       applied_discount: val.applied_discount,
       product_name: val.ProductBranch.Product.product_name,
       quantity: val.quantity,
-      price_per_product: val.price_per_product,
+      current_price: val.current_price,
       product_image: val.ProductBranch.Product.product_image,
       discounted_product: countDiscount,
     };
@@ -38,7 +37,7 @@ const TransactionCardAdmin = ({
       return (
         <>
           <Text ml={"5px"} textDecoration={"line-through"}>
-            {formatRupiah(showFirstItem[0].price_per_product) || "Loading..."}
+            {formatRupiah(showFirstItem[0].current_price) || "Loading..."}
           </Text>
           <Text ml={"5px"}>
             {formatRupiah(showFirstItem[0].discounted_product) || "Loading..."}

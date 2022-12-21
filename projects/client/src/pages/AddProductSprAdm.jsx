@@ -270,7 +270,7 @@ const AddProductSprAdm = () => {
               <Textarea
                 placeholder="Write product description"
                 bgColor={"white"}
-                overflow={"scroll"}
+                overflowY={"scroll"}
                 value={formik.values.product_description}
                 onChange={formChangeHandler}
                 name="product_description"
@@ -293,6 +293,7 @@ const AddProductSprAdm = () => {
               color={"white"}
               width={"100%"}
               marginX={"30px"}
+              mt={"10px"}
             >
               Add Product
             </Button>

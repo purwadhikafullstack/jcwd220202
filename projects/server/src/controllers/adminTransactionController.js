@@ -230,8 +230,6 @@ const adminTransactionController = {
         },
       });
 
-      console.log(findTransaction.createdAt.toISOString().split("T")[0]);
-
       if (transaction_status === findTransaction.transaction_status) {
         return res.status(200).json({
           message: "updated but not sending the email",
@@ -356,6 +354,76 @@ const adminTransactionController = {
           message: `transaction status updated to ${transaction_status}`,
         });
       }
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({
+        message: "server error",
+      });
+    }
+  },
+  getAvailableTransaction: async (req, res) => {
+    try {
+      const findAdmin = await db.Branch.findOne({
+        where: {
+          UserId: req.user.id,
+        },
+      });
+
+      const findTransactionById = await db.Transaction.findAndCountAll({
+        where: {
+          BranchId: findAdmin.id,
+          transaction_status: {
+            [Op.in]: [
+              "Waiting For Payment",
+              "Payment Approved",
+              "Product In Shipment",
+            ],
+          },
+        },
+      });
+
+      return res.status(200).json({
+        message: "get available transaction",
+        data: findTransactionById.rows,
+        dataCount: findTransactionById.count,
+      });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({
+        message: "server error",
+      });
+    }
+  },
+  getProductToSend: async (req, res) => {
+    try {
+      const findAdmin = await db.Branch.findOne({
+        where: {
+          UserId: req.user.id,
+        },
+      });
+
+      const findPaymentApprovedTransaction = await db.Transaction.findAll({
+        where: {
+          BranchId: findAdmin.id,
+          transaction_status: "Payment Approved",
+        },
+      });
+
+      const parseFindApprovedPayment = JSON.parse(
+        JSON.stringify(findPaymentApprovedTransaction)
+      );
+
+      let totalProductToSend = 0;
+
+      for (let i = 0; i < parseFindApprovedPayment.length; i++) {
+        totalProductToSend =
+          totalProductToSend + parseFindApprovedPayment[i].total_quantity;
+      }
+
+      return res.status(200).json({
+        message: "get product to send",
+        data: totalProductToSend,
+      });
     } catch (error) {
       console.log(error);
       return res.status(500).json({

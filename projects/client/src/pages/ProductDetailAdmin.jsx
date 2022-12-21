@@ -262,6 +262,8 @@ const ProductDetailAdmin = () => {
                   marginLeft={"10px"}
                   fontStyle={"italic"}
                   color={"#E07A5F"}
+                  fontSize={"14px"}
+                  mt={"2px"}
                 >
                   - Not editable by Admin
                 </Text>
@@ -290,6 +292,8 @@ const ProductDetailAdmin = () => {
                   marginLeft={"10px"}
                   fontStyle={"italic"}
                   color={"#E07A5F"}
+                  fontSize={"14px"}
+                  mt={"2px"}
                 >
                   - Not editable by Admin
                 </Text>
@@ -315,6 +319,8 @@ const ProductDetailAdmin = () => {
                   marginLeft={"10px"}
                   fontStyle={"italic"}
                   color={"#E07A5F"}
+                  fontSize={"14px"}
+                  mt={"2px"}
                 >
                   - Not editable by Admin
                 </Text>
@@ -337,6 +343,8 @@ const ProductDetailAdmin = () => {
                   marginLeft={"10px"}
                   fontStyle={"italic"}
                   color={"#E07A5F"}
+                  fontSize={"14px"}
+                  mt={"2px"}
                 >
                   - Not editable by Admin
                 </Text>
@@ -348,7 +356,7 @@ const ProductDetailAdmin = () => {
                 height={"120px"}
                 py={"8px"}
                 mt={"8px"}
-                overflow={"scroll"}
+                overflowY={"scroll"}
                 maxWidth={"420px"}
               >
                 <Text mx={"16px"}>
@@ -388,6 +396,8 @@ const ProductDetailAdmin = () => {
                     marginLeft={"10px"}
                     fontStyle={"italic"}
                     color={"#E07A5F"}
+                    fontSize={"14px"}
+                    mt={"2px"}
                   >
                     - Fill one of type discount below
                   </Text>

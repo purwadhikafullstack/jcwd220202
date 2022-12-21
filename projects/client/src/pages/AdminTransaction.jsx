@@ -16,6 +16,7 @@ import filterIcon from "../assets/funnel.png";
 import sortIcon from "../assets/sort.png";
 import Select from "react-select";
 import ReactPaginate from "react-paginate";
+import "../style/pagination.css";
 import AdminNavbar from "../components/AdminNavbar";
 import TransactionListBar from "../components/TransactionListBar";
 import TransactionCardAdmin from "../components/TransactionCardAdmin";
@@ -146,7 +147,7 @@ const AdminTransaction = () => {
 
   const renderAdminTransaction = () => {
     return adminTransaction.map((val) => {
-      return (
+      return val.transaction_status || val.transaction_status === null ? (
         <TransactionCardAdmin
           key={val.id.toString()}
           TransactionId={val.id}
@@ -156,7 +157,7 @@ const AdminTransaction = () => {
           TransactionItems={val.TransactionItems}
           transaction_status={val.transaction_status}
         />
-      );
+      ) : null;
     });
   };
 
@@ -183,7 +184,7 @@ const AdminTransaction = () => {
               <InputGroup>
                 <Input
                   name="search"
-                  placeholder="Search Username"
+                  placeholder="Search By Username"
                   _placeholder={{ color: "black.500" }}
                   value={formik.values.search}
                   onChange={formChangeHandler}

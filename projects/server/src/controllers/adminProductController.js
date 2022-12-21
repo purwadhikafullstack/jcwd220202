@@ -209,14 +209,6 @@ const adminProductController = {
             ],
           });
 
-          // const parseFindBranchById = JSON.parse(
-          //   JSON.stringify(findBranchById)
-          // );
-
-          // const findBranchData = parseFindBranchById[0].ProductBranches;
-
-          // console.log(findBranchData);
-
           return res.status(200).json({
             data: findBranchById.rows,
             dataCount: findBranchById.count,
@@ -267,10 +259,6 @@ const adminProductController = {
           ],
         });
 
-        // const parseFindBranchById = JSON.parse(JSON.stringify(findBranchById));
-
-        // const findBranchData = parseFindBranchById[0].ProductBranches;
-
         return res.status(200).json({
           message: "get branch data",
           data: findBranchById.rows,
@@ -302,10 +290,6 @@ const adminProductController = {
           },
         ],
       });
-
-      // const parseFindBranchById = JSON.parse(JSON.stringify(findBranchById));
-
-      // const findBranchData = parseFindBranchById[0].ProductBranches;
 
       return res.status(200).json({
         data: findBranchById.rows,
@@ -706,6 +690,22 @@ const adminProductController = {
 
       return res.status(200).json({
         message: "data restored",
+      });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({
+        message: "server error",
+      });
+    }
+  },
+  getActiveProduct: async (req, res) => {
+    try {
+      const findAllActiveProducts = await db.Product.findAndCountAll();
+
+      return res.status(200).json({
+        message: "get all active products",
+        data: findAllActiveProducts.rows,
+        dataCount: findAllActiveProducts.count,
       });
     } catch (error) {
       console.log(error);

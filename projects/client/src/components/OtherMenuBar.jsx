@@ -20,6 +20,7 @@ import logoutLogo from "../assets/logout.png";
 import statisticLogo from "../assets/statistic.png";
 import { logout } from "../redux/features/authSlice";
 import productMutation from "../assets/history.png";
+import voucherLogo from "../assets/voucher.png";
 
 const OtherMenuBar = ({ isOpen, closeModal }) => {
   const dispatch = useDispatch();
@@ -39,6 +40,12 @@ const OtherMenuBar = ({ isOpen, closeModal }) => {
 
   const toBranchStatistic = () => {
     navigate("/admin/statistic");
+
+    closeModal();
+  };
+
+  const toVoucher = () => {
+    navigate("/admin/voucher");
 
     closeModal();
   };
@@ -63,15 +70,20 @@ const OtherMenuBar = ({ isOpen, closeModal }) => {
           fontFamily={"roboto"}
           fontSize={"16px"}
           fontWeight={"bold"}
-          border={"5px solid"}
+          border={"2px solid"}
           borderRadius={"15px"}
           borderColor={"white"}
           backgroundColor={"#E07A5F"}
-          // overflowY={"scroll"}
+          overflowY={"scroll"}
+          sx={{
+            "::-webkit-scrollbar": {
+              display: "none",
+            },
+          }}
         >
           <ModalHeader>Other</ModalHeader>
           <ModalBody>
-            <Box display={"flex"} p={"5px"}>
+            <Box display={"flex"} p={"5px"} onClick={toBranchStatistic}>
               <Image src={statisticLogo} height={"40px"} />
               <Text
                 marginLeft={"10px"}
@@ -80,6 +92,17 @@ const OtherMenuBar = ({ isOpen, closeModal }) => {
                 color={"black"}
               >
                 Statistic
+              </Text>
+            </Box>
+            <Box display={"flex"} p={"5px"} onClick={toVoucher}>
+              <Image src={voucherLogo} height={"40px"} />
+              <Text
+                marginLeft={"10px"}
+                marginTop={"10px"}
+                marginBottom={"10px"}
+                color={"black"}
+              >
+                Voucher
               </Text>
             </Box>
             <Box display={"flex"} p={"5px"} onClick={toProductHistory}>

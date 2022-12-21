@@ -117,7 +117,7 @@ const AdminTransactionDetail = () => {
       }
 
       if (transaction_status == "Cancel" && !note_to_customer) {
-        formik.setFieldError("note_to_customer", "Note wajib diisi");
+        formik.setFieldError("note_to_customer", "Note a is required ");
       }
 
       if (transaction_status != "Cancel") {
@@ -169,7 +169,7 @@ const AdminTransactionDetail = () => {
     let sumPrice = 0;
 
     for (let i = 0; i < transactionItem.length; i++) {
-      sumPrice = sumPrice + transactionItem[i].price_per_product;
+      sumPrice = sumPrice + transactionItem[i].current_price;
     }
 
     return sumPrice;
@@ -239,8 +239,7 @@ const AdminTransactionDetail = () => {
 
   const renderItemTransaction = () => {
     return transactionItem.map((val) => {
-      const countDiscount =
-        (val.current_price - val.applied_discount) * val.quantity;
+      const countDiscount = val.current_price - val.applied_discount;
 
       return (
         <Box display={"flex"} mt={"10px"} key={val.id.toString()}>
@@ -263,7 +262,7 @@ const AdminTransactionDetail = () => {
               {val.applied_discount ? (
                 <>
                   <Text ml={"5px"} textDecoration={"line-through"}>
-                    {formatRupiah(val.price_per_product) || "Loading..."}
+                    {formatRupiah(val.current_price) || "Loading..."}
                   </Text>
                   <Text ml={"5px"}>
                     {formatRupiah(countDiscount) || "Loading..."}
@@ -271,7 +270,7 @@ const AdminTransactionDetail = () => {
                 </>
               ) : (
                 <Text ml={"5px"}>
-                  {formatRupiah(val.price_per_product) || "Loading..."}
+                  {formatRupiah(val.current_price) || "Loading..."}
                 </Text>
               )}
             </Box>
@@ -552,7 +551,6 @@ const AdminTransactionDetail = () => {
                 styles={colourStyles}
                 name="transaction_status"
                 onChange={(event) => {
-                  console.log(event.value);
                   formik.setFieldValue("transaction_status", event.value);
                 }}
                 placeholder={"Select transaction status"}

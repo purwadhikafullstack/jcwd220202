@@ -19,7 +19,7 @@ import { useFormik } from "formik";
 import { axiosInstance } from "../api";
 import { useDispatch } from "react-redux";
 import { login } from "../redux/features/authSlice";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
@@ -73,6 +73,10 @@ const LoginPage = () => {
     const { name, value } = target;
     formik.setFieldValue(name, value);
   };
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   return (
     <>
