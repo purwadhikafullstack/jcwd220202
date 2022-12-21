@@ -6,28 +6,30 @@ import {
     InputGroup,
     InputRightElement,
     Image,
-} from "@chakra-ui/react"
-import { SearchIcon } from "@chakra-ui/icons"
-import { Link } from "react-router-dom"
-import { useState } from "react"
-import grocerinLogo from "../assets/grocerin_logo_aja.png"
-import { useSelector } from "react-redux"
+} from "@chakra-ui/react";
+import { SearchIcon } from "@chakra-ui/icons";
+import { Link } from "react-router-dom";
+import { useState } from "react";
+import grocerinLogo from "../assets/grocerin_logo_aja.png";
+import { useSelector } from "react-redux";
 
 const SearchBar = () => {
-    const [keywordHandler, setKeywordHandler] = useState("")
-    const authSelector = useSelector((state) => state.auth)
+    const [keywordHandler, setKeywordHandler] = useState("");
+    const authSelector = useSelector((state) => state.auth);
 
     return (
         <Box
             pt={"10px"}
             backgroundColor={"#81B29A"}
-            height={"70px"}
+            height={"75px"}
             position={"fixed"}
             top={"0"}
             right={"0"}
             left={"0"}
             fontWeight={"bold"}
             zIndex={"4"}
+            margin={"auto"}
+            maxWidth={"480px"}
         >
             <Flex display={"flex"}>
                 <FormControl pt={"5px"}>
@@ -80,7 +82,7 @@ const SearchBar = () => {
                 )}
             </Flex>
         </Box>
-    )
-}
+    );
+};
 
-export default SearchBar
+export default SearchBar;

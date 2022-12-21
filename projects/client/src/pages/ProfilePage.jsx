@@ -22,7 +22,6 @@ import {
     FormLabel,
     InputGroup,
     InputRightElement,
-    VStack,
     Heading,
     Grid,
     GridItem,
@@ -173,7 +172,7 @@ const ProfilePage = () => {
     }, []);
 
     return (
-        <Box height="932px" bgColor="#F4F1DE" fontFamily={"roboto"}>
+        <Box height="1200px" bgColor="#F4F1DE" fontFamily={"roboto"}>
             <Grid
                 templateColumns="repeat(3, 1fr)"
                 gap={6}
@@ -246,33 +245,6 @@ const ProfilePage = () => {
             ) : (
                 // Edit mode
                 <Stack spacing={3} margin="10">
-                    <Text fontWeight={"bold"}>Username:</Text>
-                    <Input
-                        value={formik.values.username}
-                        name="username"
-                        onChange={formChangeHandler}
-                        placeholder={userData.username}
-                        size="md"
-                        bgColor={"white"}
-                    />
-                    <Text fontWeight={"bold"}>Gender:</Text>
-                    <Input
-                        value={formik.values.gender}
-                        name="gender"
-                        onChange={formChangeHandler}
-                        placeholder={userData.gender}
-                        size="md"
-                        bgColor={"white"}
-                    />
-                    <Text fontWeight={"bold"}>Date of Birth:</Text>
-                    <Input
-                        value={formik.values.birth}
-                        name="birth"
-                        onChange={formChangeHandler}
-                        placeholder={userData.birth}
-                        size="md"
-                        bgColor={"white"}
-                    />
                     <Text fontWeight={"bold"}>Profile Picture:</Text>
                     <Input
                         ref={inputFileRef}
@@ -310,8 +282,36 @@ const ProfilePage = () => {
                         }}
                         _hover={{ bgColor: "#81B29A" }}
                     >
-                        {formik?.values?.product_image?.name || "Choose Image"}
+                        {formik?.values?.profile_picture?.name ||
+                            "Choose Image"}
                     </Button>
+                    <Text fontWeight={"bold"}>Username:</Text>
+                    <Input
+                        value={formik.values.username}
+                        name="username"
+                        onChange={formChangeHandler}
+                        placeholder={userData.username}
+                        size="md"
+                        bgColor={"white"}
+                    />
+                    <Text fontWeight={"bold"}>Gender:</Text>
+                    <Input
+                        value={formik.values.gender}
+                        name="gender"
+                        onChange={formChangeHandler}
+                        placeholder={userData.gender}
+                        size="md"
+                        bgColor={"white"}
+                    />
+                    <Text fontWeight={"bold"}>Date of Birth:</Text>
+                    <Input
+                        value={formik.values.birth}
+                        name="birth"
+                        onChange={formChangeHandler}
+                        placeholder={userData.birth}
+                        size="md"
+                        bgColor={"white"}
+                    />
                     <Box marginTop={"20px"} textAlign={"center"}>
                         <Button
                             mt={"15px"}

@@ -9,33 +9,33 @@ import {
     InputGroup,
     InputRightElement,
     useToast,
-} from "@chakra-ui/react"
-import { useState } from "react"
-import { useFormik } from "formik"
-import { useNavigate, useLocation } from "react-router-dom"
-import * as Yup from "yup"
-import backIcon from "../assets/back_icon.png"
-import grocerinLogoWithText from "../assets/grocerin_logo.png"
-import shoppingPic from "../assets/frozen_food_shopping.png"
-import { axiosInstance } from "../api"
+} from "@chakra-ui/react";
+import { useState } from "react";
+import { useFormik } from "formik";
+import { useNavigate, useLocation } from "react-router-dom";
+import * as Yup from "yup";
+import backIcon from "../assets/back_icon.png";
+import grocerinLogoWithText from "../assets/grocerin_logo.png";
+import shoppingPic from "../assets/frozen_food_shopping.png";
+import { axiosInstance } from "../api";
 
 const ReentryPassword = () => {
-    const [showPassword, setShowPassword] = useState(false)
-    const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-    const navigate = useNavigate()
+    const navigate = useNavigate();
 
-    const { search: query } = useLocation()
+    const { search: query } = useLocation();
 
     const togglePassword = () => {
-        setShowPassword(!showPassword)
-    }
+        setShowPassword(!showPassword);
+    };
 
     const toggleConfirmPassword = () => {
-        setShowConfirmPassword(!showConfirmPassword)
-    }
+        setShowConfirmPassword(!showConfirmPassword);
+    };
 
-    const toast = useToast()
+    const toast = useToast();
 
     const formik = useFormik({
         initialValues: {
@@ -54,20 +54,22 @@ const ReentryPassword = () => {
                             token: query.split("=")[1],
                         },
                     }
-                )
+                );
+
+                navigate("/login/user");
 
                 toast({
                     title: "Password changed successfully",
                     description: response.data.message,
                     status: "success",
-                })
+                });
             } catch (error) {
-                console.log(error.response)
+                console.log(error.response);
                 toast({
                     title: "Registration Failed",
                     description: error.response.data.message,
                     status: "error",
-                })
+                });
             }
         },
         validationSchema: Yup.object({
@@ -82,12 +84,12 @@ const ReentryPassword = () => {
                 .oneOf([Yup.ref("password")], "Your passwords do not match."),
         }),
         validateOnChange: false,
-    })
+    });
 
     const formChangeHandler = ({ target }) => {
-        const { name, value } = target
-        formik.setFieldValue(name, value)
-    }
+        const { name, value } = target;
+        formik.setFieldValue(name, value);
+    };
 
     return (
         <>
@@ -209,6 +211,7 @@ const ReentryPassword = () => {
                                 bgColor={"#81B29A"}
                                 width={"100px"}
                                 height={"35px"}
+                                onClick
                             >
                                 Submit
                             </Button>
@@ -225,7 +228,7 @@ const ReentryPassword = () => {
                 </Box>
             </Box>
         </>
-    )
-}
+    );
+};
 
-export default ReentryPassword
+export default ReentryPassword;

@@ -5,6 +5,7 @@ const { join } = require("path");
 const db = require("../models");
 const dotenv = require("dotenv");
 const fs = require("fs");
+const schedule = require("../lib/schedulePayment");
 
 // dotenv.config();
 
@@ -107,3 +108,5 @@ app.listen(PORT, async (err) => {
     console.log(`APP RUNNING at ${PORT} ✅`);
   }
 });
+
+schedule.invoke();

@@ -1,4 +1,4 @@
-const multer = require("multer")
+const multer = require("multer");
 
 const uploader = ({
     fileName = Date.now(),
@@ -7,30 +7,34 @@ const uploader = ({
 }) => {
     const diskStorage = multer.diskStorage({
         destination: (req, file, cb) => {
-            cb(null, "public")
+            cb(null, "public");
         },
         filename: function (req, file, cb) {
-            const { originalname } = file
-            fileName = originalname + Date.now()
-            cb(null, `${filePrefix}-${fileName}.${file.mimetype.split("/")[1]}`)
+            const { originalname } = file;
+            fileName = originalname + Date.now();
+            cb(
+                null,
+                `${filePrefix}-${fileName}.${file.mimetype.split("/")[1]}`
+            );
         },
-    })
+    });
 
     const fileFilter = (req, file, cb) => {
-        const extension = file.mimetype.split("/")[1]
+        const extension = file.mimetype.split("/")[1];
         if (acceptedFileTypes.includes(extension)) {
-            cb(null, true)
+            cb(null, true);
         } else {
-            cb(new Error("invalid file type"))
+            cb(new Error("invalid file type"));
         }
-    }
+    };
 
     return multer({
         storage: diskStorage,
+        limits: { fileSize: 1 * 1024 * 1024 },
         fileFilter,
-    })
-}
+    });
+};
 
 module.exports = {
     uploader,
-}
+};
