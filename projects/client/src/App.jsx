@@ -169,7 +169,6 @@ const App = () => {
           <Route path="/super-admin/category/:id" element={<CategoryEdit />} />
           <Route path="/super-admin/create-branch" element={<CreateBranch />} />
           <Route path="/super-admin/branch" element={<UserSprAdmin />} />
-
           <Route path="/user/cart" element={<CartUser />} />
           <Route path="/user/order" element={<OrderUser />} />
           <Route path="/admin/voucher" element={<VoucherAdmin />} />
