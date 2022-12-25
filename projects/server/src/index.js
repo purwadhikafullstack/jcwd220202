@@ -3,17 +3,15 @@ const express = require("express");
 const cors = require("cors");
 const { join } = require("path");
 const db = require("../models");
+const dotenv = require("dotenv");
+const fs = require("fs");
+const schedule = require("../lib/schedulePayment");
+
+// dotenv.config();
 
 const PORT = process.env.PORT || 8000;
 const app = express();
-app.use(
-  cors({
-    origin: [
-      process.env.WHITELISTED_DOMAIN &&
-        process.env.WHITELISTED_DOMAIN.split(","),
-    ],
-  })
-);
+app.use(cors());
 
 app.use(express.json());
 
@@ -21,6 +19,37 @@ app.use(express.json());
 
 // ===========================
 // NOTE : Add your routes here
+const registerRoute = require("./routes/registerRoute");
+const loginRoute = require("./routes/loginRoute.js");
+const profileRoute = require("./routes/userProfileRoute.js");
+const loginAdminRoute = require("./routes/loginAdminRoute.js");
+const categoryRoute = require("./routes/categoryRoute");
+const adminProductRoute = require("./routes/adminProductRoute");
+const productRoute = require("./routes/productRoute.js");
+const geocodeRoute = require("./routes/geocodeRoute");
+const createAdminRoute = require("./routes/createAdminRoute");
+const adminBranchRoute = require("./routes/adminBranchRoute");
+const productHistoryRoute = require("./routes/productHistoryRoute");
+const adminTransactionRoute = require("./routes/adminTransactionRoute");
+const passwordRoute = require("./routes/passwordRoute.js");
+const voucherAdminRoute = require("./routes/voucherAdminRoute.js");
+
+app.use("/user", loginRoute);
+app.use("/profile", profileRoute);
+app.use("/admin", loginAdminRoute);
+app.use("/register", registerRoute);
+app.use("/category", categoryRoute);
+app.use("/admin-product", adminProductRoute);
+app.use("/product", productRoute);
+app.use("/geocode", geocodeRoute);
+app.use("/create-admin", createAdminRoute);
+app.use("/admin-branch", adminBranchRoute);
+app.use("/product-history", productHistoryRoute);
+app.use("/admin-transaction", adminTransactionRoute);
+app.use("/password", passwordRoute);
+app.use("/admin-voucher", voucherAdminRoute);
+
+app.use("/public", express.static("public"));
 
 app.get("/api", (req, res) => {
   res.send(`Hello, this is my API`);
@@ -69,9 +98,15 @@ app.get("*", (req, res) => {
 app.listen(PORT, async (err) => {
   db.sequelize.sync({ alter: true });
 
+  if (!fs.existsSync("public")) {
+    fs.mkdirSync("public");
+  }
+
   if (err) {
     console.log(`ERROR: ${err}`);
   } else {
     console.log(`APP RUNNING at ${PORT} ✅`);
   }
 });
+
+schedule.invoke();
