@@ -81,7 +81,8 @@ const AddProductSprAdm = () => {
         newProduct.append("product_price", product_price);
         newProduct.append("product_image", product_image);
         newProduct.append("product_description", product_description);
-        newProduct.append("CategoryId", CategoryId.value);
+        // newProduct.append("CategoryId", Number(CategoryId.value));
+        newProduct.append("CategoryId", CategoryId);
 
         const response = await axiosInstance.post("/admin-product", newProduct);
 
@@ -135,6 +136,8 @@ const AddProductSprAdm = () => {
     }),
     validateOnChange: false,
   });
+
+  console.log(formik.values);
 
   const formChangeHandler = ({ target }) => {
     const { name, value } = target;
@@ -250,7 +253,14 @@ const AddProductSprAdm = () => {
             <FormControl mt={"5px"} isInvalid={formik.errors.CategoryId}>
               <FormLabel fontWeight={"bold"}>Category:</FormLabel>
               <Select
-                value={formik.values.CategoryId || null}
+                // value={formik.values.CategoryId || null}
+                value={
+                  formik.values.CategoryId === null
+                    ? null
+                    : renderCategory.find(
+                        ({ value }) => value === formik.values.CategoryId
+                      ) || null
+                }
                 options={renderCategory}
                 styles={colourStyles}
                 name="CategoryId"

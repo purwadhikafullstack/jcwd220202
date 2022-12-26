@@ -20,6 +20,7 @@ import { useDispatch } from "react-redux";
 import { login } from "../redux/features/authSlice";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import * as Yup from "yup";
 
 const LoginPage = () => {
   const toast = useToast();
@@ -84,6 +85,16 @@ const LoginPage = () => {
         });
       }
     },
+    validationSchema: Yup.object({
+      email: Yup.string().required().email(),
+      password: Yup.string()
+        .required()
+        .matches(
+          /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
+          "Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and One Special Case Character"
+        ),
+    }),
+    validateOnChange: false,
   });
 
   const formChangeHandler = ({ target }) => {
@@ -97,7 +108,7 @@ const LoginPage = () => {
 
   return (
     <>
-      <Box height={"932px"}>
+      <Box height={"932px"} border={"2px solid lightgrey"}>
         {/* <Box marginTop={"20px"} marginLeft={"20px"}>
           <Image objectFit="cover" src={backIcon} alt="back" height={"40px"} />
         </Box> */}
@@ -119,7 +130,7 @@ const LoginPage = () => {
           fontFamily={"roboto"}
         >
           <form onSubmit={formik.handleSubmit}>
-            <FormControl mt={"10px"}>
+            <FormControl mt={"10px"} isInvalid={formik.errors.email}>
               <FormLabel fontWeight={"bold"}>Email</FormLabel>
               <Input
                 value={formik.values.email}
@@ -171,7 +182,9 @@ const LoginPage = () => {
               color={"#E07A5F"}
               fontWeight={"bold"}
             >
-              <Link to={"/forgot-password"}>Forgot Password</Link>
+              <Link to={"/forgot-password"}>
+                <Text _hover={{ color: "#E07A5F" }}>Forgot Password</Text>
+              </Link>
             </Box>
             <Box marginTop={"20px"} textAlign={"right"}>
               <Button
@@ -183,6 +196,8 @@ const LoginPage = () => {
                 bgColor={"#81B29A"}
                 width={"100px"}
                 height={"35px"}
+                _hover={{ bgColor: "#81B29A" }}
+                isDisabled={formik.isSubmitting}
               >
                 Submit
               </Button>

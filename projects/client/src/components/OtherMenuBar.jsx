@@ -62,9 +62,9 @@ const OtherMenuBar = ({ isOpen, closeModal }) => {
         <ModalOverlay />
         <ModalContent
           position={"fixed"}
-          height={"50vh"}
+          height={"350px"}
           marginX={"auto"}
-          mt={"35vh"}
+          mt={"25vh"}
           right={"0"}
           left={"0"}
           fontFamily={"roboto"}
@@ -121,7 +121,7 @@ const OtherMenuBar = ({ isOpen, closeModal }) => {
               width={"130px"}
               p={"5px"}
               border={"2px solid white"}
-              borderRadius={"20px"}
+              borderRadius={"10px"}
               onClick={logoutBtnHandler}
               mt={"10px"}
               display={"flex"}

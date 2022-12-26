@@ -128,6 +128,7 @@ const adminTransactionController = {
           {
             model: db.TransactionItem,
             separate: true,
+            // ngitung seperate array
             include: [
               {
                 model: db.ProductBranch,
@@ -191,6 +192,18 @@ const adminTransactionController = {
           },
           {
             model: db.Voucher,
+            include: [
+              {
+                model: db.Product,
+                include: db.ProductBranch,
+                // where: {
+                //   BranchId: findAdmin.id,
+                // },
+              },
+              {
+                model: db.VoucherType,
+              },
+            ],
           },
         ],
       });
@@ -282,7 +295,8 @@ const adminTransactionController = {
         });
       } else if (
         transaction_status === "Cancel" ||
-        transaction_status === "Waiting For Payment"
+        transaction_status === "Waiting For Payment" ||
+        transaction_status === "Waiting For Approval"
       ) {
         await db.Transaction.update(
           {
@@ -374,6 +388,7 @@ const adminTransactionController = {
           BranchId: findAdmin.id,
           transaction_status: {
             [Op.in]: [
+              "Waiting For Approval",
               "Waiting For Payment",
               "Payment Approved",
               "Product In Shipment",

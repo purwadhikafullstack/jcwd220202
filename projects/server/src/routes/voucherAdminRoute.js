@@ -32,4 +32,12 @@ router.post(
   adminVoucherController.createBuy1Get1Voucher
 );
 
+router.get("/", verifyToken, adminVoucherController.getAllVoucherByBranch);
+
+router.get("/type", verifyToken, adminVoucherController.getVoucherType);
+
+router.delete("/:id", verifyToken, adminVoucherController.deleteVoucherById);
+
+router.get("/active", verifyToken, adminVoucherController.getActiveVoucher);
+
 module.exports = router;

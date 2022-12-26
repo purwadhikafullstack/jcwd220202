@@ -24,7 +24,7 @@ import {
 import TransactionListBar from "../components/TransactionListBar";
 import { useState } from "react";
 import { axiosInstance } from "../api";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useEffect } from "react";
 import Select from "react-select";
 import { useFormik } from "formik";
@@ -34,6 +34,8 @@ const AdminTransactionDetail = () => {
   const [transactionDetail, setTransactionDetail] = useState({});
   const [transactionItem, setTransactionItem] = useState([]);
 
+  console.log(transactionItem);
+
   const params = useParams();
   const toast = useToast();
   const {
@@ -41,10 +43,10 @@ const AdminTransactionDetail = () => {
     onOpen: onOpenStatus,
     onClose: onCloseStatus,
   } = useDisclosure();
-  const navigate = useNavigate();
 
   const optionsStatus = [
     { value: "Waiting For Payment", label: "Waiting For Payment" },
+    { value: "Waiting For Approval", label: "Waiting For Approval" },
     { value: "Payment Approved", label: "Payment Approved" },
     { value: "Product In Shipment", label: "Product In Shipment" },
     { value: "Success", label: "Success" },
@@ -89,6 +91,8 @@ const AdminTransactionDetail = () => {
       console.log(err);
     }
   };
+
+  console.log(transactionDetail);
 
   const formik = useFormik({
     initialValues: {
@@ -169,7 +173,10 @@ const AdminTransactionDetail = () => {
     let sumPrice = 0;
 
     for (let i = 0; i < transactionItem.length; i++) {
-      sumPrice = sumPrice + transactionItem[i].current_price;
+      sumPrice =
+        sumPrice +
+        transactionItem[i].current_price +
+        transactionItem[i].applied_discount;
     }
 
     return sumPrice;
@@ -195,7 +202,11 @@ const AdminTransactionDetail = () => {
     }
 
     if (transactionDetail.ReferralVoucherId !== null) {
-      return <Text fontWeight={"normal"}>{"Referral Voucher Used"}</Text>;
+      return (
+        <Text fontWeight={"normal"}>
+          {transactionDetail?.ReferralVoucher?.voucher_name || "Loading..."}
+        </Text>
+      );
     }
   };
 
@@ -208,19 +219,119 @@ const AdminTransactionDetail = () => {
       );
     }
 
-    if (transactionDetail.VoucherId !== null) {
-      return <Text fontWeight={"normal"}>{"Grocerin Voucher Used"}</Text>;
+    if (transactionDetail?.VoucherId !== null) {
+      if (
+        transactionDetail?.Voucher?.VoucherType?.voucher_type ===
+        "Free Shipment"
+      ) {
+        return (
+          <>
+            <Text fontWeight={"bold"}>{"Free Shipment"}</Text>
+            <Text fontWeight={"normal"}>
+              {transactionDetail?.Voucher?.voucher_name || "Loading..."}
+            </Text>
+          </>
+        );
+      }
+
+      if (
+        transactionDetail?.Voucher?.VoucherType?.voucher_type ===
+        "Discount Voucher"
+      ) {
+        return (
+          <>
+            <Text fontWeight={"bold"}>{"Discount Voucher"}</Text>
+            <Text fontWeight={"normal"}>
+              {transactionDetail?.Voucher?.voucher_name || "Loading..."}
+            </Text>
+          </>
+        );
+      }
+
+      if (
+        transactionDetail?.Voucher?.VoucherType?.voucher_type === "Buy 1 Get 1"
+      ) {
+        return (
+          <>
+            <Text fontWeight={"bold"}>{"Buy 1 Get 1"}</Text>
+            <Text fontWeight={"normal"}>
+              {transactionDetail?.Voucher?.voucher_name || "Loading..."}
+            </Text>
+            <Text fontWeight={"normal"}>
+              {transactionDetail?.Voucher?.Product?.product_name ||
+                "Loading..."}
+            </Text>
+          </>
+        );
+      }
     }
   };
 
   const finalVoucher = () => {
     if (
-      transactionDetail.VoucherId === null &&
-      transactionDetail.ReferralVoucherId === null
+      transactionDetail?.VoucherId === null &&
+      transactionDetail?.ReferralVoucherId === null
     ) {
       return <Text textAlign={"center"}>{"-"}</Text>;
-    } else {
-      return <Text>It used voucher</Text>;
+    } else if (transactionDetail?.ReferralVoucher) {
+      return (
+        <Text>
+          -{" "}
+          {formatRupiah(transactionDetail?.ReferralVoucher?.discount_amount) ||
+            "Loading..."}
+        </Text>
+      );
+    } else if (transactionDetail?.Voucher) {
+      if (
+        transactionDetail?.Voucher?.VoucherType?.voucher_type ===
+        "Free Shipment"
+      ) {
+        if (transactionDetail?.Voucher?.discount_amount_nominal) {
+          return (
+            <Text>
+              -{" "}
+              {formatRupiah(
+                transactionDetail?.Voucher?.discount_amount_nominal
+              ) || "Loading..."}
+            </Text>
+          );
+        } else if (transactionDetail?.Voucher?.discount_amount_percentage) {
+          const countShipmentDiscount =
+            (transactionDetail?.Voucher?.discount_amount_percentage / 100) *
+            transactionDetail?.shipment_price;
+          return (
+            <Text>- {formatRupiah(countShipmentDiscount) || "Loading..."}</Text>
+          );
+        }
+      }
+      if (
+        transactionDetail?.Voucher?.VoucherType?.voucher_type === "Buy 1 Get 1"
+      ) {
+        return <Text textAlign={"center"}>{"-"}</Text>;
+      }
+
+      if (
+        transactionDetail?.Voucher?.VoucherType?.voucher_type ===
+        "Discount Voucher"
+      ) {
+        if (transactionDetail?.Voucher?.discount_amount_nominal) {
+          return (
+            <Text>
+              -{" "}
+              {formatRupiah(
+                transactionDetail?.Voucher?.discount_amount_nominal
+              ) || "Loading..."}
+            </Text>
+          );
+        } else if (transactionDetail?.Voucher?.discount_amount_percentage) {
+          const countProductDiscount =
+            (transactionDetail?.Voucher?.discount_amount_percentage / 100) *
+            transactionDetail?.Voucher?.Product?.product_price;
+          return (
+            <Text>- {formatRupiah(countProductDiscount) || "Loading..."}</Text>
+          );
+        }
+      }
     }
   };
 
@@ -239,7 +350,7 @@ const AdminTransactionDetail = () => {
 
   const renderItemTransaction = () => {
     return transactionItem.map((val) => {
-      const countDiscount = val.current_price - val.applied_discount;
+      const countOriginalPrice = val.current_price + val.applied_discount;
 
       return (
         <Box display={"flex"} mt={"10px"} key={val.id.toString()}>
@@ -262,15 +373,15 @@ const AdminTransactionDetail = () => {
               {val.applied_discount ? (
                 <>
                   <Text ml={"5px"} textDecoration={"line-through"}>
-                    {formatRupiah(val.current_price) || "Loading..."}
+                    {formatRupiah(countOriginalPrice) || "Loading..."}
                   </Text>
                   <Text ml={"5px"}>
-                    {formatRupiah(countDiscount) || "Loading..."}
+                    {formatRupiah(val.current_price) || "Loading..."}
                   </Text>
                 </>
               ) : (
                 <Text ml={"5px"}>
-                  {formatRupiah(val.current_price) || "Loading..."}
+                  {formatRupiah(countOriginalPrice) || "Loading..."}
                 </Text>
               )}
             </Box>
@@ -423,7 +534,8 @@ const AdminTransactionDetail = () => {
           <Box>
             <Text fontWeight={"bold"}>Address:</Text>
             <Text fontWeight={"normal"}>
-              {transactionDetail?.User?.Addresses[0].address || "Loading"}
+              {transactionDetail?.User?.Address?.address || "Loading"}
+              {/* {"Loading"} */}
             </Text>
             <Text fontWeight={"bold"} mt={"5px"}>
               Shipping Method:
@@ -608,6 +720,7 @@ const AdminTransactionDetail = () => {
               _hover={{
                 bgColor: "green.500",
               }}
+              isDisabled={formik.isSubmitting}
             >
               Submit
             </Button>

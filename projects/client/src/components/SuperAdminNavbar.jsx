@@ -5,30 +5,12 @@ import productLogo from "../assets/product.png";
 import userLogo from "../assets/user.png";
 import otherLogo from "../assets/other_list.png";
 import OtherMenuBarSuperAdm from "./OtherMenuBarSuperAdm";
-import { Link } from "react-router-dom";
-import { RemoveScrollBar, zeroRightClassName } from "react-remove-scroll-bar";
-import App from "../App";
+import { Link, useLocation } from "react-router-dom";
 
 const SuperAdminNavbar = () => {
-  const [menu, setMenu] = useState([
-    {
-      icon: homeLogo,
-      text: "Home",
-      link: "/super-admin/dashboard",
-    },
-    {
-      icon: productLogo,
-      text: "Product",
-      link: "/super-admin/product",
-    },
-    {
-      icon: userLogo,
-      text: "Branch",
-      link: "/super-admin/branch",
-    },
-  ]);
-
   const [modalIsOpen, setModalIsOpen] = useState(false);
+
+  const location = useLocation();
 
   const closeModal = () => {
     setModalIsOpen(false);
@@ -40,28 +22,6 @@ const SuperAdminNavbar = () => {
     setModalIsOpen(true);
 
     document.body.style.overflow = "hidden";
-  };
-
-  const renderIcon = () => {
-    return menu.map((val) => {
-      return (
-        <GridItem h="65px" key={val.icon}>
-          <Link to={val.link}>
-            <Box display={"grid"}>
-              <Image
-                src={val.icon}
-                alt="logo"
-                height={"40px"}
-                justifySelf={"center"}
-              />
-              <Text textAlign={"center"} fontFamily={"roboto"} color={"black"}>
-                {val.text}
-              </Text>
-            </Box>
-          </Link>
-        </GridItem>
-      );
-    });
   };
 
   return (
@@ -76,22 +36,168 @@ const SuperAdminNavbar = () => {
         fontWeight={"bold"}
         margin={"auto"}
         maxWidth={"480px"}
+        zIndex={"3"}
       >
         <Grid templateColumns="repeat(4, 1fr)" gap={1} margin={"5px"}>
-          {renderIcon()}
-          <GridItem h="65px">
-            <Box display={"grid"} onClick={openModal}>
-              <Image
-                src={otherLogo}
-                alt="logo"
-                height={"40px"}
-                justifySelf={"center"}
-              />
-              <Text textAlign={"center"} fontFamily={"roboto"}>
-                Other
-              </Text>
-            </Box>
-          </GridItem>
+          {/* {renderIcon()} */}
+          {location.pathname === "/super-admin/dashboard" ? (
+            <GridItem h="65px">
+              <Link to={"/super-admin/dashboard"}>
+                <Box display={"grid"} bgColor={"#F4F1DE"} borderRadius={"5px"}>
+                  <Image
+                    src={homeLogo}
+                    alt="logo"
+                    height={"40px"}
+                    justifySelf={"center"}
+                  />
+                  <Text
+                    textAlign={"center"}
+                    fontFamily={"roboto"}
+                    color={"black"}
+                  >
+                    Home
+                  </Text>
+                </Box>
+              </Link>
+            </GridItem>
+          ) : (
+            <GridItem h="65px">
+              <Link to={"/super-admin/dashboard"}>
+                <Box display={"grid"}>
+                  <Image
+                    src={homeLogo}
+                    alt="logo"
+                    height={"40px"}
+                    justifySelf={"center"}
+                  />
+                  <Text
+                    textAlign={"center"}
+                    fontFamily={"roboto"}
+                    color={"black"}
+                  >
+                    Home
+                  </Text>
+                </Box>
+              </Link>
+            </GridItem>
+          )}
+          {location.pathname === "/super-admin/product" ? (
+            <GridItem h="65px">
+              <Link to={"/super-admin/product"}>
+                <Box display={"grid"} bgColor={"#F4F1DE"} borderRadius={"5px"}>
+                  <Image
+                    src={productLogo}
+                    alt="logo"
+                    height={"40px"}
+                    justifySelf={"center"}
+                  />
+                  <Text
+                    textAlign={"center"}
+                    fontFamily={"roboto"}
+                    color={"black"}
+                  >
+                    Product
+                  </Text>
+                </Box>
+              </Link>
+            </GridItem>
+          ) : (
+            <GridItem h="65px">
+              <Link to={"/super-admin/product"}>
+                <Box display={"grid"}>
+                  <Image
+                    src={productLogo}
+                    alt="logo"
+                    height={"40px"}
+                    justifySelf={"center"}
+                  />
+                  <Text
+                    textAlign={"center"}
+                    fontFamily={"roboto"}
+                    color={"black"}
+                  >
+                    Product
+                  </Text>
+                </Box>
+              </Link>
+            </GridItem>
+          )}
+          {location.pathname === "/super-admin/branch" ? (
+            <GridItem h="65px">
+              <Link to={"/super-admin/branch"}>
+                <Box display={"grid"} bgColor={"#F4F1DE"} borderRadius={"5px"}>
+                  <Image
+                    src={userLogo}
+                    alt="logo"
+                    height={"40px"}
+                    justifySelf={"center"}
+                  />
+                  <Text
+                    textAlign={"center"}
+                    fontFamily={"roboto"}
+                    color={"black"}
+                  >
+                    Branch
+                  </Text>
+                </Box>
+              </Link>
+            </GridItem>
+          ) : (
+            <GridItem h="65px">
+              <Link to={"/super-admin/branch"}>
+                <Box display={"grid"}>
+                  <Image
+                    src={userLogo}
+                    alt="logo"
+                    height={"40px"}
+                    justifySelf={"center"}
+                  />
+                  <Text
+                    textAlign={"center"}
+                    fontFamily={"roboto"}
+                    color={"black"}
+                  >
+                    Branch
+                  </Text>
+                </Box>
+              </Link>
+            </GridItem>
+          )}
+          {location.pathname === "/super-admin/statistic" ||
+          location.pathname === "/super-admin/category" ? (
+            <GridItem h="65px">
+              <Box
+                display={"grid"}
+                onClick={openModal}
+                bgColor={"#F4F1DE"}
+                borderRadius={"5px"}
+              >
+                <Image
+                  src={otherLogo}
+                  alt="logo"
+                  height={"40px"}
+                  justifySelf={"center"}
+                />
+                <Text textAlign={"center"} fontFamily={"roboto"}>
+                  Other
+                </Text>
+              </Box>
+            </GridItem>
+          ) : (
+            <GridItem h="65px">
+              <Box display={"grid"} onClick={openModal}>
+                <Image
+                  src={otherLogo}
+                  alt="logo"
+                  height={"40px"}
+                  justifySelf={"center"}
+                />
+                <Text textAlign={"center"} fontFamily={"roboto"}>
+                  Other
+                </Text>
+              </Box>
+            </GridItem>
+          )}
         </Grid>
         <OtherMenuBarSuperAdm isOpen={modalIsOpen} closeModal={closeModal} />
       </Box>

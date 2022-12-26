@@ -66,7 +66,7 @@ const VoucherFreeShipment = () => {
             minimum_transaction_done: minimum_transaction_done,
             voucher_start_date: voucher_start_date,
             voucher_end_date: voucher_end_date,
-            // quantity: quantity,
+            quantity: quantity,
           }
         );
 

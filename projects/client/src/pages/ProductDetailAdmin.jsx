@@ -490,6 +490,7 @@ const ProductDetailAdmin = () => {
                 marginX={"30px"}
                 width={"100%"}
                 onClick={formik.handleSubmit}
+                isDisabled={formik.isSubmitting}
               >
                 Submit
               </Button>

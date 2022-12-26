@@ -45,6 +45,7 @@ const AdminTransaction = () => {
   const optionsFilter = [
     { value: "", label: "All" },
     { value: "Waiting For Payment", label: "Waiting For Payment" },
+    { value: "Waiting For Approval", label: "Waiting For Approval" },
     { value: "Payment Approved", label: "Payment Approved" },
     { value: "Product in Shipment", label: "Product in Shipment" },
     { value: "Success", label: "Success" },

@@ -23,10 +23,9 @@ const uploadProduct = ({
     // const fileSize = parseInt(req.headers["content-length"]);
     if (acceptedFileTypes.includes(extension)) {
       if (
-        (file.mimetype === "image/png" ||
-          file.mimetype === "image/jpg" ||
-          file.mimetype === "image/jpeg") &&
-        fileSize <= 1282810
+        file.mimetype === "image/png" ||
+        file.mimetype === "image/jpg" ||
+        file.mimetype === "image/jpeg"
       ) {
         cb(null, true);
       }

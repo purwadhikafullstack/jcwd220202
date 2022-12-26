@@ -79,7 +79,9 @@ const SuperAdminDashboard = () => {
             >
               <Text fontSize={"16px"}>Product In Store</Text>
               <Text fontSize={"20px"} fontWeight={"bold"}>
-                {countProduct || "Loading..."}
+                {countProduct !== 0 || countProduct !== null
+                  ? countProduct
+                  : "Loading..."}
               </Text>
             </Box>
           </Link>
@@ -102,7 +104,7 @@ const SuperAdminDashboard = () => {
               objectFit={"contain"}
             />
           </Box>
-          <Link to={"/super-admin/user"}>
+          <Link to={"/super-admin/branch"}>
             <Box
               width={"120px"}
               mt={"35px"}
@@ -111,7 +113,9 @@ const SuperAdminDashboard = () => {
             >
               <Text fontSize={"16px"}>Branch Available</Text>
               <Text fontSize={"20px"} fontWeight={"bold"}>
-                {countBranch || "Loading..."}
+                {countBranch !== 0 || countBranch !== null
+                  ? countBranch
+                  : "Loading..."}
               </Text>
             </Box>
           </Link>
@@ -141,17 +145,19 @@ const SuperAdminDashboard = () => {
         <LineChartSuperAdmin />
       </Box>
       <Box>
-        <Text
-          textAlign={"right"}
-          marginRight={"30px"}
-          marginTop={"10px"}
-          fontFamily={"roboto"}
-          fontSize={"15px"}
-          color={"#E07A5F"}
-          fontWeight={"bold"}
-        >
-          View more..
-        </Text>
+        <Link to={"/super-admin/statistic"}>
+          <Text
+            textAlign={"right"}
+            marginRight={"30px"}
+            marginTop={"10px"}
+            fontFamily={"roboto"}
+            fontSize={"15px"}
+            color={"#E07A5F"}
+            fontWeight={"bold"}
+          >
+            View more..
+          </Text>
+        </Link>
       </Box>
       <Box>
         <SuperAdminNavbar />

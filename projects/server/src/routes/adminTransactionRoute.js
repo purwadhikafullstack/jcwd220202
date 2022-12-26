@@ -30,7 +30,7 @@ router.get(
 router.patch(
   "/status/:id",
   verifyToken,
-  editTransactionStatusMiddleware,
+  // editTransactionStatusMiddleware,
   adminTransactionController.updateTransactionStatus
 );
 

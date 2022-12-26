@@ -1,4 +1,7 @@
 const nodemailer = require("nodemailer");
+const dotenv = require("dotenv");
+
+dotenv.config();
 
 const emailer = async ({ to, subject, text, html }) => {
   if (!to)

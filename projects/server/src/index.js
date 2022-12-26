@@ -5,9 +5,12 @@ const { join } = require("path");
 const db = require("../models");
 const dotenv = require("dotenv");
 const fs = require("fs");
+const startVoucherScheduler = require("../lib/startVoucherScheduler");
+const endVoucherScheduler = require("../lib/endVoucherSchedule");
+const salesReportScheduler = require("../lib/salesReportScheduler");
 const schedule = require("../lib/schedulePayment");
 
-// dotenv.config();
+dotenv.config();
 
 const PORT = process.env.PORT || 8000;
 const app = express();
@@ -33,6 +36,7 @@ const productHistoryRoute = require("./routes/productHistoryRoute");
 const adminTransactionRoute = require("./routes/adminTransactionRoute");
 const passwordRoute = require("./routes/passwordRoute.js");
 const voucherAdminRoute = require("./routes/voucherAdminRoute.js");
+const adminSalesRoute = require("./routes/adminSalesRoute");
 
 app.use("/user", loginRoute);
 app.use("/profile", profileRoute);
@@ -48,6 +52,7 @@ app.use("/product-history", productHistoryRoute);
 app.use("/admin-transaction", adminTransactionRoute);
 app.use("/password", passwordRoute);
 app.use("/admin-voucher", voucherAdminRoute);
+app.use("/admin-sales", adminSalesRoute);
 
 app.use("/public", express.static("public"));
 
@@ -109,4 +114,7 @@ app.listen(PORT, async (err) => {
   }
 });
 
+startVoucherScheduler.invoke();
+endVoucherScheduler.invoke();
+salesReportScheduler.invoke();
 schedule.invoke();

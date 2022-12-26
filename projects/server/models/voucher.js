@@ -41,7 +41,11 @@ module.exports = (sequelize, DataTypes) => {
       quantity: {
         type: DataTypes.INTEGER,
       },
-      is_expired: {
+      is_Active: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
+      is_Deleted: {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
       },
@@ -49,6 +53,8 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: "Voucher",
+      paranoid: true,
+      timestamps: true,
     }
   );
   return Voucher;
