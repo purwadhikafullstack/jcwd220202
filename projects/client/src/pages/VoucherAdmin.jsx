@@ -73,8 +73,8 @@ const VoucherAdmin = () => {
   const optionsSort = [
     { value: "createdAt ASC", label: "latest created" },
     { value: "createdAt DESC", label: "oldest created" },
-    { value: "voucher_start_date ASC", label: "latest start date" },
-    { value: "voucher_start_date DESC", label: "oldest start date" },
+    { value: "voucher_start_date DESC", label: "latest start date" },
+    { value: "voucher_start_date ASC", label: "oldest start date" },
   ];
 
   const fetchVoucherType = async () => {

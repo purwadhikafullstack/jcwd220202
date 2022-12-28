@@ -181,7 +181,13 @@ const VoucherCard = ({
             </Box>
           </Box>
           <Flex mt={"5px"} px={"5px"}>
-            <Box flex="0.5">{showImage()}</Box>
+            {is_Deleted === true ? (
+              <Box flex="0.5" mt={"25px"}>
+                {showImage()}
+              </Box>
+            ) : (
+              <Box flex="0.5">{showImage()}</Box>
+            )}
             <Box flex="1">
               <Box display={"flex"}>
                 <Text fontWeight={"bold"}>{branch_name || "Loading..."}</Text>

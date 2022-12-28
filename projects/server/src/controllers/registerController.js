@@ -204,7 +204,7 @@ const registerContoller = {
         id: findUserById.id,
       });
 
-      const verificationLink = `http://localhost:8000/register/user/verification?verification_token=${verification_token}`;
+      const verificationLink = `http://localhost:8000/register/user/reverification-account?verification_token=${verification_token}`;
 
       const rawHTML = fs.readFileSync("templates/register_user.html", "utf-8");
       const compiledHTML = handlebars.compile(rawHTML);
@@ -224,6 +224,36 @@ const registerContoller = {
         message: "Verification email sent",
       });
     } catch (error) {
+      console.log(error);
+      return res.status(500).json({
+        message: "server error",
+      });
+    }
+  },
+  verifyUserWhenLoggedIn: async (req, res) => {
+    try {
+      const { verification_token } = req.query;
+
+      const validToken = validateVerificationToken(verification_token);
+
+      if (!validToken) {
+        return res.status(401).json({
+          message: "Token Invalid",
+        });
+      }
+
+      await db.User.update(
+        { is_verified: true },
+        {
+          where: {
+            id: validToken.id,
+          },
+        }
+      );
+
+      return res.redirect("http://localhost:3000/profile");
+    } catch (error) {
+      console.log(error);
       return res.status(500).json({
         message: "server error",
       });
