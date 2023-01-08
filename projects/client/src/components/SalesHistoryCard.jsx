@@ -1,29 +1,15 @@
-import {
-  Badge,
-  Box,
-  Button,
-  Flex,
-  Grid,
-  GridItem,
-  Image,
-  Text,
-} from "@chakra-ui/react";
-import { Link } from "react-router-dom";
-import freeShipmentStory from "../assets/shipment.png";
+import { Box, Flex, Image, Text } from "@chakra-ui/react";
+import moment from "moment";
 import reportStory from "../assets/report.png";
 
 const SalesHistoryCard = ({
-  branch_name,
   username,
   total_quantity,
-  transaction_items,
   createdAt,
   total_price,
   TransactionId,
+  branch_name,
 }) => {
-  // console.log(transaction_items[0]);
-  console.log(transaction_items);
-
   const formatRupiah = (value) => {
     return new Intl.NumberFormat("id-ID", {
       style: "currency",
@@ -32,25 +18,16 @@ const SalesHistoryCard = ({
     }).format(value);
   };
 
-  // let grossPrice = 0;
-
-  // transaction_items.forEach((element) => {
-  //   grossPrice = grossPrice + element.price_per_product;
-  // });
-
-  // const countGMV = grossPrice * total_quantity;
-
   return (
     <>
       <Box marginTop={"20px"} mx={"20px"}>
         <Box
-          // maxHeight={"185px"}
           fontFamily={"roboto"}
           color={"black"}
           border={"2px solid #E07A5F"}
           borderRadius={"15px"}
           boxShadow={"1px 1px 4px #E07A5F"}
-          height={"165px"}
+          height={"180px"}
           columnGap={"2"}
           fontSize={"15px"}
         >
@@ -72,11 +49,11 @@ const SalesHistoryCard = ({
               textAlign={"center"}
               color={"white"}
             >
-              {createdAt.split("T")[0]}
+              {moment(createdAt).utcOffset("+07:00").format("YYYY-MM-DD")}
             </Box>
           </Box>
           <Flex mt={"5px"} pl={"10px"}>
-            <Box flex={"0.5"}>
+            <Box flex={"0.5"} mt={"10px"}>
               <Image
                 src={reportStory}
                 alt="logo"
@@ -86,13 +63,14 @@ const SalesHistoryCard = ({
                 height={"100px"}
               />
             </Box>
-            <Box flex="1">
-              <Box display={"flex"}>
-                <Text fontWeight={"bold"}>{branch_name || "Loading..."}</Text>
-              </Box>
+            <Box flex="1" mt={"10px"}>
               <Box display={"flex"}>
                 <Text fontWeight={"bold"}>Transaction ID: </Text>
                 <Text ml={"5px"}>{TransactionId || "Loading..."}</Text>
+              </Box>
+              <Box display={"flex"}>
+                <Text fontWeight={"bold"}>Branch Name: </Text>
+                <Text ml={"5px"}>{branch_name || "Loading..."}</Text>
               </Box>
               <Box
                 display={"flex"}

@@ -1,9 +1,6 @@
 const express = require("express");
 const adminTransactionController = require("../controllers/adminTransactionController");
 const { verifyToken } = require("../middlewares/loginMiddleware");
-const {
-  editTransactionStatusMiddleware,
-} = require("../middlewares/editTransactionStatusMiddleware");
 
 const router = express.Router();
 
@@ -30,7 +27,6 @@ router.get(
 router.patch(
   "/status/:id",
   verifyToken,
-  // editTransactionStatusMiddleware,
   adminTransactionController.updateTransactionStatus
 );
 

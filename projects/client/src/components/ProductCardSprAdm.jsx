@@ -4,7 +4,6 @@ import {
   Button,
   Flex,
   Image,
-  Stack,
   Text,
   useToast,
 } from "@chakra-ui/react";
@@ -79,11 +78,9 @@ const ProductCardSprAdm = ({
 
       return (
         <Box flex="1.2" my={"55px"} mr={"5px"}>
-          <Stack>
-            <Badge colorScheme="red" textAlign={"center"} mr={"5px"} mt={"5px"}>
-              Deleted
-            </Badge>
-          </Stack>
+          <Badge colorScheme="red" textAlign={"center"} width={"86px"}>
+            Deleted
+          </Badge>
           <Button
             borderRadius={"10px"}
             marginRight={"5px"}

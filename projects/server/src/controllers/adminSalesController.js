@@ -319,8 +319,6 @@ const adminSalesController = {
         (num, index) => num / valuesCountHashmap[index]
       );
 
-      // console.log(avgGrossIncome);
-
       return res.status(200).json({
         message: "get avg gross income",
         label: keysHashmap,

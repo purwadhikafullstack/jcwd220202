@@ -59,6 +59,16 @@ const App = () => {
       const response = await axiosInstance.get("/user/refreshToken");
 
       dispatch(login(response.data.data));
+
+      if (response.data.data.RoleId === 2) {
+        dispatch(
+          login({
+            id: response.data.data.id,
+            RoleId: 2,
+            branch_name: response.data.data.Branch.branch_name,
+          })
+        );
+      }
       localStorage.setItem("auth_token", response.data.token);
       setAuthCheck(true);
     } catch (err) {

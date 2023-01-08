@@ -25,7 +25,6 @@ import { Link, useLocation } from "react-router-dom";
 
 const AdminNavbar = () => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  const { isOpen, onOpen, onClose } = useDisclosure();
   const location = useLocation();
 
   const closeModal = () => {

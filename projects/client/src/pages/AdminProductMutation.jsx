@@ -26,8 +26,8 @@ import { useFormik } from "formik";
 import { DatePicker } from "antd";
 import moment from "moment";
 import productNotFound from "../assets/feelsorry.png";
+import { useRef } from "react";
 
-// const { RangePicker } = DatePicker;
 const maxItemsPerPage = 12;
 
 const AdminProductMutation = () => {
@@ -39,6 +39,14 @@ const AdminProductMutation = () => {
   const [activePage, setActivePage] = useState(1);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+
+  const divRef = useRef(null);
+
+  const scrollToTop = () => {
+    divRef.current.scroll({
+      top: 0,
+    });
+  };
 
   const optionsSort = [
     { value: "createdAt DESC", label: "Latest" },
@@ -155,6 +163,7 @@ const AdminProductMutation = () => {
 
   useEffect(() => {
     fetchProduHistory();
+    scrollToTop();
   }, [sortBy, sortDir, currentSearch, activePage, endDate, startDate]);
 
   return (
@@ -165,6 +174,7 @@ const AdminProductMutation = () => {
       fontSize={"16px"}
       overflow={"scroll"}
       pb={"120px"}
+      ref={divRef}
     >
       <Box>
         <ProductMutationListBar />
@@ -276,9 +286,7 @@ const AdminProductMutation = () => {
                   }
 
                   setStartDate(newStartDate);
-                  console.log(newStartDate);
                 }}
-                // allowClear={false}
               />
             </Box>
           </GridItem>
@@ -305,12 +313,27 @@ const AdminProductMutation = () => {
                   }
                   setEndDate(newEndDate);
                 }}
-                // allowClear={false}
               />
             </Box>
           </GridItem>
         </Grid>
       </Box>
+      {!productHistory.length ? (
+        <Box display={"grid"} mt={"15vh"}>
+          <Text textAlign={"center"} fontWeight={"bold"}>
+            No Histories Found
+          </Text>
+          <Image
+            src={productNotFound}
+            alt="not found"
+            width={"70%"}
+            objectFit={"contain"}
+            justifySelf={"center"}
+          />
+        </Box>
+      ) : (
+        <Box>{renderProductHistory()}</Box>
+      )}
       {!productHistory.length ? null : (
         <Box marginTop={"20px"}>
           <ReactPaginate
@@ -332,22 +355,6 @@ const AdminProductMutation = () => {
             breakLinkClassName={"page-link"}
           />
         </Box>
-      )}
-      {!productHistory.length ? (
-        <Box display={"grid"} mt={"15vh"}>
-          <Text textAlign={"center"} fontWeight={"bold"}>
-            No Histories Found
-          </Text>
-          <Image
-            src={productNotFound}
-            alt="not found"
-            width={"70%"}
-            objectFit={"contain"}
-            justifySelf={"center"}
-          />
-        </Box>
-      ) : (
-        <Box>{renderProductHistory()}</Box>
       )}
       <Box>
         <AdminNavbar />

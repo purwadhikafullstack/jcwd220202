@@ -180,11 +180,9 @@ const adminProductController = {
             include: [
               {
                 model: db.ProductBranch,
-                // paranoid: false,
                 include: [
                   {
                     model: db.Product,
-                    // paranoid: false,
                     where: {
                       [Op.or]: [
                         {
@@ -229,11 +227,9 @@ const adminProductController = {
           include: [
             {
               model: db.ProductBranch,
-              // paranoid: false,
               include: [
                 {
                   model: db.Product,
-                  // paranoid: false,
                   where: {
                     [Op.or]: [
                       {
@@ -279,11 +275,9 @@ const adminProductController = {
         include: [
           {
             model: db.ProductBranch,
-            // paranoid: false,
             include: [
               {
                 model: db.Product,
-                // paranoid: false,
                 include: [{ model: db.Category }],
               },
             ],
@@ -318,8 +312,6 @@ const adminProductController = {
       const findProductById = await db.Product.findByPk(id, {
         include: [{ model: db.Category }],
       });
-
-      // console.log(findProductById);
 
       return res.status(200).json({
         message: "get product by id",
@@ -375,8 +367,6 @@ const adminProductController = {
 
       const findProductById = await db.Product.findByPk(req.params.id);
 
-      // delete foto yg sebelumnya
-
       return res.status(200).json({
         message: "product data edited",
         data: findProductById,
@@ -400,8 +390,6 @@ const adminProductController = {
         });
       }
 
-      // const parseAdmin = JSON.parse(JSON.stringify(findAdmin));
-
       const findProductById = await db.Product.findByPk(req.params.id, {
         include: [
           {
@@ -411,7 +399,6 @@ const adminProductController = {
             model: db.ProductBranch,
             where: {
               BranchId: findAdmin.Branch.id,
-              // ProductId: parseAdmin.id,
             },
           },
         ],
@@ -459,6 +446,38 @@ const adminProductController = {
       });
 
       if (stock === findProductWillUpdated.stock) {
+        if (discount_amount_percentage === 0) {
+          await db.ProductBranch.update(
+            {
+              discount_amount_nominal: discount_amount_nominal,
+              discount_amount_percentage: 0,
+              stock: stock,
+            },
+            {
+              where: {
+                ProductId: req.params.id,
+                BranchId: parseAdmin.Branch.id,
+              },
+            }
+          );
+        }
+
+        if (discount_amount_nominal === 0) {
+          await db.ProductBranch.update(
+            {
+              discount_amount_percentage: discount_amount_percentage,
+              discount_amount_nominal: 0,
+              stock: stock,
+            },
+            {
+              where: {
+                ProductId: req.params.id,
+                BranchId: parseAdmin.Branch.id,
+              },
+            }
+          );
+        }
+
         return res.status(200).json({
           message: "product updated but not including the history",
         });
@@ -609,10 +628,6 @@ const adminProductController = {
   deleteProductByIdSprAdm: async (req, res) => {
     try {
       const { id } = req.params;
-
-      // const findProduct = await db.Product.findByPk(id);
-
-      // fs.unlinkSync(`public/${findProduct.product_image.split("/")[4]}`);
 
       await db.ProductBranch.update(
         { is_DeletedInBranch: true },

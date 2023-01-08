@@ -1,26 +1,16 @@
 import {
-  AlertDialog,
-  AlertDialogBody,
-  AlertDialogContent,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogOverlay,
   Box,
   Button,
   HStack,
   Image,
   Text,
-  useDisclosure,
   VStack,
   useToast,
 } from "@chakra-ui/react";
 import ProductListBar from "../components/ProductListBar";
-import uploadProduct from "../assets/product_upload.png";
 import { useState, useEffect } from "react";
-import Select from "react-select";
 import { axiosInstance } from "../api";
 import { useParams } from "react-router-dom";
-import { useSelector } from "react-redux";
 
 const ProductDetailUser = () => {
   const toast = useToast();

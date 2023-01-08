@@ -10,6 +10,7 @@ import {
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import uploadProduct from "../assets/product_upload.png";
+import moment from "moment";
 
 const TransactionCardAdmin = ({
   TransactionId,
@@ -19,8 +20,6 @@ const TransactionCardAdmin = ({
   TransactionItems,
   transaction_status,
 }) => {
-  console.log(TransactionItems);
-
   const showFirstItem = TransactionItems.map((val) => {
     const countOriginalPrice = val.current_price + val.applied_discount;
 
@@ -33,8 +32,6 @@ const TransactionCardAdmin = ({
       discounted_product: val.current_price,
     };
   });
-
-  console.log(showFirstItem[0]);
 
   const showDiscount = () => {
     if (showFirstItem[0].applied_discount) {
@@ -67,7 +64,6 @@ const TransactionCardAdmin = ({
     <>
       <Box marginTop={"20px"} mx={"20px"}>
         <Flex
-          // maxHeight={"185px"}
           fontFamily={"roboto"}
           color={"black"}
           border={"2px solid #E07A5F"}
@@ -108,7 +104,10 @@ const TransactionCardAdmin = ({
                 {formatRupiah(total_price) || "Loading..."}
               </Text>
             </Box>
-            <Box>{createdAt.split("T")[0] || "Loading..."}</Box>
+            <Box>
+              {moment(createdAt).utcOffset("+07:00").format("YYYY-MM-DD") ||
+                "Loading..."}
+            </Box>
             <Box>
               {transaction_status === "Payment Approved" ||
               transaction_status === "Product In Shipment" ||
@@ -144,7 +143,6 @@ const TransactionCardAdmin = ({
                   width={"100px"}
                   bgColor={"#81B29A"}
                   _hover={{ bgColor: "#81B29A", color: "white" }}
-                  // color={"black"}
                 >
                   Details
                 </Button>

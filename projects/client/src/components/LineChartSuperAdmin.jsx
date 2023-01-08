@@ -1,8 +1,16 @@
 import React, { useState } from "react";
-import Chart from "chart.js/auto";
 import { Line } from "react-chartjs-2";
+import {
+  Chart as ChartJS,
+  LineElement,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+} from "chart.js";
 import { useEffect } from "react";
 import { axiosInstance } from "../api";
+
+ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement);
 
 const LineChartSuperAdmin = () => {
   const [graphData, setGraphData] = useState([]);
@@ -33,19 +41,16 @@ const LineChartSuperAdmin = () => {
     ],
   };
 
+  const options = {
+    responsive: true,
+    maintainAspectRatio: false,
+  };
+
   useEffect(() => {
     fetchGraphData();
   }, []);
 
-  return (
-    <Line
-      data={data}
-      options={{
-        responsive: true,
-        maintainAspectRatio: false,
-      }}
-    />
-  );
+  return <Line data={data} options={options} />;
 };
 
 export default LineChartSuperAdmin;

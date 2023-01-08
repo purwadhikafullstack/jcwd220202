@@ -41,7 +41,6 @@ const LoginPage = () => {
           email,
           password,
         });
-        console.log(response);
 
         localStorage.setItem("auth_token", response.data.token);
         dispatch(

@@ -57,6 +57,11 @@ const userController = {
         where: {
           email: email,
         },
+        include: [
+          {
+            model: db.Branch,
+          },
+        ],
       });
 
       if (!findUserByEmail) {
@@ -96,7 +101,9 @@ const userController = {
   },
   keepUserLoggedIn: async (req, res) => {
     try {
-      const findUserById = await db.User.findByPk(req.user.id);
+      const findUserById = await db.User.findByPk(req.user.id, {
+        include: [{ model: db.Branch }],
+      });
 
       const renewedToken = signToken({
         id: req.user.id,
@@ -108,7 +115,7 @@ const userController = {
         token: renewedToken,
       });
     } catch (err) {
-      console.log(err)
+      console.log(err);
       return res.status(500).json({
         message: "Server error",
       });

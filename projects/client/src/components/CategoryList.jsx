@@ -37,7 +37,6 @@ const CategoryList = ({ no, category_name, onDelete, id, onOpenAlert }) => {
   const openDeleteAlert = () => {
     onOpenAlert();
 
-    console.log(onOpenAlert());
     document.body.style.overflow = "hidden";
   };
 

@@ -11,7 +11,6 @@ import {
   FormControl,
   Grid,
   GridItem,
-  Heading,
   Image,
   Input,
   InputGroup,
@@ -40,6 +39,7 @@ import Select from "react-select";
 import sortIcon from "../assets/sort.png";
 import { useFormik } from "formik";
 import productNotFound from "../assets/feelsorry.png";
+import { useRef } from "react";
 
 const maxItemsPerPage = 12;
 
@@ -51,6 +51,14 @@ const AdminCategory = () => {
   const [currentSearch, setCurrentSearch] = useState("");
   const [totalCategory, setTotalCategory] = useState(0);
   const [activePage, setActivePage] = useState(1);
+
+  const divRef = useRef(null);
+
+  const scrollToTop = () => {
+    divRef.current.scroll({
+      top: 0,
+    });
+  };
 
   const toast = useToast();
 
@@ -75,8 +83,6 @@ const AdminCategory = () => {
       console.log(err);
     }
   };
-
-  //   console.log(category);
 
   const maxPage = Math.ceil(totalCategory / maxItemsPerPage);
 
@@ -127,7 +133,6 @@ const AdminCategory = () => {
   const confirmDeleteBtnHandler = () => {
     deleteBtnHandler(alert.id);
     onClose();
-    // onDelete();
     setAlert(null);
     document.body.style.overflow = "unset";
   };
@@ -194,6 +199,7 @@ const AdminCategory = () => {
 
   useEffect(() => {
     fetchCategory();
+    scrollToTop();
   }, [sortBy, sortDir, currentSearch, activePage]);
 
   return (
@@ -204,6 +210,7 @@ const AdminCategory = () => {
       fontSize={"16px"}
       overflow={"scroll"}
       pb={"80px"}
+      ref={divRef}
     >
       <Box>
         <CategoryListBar />
@@ -307,28 +314,7 @@ const AdminCategory = () => {
           </Link>
         </Grid>
       </Box>
-      {!category.length ? null : (
-        <Box marginTop={"20px"}>
-          <ReactPaginate
-            previousLabel={"previous"}
-            nextLabel={"next"}
-            breakLabel={"..."}
-            pageCount={maxPage}
-            marginPagesDisplayed={5}
-            pageRangeDisplayed={2}
-            onPageChange={handlePageClick}
-            containerClassName={"pagination justify-content-center"}
-            pageClassName={"page-item"}
-            pageLinkClassName={"page-link"}
-            previousClassName={"page-item"}
-            previousLinkClassName={"page-link"}
-            nextClassName={"page-item"}
-            nextLinkClassName={"page-link"}
-            breakClassName={"page-item"}
-            breakLinkClassName={"page-link"}
-          />
-        </Box>
-      )}
+
       {!category.length ? (
         <Box display={"grid"} mt={"15vh"}>
           <Text textAlign={"center"} fontWeight={"bold"}>
@@ -371,6 +357,28 @@ const AdminCategory = () => {
               </Tbody>
             </Table>
           </TableContainer>
+        </Box>
+      )}
+      {!category.length ? null : (
+        <Box>
+          <ReactPaginate
+            previousLabel={"previous"}
+            nextLabel={"next"}
+            breakLabel={"..."}
+            pageCount={maxPage}
+            marginPagesDisplayed={5}
+            pageRangeDisplayed={2}
+            onPageChange={handlePageClick}
+            containerClassName={"pagination justify-content-center"}
+            pageClassName={"page-item"}
+            pageLinkClassName={"page-link"}
+            previousClassName={"page-item"}
+            previousLinkClassName={"page-link"}
+            nextClassName={"page-item"}
+            nextLinkClassName={"page-link"}
+            breakClassName={"page-item"}
+            breakLinkClassName={"page-link"}
+          />
         </Box>
       )}
       <Box>

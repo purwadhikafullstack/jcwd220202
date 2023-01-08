@@ -9,8 +9,6 @@ import {
   Input,
   InputGroup,
   InputRightElement,
-  ListItem,
-  OrderedList,
   Text,
 } from "@chakra-ui/react";
 
@@ -29,6 +27,7 @@ import { useFormik } from "formik";
 import ReactPaginate from "react-paginate";
 import "../style/pagination.css";
 import productNotFound from "../assets/feelsorry.png";
+import { useRef } from "react";
 
 const maxItemsPerPage = 12;
 
@@ -41,6 +40,14 @@ const ProductListSprAdm = () => {
   const [currentSearch, setCurrentSearch] = useState("");
   const [totalProducts, setTotalProducts] = useState(0);
   const [activePage, setActivePage] = useState(1);
+
+  const divRef = useRef(null);
+
+  const scrollToTop = () => {
+    divRef.current.scroll({
+      top: 0,
+    });
+  };
 
   const optionsSort = [
     { value: "product_name ASC", label: "A to Z" },
@@ -186,6 +193,7 @@ const ProductListSprAdm = () => {
 
   useEffect(() => {
     fetchProducts();
+    scrollToTop();
   }, [sortBy, sortDir, filter, currentSearch, activePage]);
 
   return (
@@ -196,6 +204,7 @@ const ProductListSprAdm = () => {
       fontSize={"16px"}
       overflow={"scroll"}
       pb={"120px"}
+      ref={divRef}
     >
       <Box>
         <ProductListBar />
@@ -322,6 +331,23 @@ const ProductListSprAdm = () => {
           </Link>
         </Grid>
       </Box>
+
+      {!product.length ? (
+        <Box display={"grid"} mt={"15vh"}>
+          <Text textAlign={"center"} fontWeight={"bold"}>
+            No item(s) found
+          </Text>
+          <Image
+            src={productNotFound}
+            alt="not found"
+            width={"70%"}
+            objectFit={"contain"}
+            justifySelf={"center"}
+          />
+        </Box>
+      ) : (
+        <Box>{renderProducts()}</Box>
+      )}
       {!product.length ? null : (
         <Box marginTop={"20px"}>
           <ReactPaginate
@@ -343,22 +369,6 @@ const ProductListSprAdm = () => {
             breakLinkClassName={"page-link"}
           />
         </Box>
-      )}
-      {!product.length ? (
-        <Box display={"grid"} mt={"15vh"}>
-          <Text textAlign={"center"} fontWeight={"bold"}>
-            No item(s) found
-          </Text>
-          <Image
-            src={productNotFound}
-            alt="not found"
-            width={"70%"}
-            objectFit={"contain"}
-            justifySelf={"center"}
-          />
-        </Box>
-      ) : (
-        <Box>{renderProducts()}</Box>
       )}
       <Box>
         <SuperAdminNavbar />
