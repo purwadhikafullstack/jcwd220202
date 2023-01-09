@@ -17,7 +17,7 @@ const productController = {
         },
         include: [
           {
-            model: db.User, 
+            model: db.User,
           },
         ],
       });
@@ -26,12 +26,12 @@ const productController = {
       const lon = userCoordinate.longitude;
 
       const query = `(6371 *
-        acos(
-          cos(radians(${lat})) *
-            cos(radians(latitude)) *
-            cos(radians(longitude) - radians(${lon})) +
-            sin(radians(${lat})) * sin(radians(latitude))
-        ))`;
+            acos(
+              cos(radians(${lat})) *
+                cos(radians(latitude)) *
+                cos(radians(longitude) - radians(${lon})) +
+                sin(radians(${lat})) * sin(radians(latitude))
+            ))`;
 
       const pickBranch = await db.User.findAll({
         where: {
@@ -295,12 +295,12 @@ const productController = {
       const lon = userCoordinate.longitude;
 
       const query = `(6371 *
-        acos(
-          cos(radians(${lat})) *
-            cos(radians(latitude)) *
-            cos(radians(longitude) - radians(${lon})) +
-            sin(radians(${lat})) * sin(radians(latitude))
-        ))`;
+            acos(
+              cos(radians(${lat})) *
+                cos(radians(latitude)) *
+                cos(radians(longitude) - radians(${lon})) +
+                sin(radians(${lat})) * sin(radians(latitude))
+            ))`;
 
       const pickBranch = await db.User.findAll({
         where: {
@@ -319,7 +319,7 @@ const productController = {
         where: {
           UserId: pickBranch[0].id,
         },
-        
+
         include: [
           {
             model: db.ProductBranch,
@@ -332,7 +332,10 @@ const productController = {
       const detailProduct = await db.Product.findAll({
         where: { id: req.params.id },
         include: [
-          { model: db.ProductBranch, where: { BranchId: findBranchById[0].id } },
+          {
+            model: db.ProductBranch,
+            where: { BranchId: findBranchById[0].id },
+          },
         ],
       });
 
@@ -343,6 +346,24 @@ const productController = {
     } catch (err) {
       return res.status(500).json({
         message: "Server error fetching details",
+      });
+    }
+  },
+  findProductByCategory: async (req, res) => {
+    try {
+      const findProductByCategory = await db.Product.findAll({
+        where: {
+          categoryId: req.query.category_id,
+        },
+      });
+
+      return res.status(200).json({
+        message: "Showing product by category",
+        data: findProductByCategory,
+      });
+    } catch (err) {
+      return res.status(500).json({
+        message: "Server error find product by category",
       });
     }
   },

@@ -18,7 +18,7 @@ import {
   GridItem,
   Select,
 } from "@chakra-ui/react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { SearchIcon } from "@chakra-ui/icons";
 import Navigation from "../components/NavigationBar";
 import { categories } from "../components/category";
@@ -70,7 +70,14 @@ const Home = () => {
 
   useEffect(() => {
     fetchCategory();
-}, []);
+  }, []);
+
+  const navigate = useNavigate();
+
+  const redirectCategory = (id) => {
+    let path = `/product/category?category_id=${id}`;
+    navigate(path);
+  };
 
   const colourStyles = {
     control: (base) => ({
@@ -206,82 +213,88 @@ const Home = () => {
   return (
     <Box bgColor={"#81B29A"} mt={"20px"}>
       <SearchBar />
-            <Box h={"200px"} bgColor={"#F4F1DE"}>
-                <Carousel />
+      <Box h={"200px"} bgColor={"#F4F1DE"}>
+        <Carousel />
+      </Box>
+      {category.length <= 8 ? (
+        <SimpleGrid
+          columns={"4"}
+          spacing={5}
+          textAlign={"center"}
+          alignItems={"center"}
+          bgColor={"white"}
+          p={"5"}
+          mt={"10px"}
+        >
+          {category.slice(0, 3).map((item) => {
+            return (
+              <Box
+                display={"grid"}
+                onClick={() => {
+                  redirectCategory(item.id);
+                }}
+              >
+                <Image
+                  justifySelf={"center"}
+                  src={item.icon_url}
+                  w={"50px"}
+                  alignItems={"center"}
+                />
+                <Text fontSize={"xs"}>{item.category_name}</Text>
+              </Box>
+            );
+          })}
+          <Link to={"/category"}>
+            <Box display={"grid"}>
+              <Image
+                justifySelf={"center"}
+                src={other}
+                w={"40px"}
+                alignItems={"center"}
+              />
             </Box>
-            {category.length <= 8 ? (
-                <SimpleGrid
-                    columns={"4"}
-                    spacing={5}
-                    textAlign={"center"}
-                    alignItems={"center"}
-                    bgColor={"white"}
-                    p={"5"}
-                    mt={"10px"}
-                >
-                    {category.slice(0, 3).map((item) => {
-                        return (
-                            <Box display={"grid"}>
-                                <Image
-                                    justifySelf={"center"}
-                                    src={item.icon_url}
-                                    w={"50px"}
-                                    alignItems={"center"}
-                                />
-                                <Text fontSize={"xs"}>
-                                    {item.category_name}
-                                </Text>
-                            </Box>
-                        );
-                    })}
-                    <Link to={"/category"}>
-                        <Box display={"grid"}>
-                            <Image
-                                justifySelf={"center"}
-                                src={other}
-                                w={"40px"}
-                                alignItems={"center"}
-                            />
-                        </Box>
-                    </Link>
-                </SimpleGrid>
-            ) : (
-                <SimpleGrid
-                    columns={"4"}
-                    spacing={5}
-                    textAlign={"center"}
-                    alignItems={"center"}
-                    bgColor={"white"}
-                    p={"5"}
-                    mt={"10px"}
-                >
-                    {category.slice(0, 7).map((item) => {
-                        return (
-                            <Box display={"grid"}>
-                                <Image
-                                    justifySelf={"center"}
-                                    src={item.icon_url}
-                                    w={"50px"}
-                                    alignItems={"center"}
-                                />
-                                <Text fontSize={"xs"}>
-                                    {item.category_name}
-                                </Text>
-                            </Box>
-                        );
-                    })}
-                    <Link to={"/category"}>
-                        <Box display={"grid"}>
-                            <Image
-                                justifySelf={"center"}
-                                src={other}
-                                w={"40px"}
-                                alignItems={"center"}
-                            />
-                        </Box>
-                    </Link>
-                </SimpleGrid>
-            )}
+          </Link>
+        </SimpleGrid>
+      ) : (
+        <SimpleGrid
+          columns={"4"}
+          spacing={5}
+          textAlign={"center"}
+          alignItems={"center"}
+          bgColor={"white"}
+          p={"5"}
+          mt={"10px"}
+        >
+          {category.slice(0, 7).map((item) => {
+            return (
+              <Box
+                display={"grid"}
+                onClick={() => {
+                  redirectCategory(item.id);
+                }}
+              >
+                <Image
+                  justifySelf={"center"}
+                  src={item.icon_url}
+                  w={"50px"}
+                  alignItems={"center"}
+                />
+                <Text fontSize={"xs"}>{item.category_name}</Text>
+              </Box>
+            );
+          })}
+          <Link to={"/category"}>
+            <Box display={"grid"}>
+              <Image
+                justifySelf={"center"}
+                src={other}
+                w={"40px"}
+                alignItems={"center"}
+              />
+            </Box>
+          </Link>
+        </SimpleGrid>
+      )}
       <Box
         bgColor={"#F4F1DE"}
         mt={"10px"}

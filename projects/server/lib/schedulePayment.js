@@ -1,30 +1,26 @@
 const schedule = require("node-schedule");
 const db = require("../models");
-const moment = require("moment");
-const { Op } = require("sequelize");
 
-const job = schedule.scheduleJob("0 * * * * *", async () => {
-  const getTransaction = await db.Transaction.findAll({
-    where: {
-      expired_date: {
-        [Op.lt]: moment(),
-      },
-      transaction_status: "Waiting For Payment",
-    },
-  });
+const checkPayment = (objectTransaction) => {
+  schedule.scheduleJob(objectTransaction).expired_date,
+    async () => {
+      const getTransaction = await db.Transaction.findByPk(
+        objectTransaction.id
+      );
 
-  const ids = getTransaction.map((item) => item.id);
+      if (objectTransaction.status === "Waiting For Payment") {
+        await db.Transaction.update(
+          {
+            transaction_status: "Cancel",
+          },
+          {
+            where: {
+              id: getTransaction.id,
+            },
+          }
+        );
+      }
+    };
+};
 
-  await db.Transaction.update(
-    {
-      transaction_status: "Cancel",
-    },
-    {
-      where: {
-        id: ids,
-      },
-    }
-  );
-});
-
-module.exports = job;
+module.exports = checkPayment;

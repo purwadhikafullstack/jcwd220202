@@ -33,6 +33,7 @@ router.patch(
     }).single("payment_proof_img"),
     transactionController.updatePayment
 );
-router.get("/:id", transactionController.getTransactionData);
+router.get("/:id", verifyToken, transactionController.getTransactionData);
+router.post("/", transactionController.createPayment);
 
 module.exports = router;

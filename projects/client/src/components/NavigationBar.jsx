@@ -32,9 +32,7 @@ const Navigation = () => {
   const renderIcon = () => {
     return items.map((item) => {
       return (
-        <GridItem
-        key={item.path}
-        h="65px">
+        <GridItem key={item.path} h="65px">
           <Link to={item.path}>
             <Box display={"grid"}>
               <Image
@@ -63,6 +61,9 @@ const Navigation = () => {
         right={"0"}
         left={"0"}
         fontWeight={"bold"}
+        maxW={"480px"}
+        maxWidth={"480px"}
+        margin={"auto"}
       >
         <Grid templateColumns="repeat(4, 1fr)" gap={1} margin={"5px"}>
           {renderIcon()}

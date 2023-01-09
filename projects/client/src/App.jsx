@@ -39,6 +39,7 @@ import CartUser from "./pages/CartPageUser";
 import OrderUser from "./pages/OrderUser";
 import AddVoucherAdmin from "./pages/AddVoucherAdmin";
 import CategoryEdit from "./pages/EditCategory";
+import ProductByCategory from "./pages/ProductByCategory";
 import SprAdminStatisctic from "./pages/SprAdminStatistic";
 import AdminStatistic from "./pages/AdminStatistic";
 
@@ -157,6 +158,7 @@ const App = () => {
               <Route path="/admin/voucher/:url" element={<AddVoucherAdmin />} />
               <Route path="/user/payment/:id" element={<Payment />} />
               <Route path="/user/address" element={<AddressPage />} />
+              <Route path="/product/category" element={<ProductByCategory />} />
             </Routes>
           </Box>
         </>
