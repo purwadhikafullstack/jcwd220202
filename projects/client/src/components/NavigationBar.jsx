@@ -3,7 +3,7 @@ import home from "../assets/home.png";
 import profile from "../assets/profile.png";
 import cart from "../assets/cart.png";
 import order from "../assets/order.png";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 const items = [
   {
@@ -29,6 +29,8 @@ const items = [
 ];
 
 const Navigation = () => {
+  const location = useLocation();
+
   const renderIcon = () => {
     return items.map((item) => {
       return (
@@ -61,12 +63,175 @@ const Navigation = () => {
         right={"0"}
         left={"0"}
         fontWeight={"bold"}
-        maxW={"480px"}
         maxWidth={"480px"}
         margin={"auto"}
+        zIndex={"3"}
       >
         <Grid templateColumns="repeat(4, 1fr)" gap={1} margin={"5px"}>
-          {renderIcon()}
+          {location.pathname === "/" ? (
+            <GridItem h="65px">
+              <Link to={"/"}>
+                <Box display={"grid"} bgColor={"#F4F1DE"} borderRadius={"5px"}>
+                  <Image
+                    src={home}
+                    alt="logo"
+                    height={"40px"}
+                    justifySelf={"center"}
+                  />
+                  <Text
+                    textAlign={"center"}
+                    fontFamily={"roboto"}
+                    color={"black"}
+                  >
+                    Home
+                  </Text>
+                </Box>
+              </Link>
+            </GridItem>
+          ) : (
+            <GridItem h="65px">
+              <Link to={"/"}>
+                <Box display={"grid"}>
+                  <Image
+                    src={home}
+                    alt="logo"
+                    height={"40px"}
+                    justifySelf={"center"}
+                  />
+                  <Text
+                    textAlign={"center"}
+                    fontFamily={"roboto"}
+                    color={"black"}
+                  >
+                    Home
+                  </Text>
+                </Box>
+              </Link>
+            </GridItem>
+          )}
+          {location.pathname === "/user/cart" ? (
+            <GridItem h="65px">
+              <Link to={"/user/cart"}>
+                <Box display={"grid"} bgColor={"#F4F1DE"} borderRadius={"5px"}>
+                  <Image
+                    src={cart}
+                    alt="logo"
+                    height={"40px"}
+                    justifySelf={"center"}
+                  />
+                  <Text
+                    textAlign={"center"}
+                    fontFamily={"roboto"}
+                    color={"black"}
+                  >
+                    Cart
+                  </Text>
+                </Box>
+              </Link>
+            </GridItem>
+          ) : (
+            <GridItem h="65px">
+              <Link to={"/user/cart"}>
+                <Box display={"grid"}>
+                  <Image
+                    src={cart}
+                    alt="logo"
+                    height={"40px"}
+                    justifySelf={"center"}
+                  />
+                  <Text
+                    textAlign={"center"}
+                    fontFamily={"roboto"}
+                    color={"black"}
+                  >
+                    Cart
+                  </Text>
+                </Box>
+              </Link>
+            </GridItem>
+          )}
+          {location.pathname === "/user/order" ? (
+            <GridItem h="65px">
+              <Link to={"/user/order"}>
+                <Box display={"grid"} bgColor={"#F4F1DE"} borderRadius={"5px"}>
+                  <Image
+                    src={order}
+                    alt="logo"
+                    height={"40px"}
+                    justifySelf={"center"}
+                  />
+                  <Text
+                    textAlign={"center"}
+                    fontFamily={"roboto"}
+                    color={"black"}
+                  >
+                    Order
+                  </Text>
+                </Box>
+              </Link>
+            </GridItem>
+          ) : (
+            <GridItem h="65px">
+              <Link to={"/user/order"}>
+                <Box display={"grid"}>
+                  <Image
+                    src={order}
+                    alt="logo"
+                    height={"40px"}
+                    justifySelf={"center"}
+                  />
+                  <Text
+                    textAlign={"center"}
+                    fontFamily={"roboto"}
+                    color={"black"}
+                  >
+                    Order
+                  </Text>
+                </Box>
+              </Link>
+            </GridItem>
+          )}
+          {location.pathname === "/profile" ? (
+            <GridItem h="65px">
+              <Link to={"/profile"}>
+                <Box display={"grid"} bgColor={"#F4F1DE"} borderRadius={"5px"}>
+                  <Image
+                    src={profile}
+                    alt="logo"
+                    height={"40px"}
+                    justifySelf={"center"}
+                  />
+                  <Text
+                    textAlign={"center"}
+                    fontFamily={"roboto"}
+                    color={"black"}
+                  >
+                    Profile
+                  </Text>
+                </Box>
+              </Link>
+            </GridItem>
+          ) : (
+            <GridItem h="65px">
+              <Link to={"/profile"}>
+                <Box display={"grid"}>
+                  <Image
+                    src={profile}
+                    alt="logo"
+                    height={"40px"}
+                    justifySelf={"center"}
+                  />
+                  <Text
+                    textAlign={"center"}
+                    fontFamily={"roboto"}
+                    color={"black"}
+                  >
+                    Profile
+                  </Text>
+                </Box>
+              </Link>
+            </GridItem>
+          )}
         </Grid>
       </Box>
     </>

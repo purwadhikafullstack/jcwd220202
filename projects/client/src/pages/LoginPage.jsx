@@ -49,6 +49,7 @@ const LoginPage = () => {
             email: response.data.data.email,
             id: response.data.data.id,
             RoleId: response.data.data.RoleId,
+            is_verified: response.data.data.is_verified,
           })
         );
         navigate("/");

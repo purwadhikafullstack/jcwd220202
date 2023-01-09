@@ -45,7 +45,6 @@ const productController = {
         attributes: { include: [[sequelize.literal(query), "distance"]] },
         order: sequelize.col("distance"),
       });
-      console.log(JSON.parse(JSON.stringify(pickBranch)));
       // const coba = JSON.parse(JSON.stringify(pickBranch[0].id));
       // console.log(coba);
 
