@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       User.belongsTo(models.Role);
-      User.belongsTo(models.Address);
+      User.hasMany(models.Address);
       User.hasOne(models.ReferralVoucher);
       User.hasMany(models.Cart);
       User.hasOne(models.Branch);
@@ -58,6 +58,10 @@ module.exports = (sequelize, DataTypes) => {
       },
       my_referral_code: {
         type: DataTypes.STRING,
+        allowNull: true,
+      },
+      AddressId: {
+        type: DataTypes.INTEGER,
         allowNull: true,
       },
     },

@@ -22,7 +22,7 @@ import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { axiosInstance } from "../api";
 
-const CheckoutCart = ({
+const CheckoutOrders = ({
   id,
   product_name,
   current_price,
@@ -43,23 +43,7 @@ const CheckoutCart = ({
     }).format(value);
   };
 
-  const qtyBtnHandler = async (qty) => {
-    try {
-      await axiosInstance.patch("/transaction/update", {
-        qty,
-        ProductBranchId,
-      });
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  const confirmDeleteBtnHandler = () => {
-    onDelete();
-  };
-
   useEffect(() => {
-    qtyBtnHandler()
   }, []);
 
   return (
@@ -72,7 +56,7 @@ const CheckoutCart = ({
           border={"2px solid #E07A5F"}
           borderRadius={"15px"}
           boxShadow={"1px 1px 4px #E07A5F"}
-          height={"185px"}
+          height={"140px"}
           fontSize={"15px"}
         >
           <Box flex="1" mx={"5px"} mt={"5px"}>
@@ -82,7 +66,7 @@ const CheckoutCart = ({
                 alt="search"
                 objectFit={"contain"}
                 height={"80px"}
-                maxW={"300px"}
+                maxW={"200px"}
               />
             </Box>
           </Box>
@@ -107,39 +91,14 @@ const CheckoutCart = ({
               <Text fontWeight={"bold"} textDecorationLine={"line-through"}>
                 {"Rp 9999"}
               </Text>
-              <Text
-                fontWeight={"bold"}
-                ml={"5px"}
-                overflow={"hidden"}
-                textOverflow={"ellipsis"}
-                whiteSpace={"nowrap"}
-                maxWidth={"150px"}
-              >
-                {formatRupiah(current_price)}
-              </Text>
+              <Text>{formatRupiah(current_price)}</Text>
             </Box>
             <Box>
-              <Text>{qty}</Text>
-              <NumberInput
-                size="sm"
-                maxW={20}
-                defaultValue={quantity}
-                min={1}
-                bgColor={"white"}
-                name={"qty"}
-                value={qty}
-                onChange={qtyBtnHandler}
-              >
-                <NumberInputField />
-                <NumberInputStepper>
-                  <NumberIncrementStepper />
-                  <NumberDecrementStepper />
-                </NumberInputStepper>
-              </NumberInput>
+              <Text>x {quantity}</Text>
             </Box>
-            <Button colorScheme="red" onClick={confirmDeleteBtnHandler} ml={3}>
-              Delete
-            </Button>
+            <Box>
+              <Text>{formatRupiah(total_product_price)}</Text>
+            </Box>
           </Box>
         </Flex>
       </Box>
@@ -147,4 +106,4 @@ const CheckoutCart = ({
   );
 };
 
-export default CheckoutCart;
+export default CheckoutOrders;

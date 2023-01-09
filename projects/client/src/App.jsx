@@ -80,7 +80,85 @@ const App = () => {
     if (authSelector.RoleId == "1") {
       return (
         <>
-          <Routes></Routes>
+          <Box
+            maxWidth={"480px"}
+            margin={"auto"}
+            boxSizing={"border-box"}
+            border={"2px solid lightgrey"}
+            fontFamily={"roboto"}
+          >
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/admin/dashboard" element={<AdminDashboard />} />
+              <Route path="/category" element={<CategoryList />} />
+              <Route path="/login/user" element={<LoginPage />} />
+              <Route path="/login/admin" element={<LoginAdminPage />} />
+              {/* <Route path="/address" element={<AddressPage />} /> */}
+              <Route path="/register/user" element={<Register />} />
+              <Route path="/product" element={<ProductPage />} />
+              <Route path="/super-admin/category" element={<AdminCategory />} />
+              <Route
+                path="/super-admin/category/add"
+                element={<AddCategory />}
+              />
+              <Route path="/category/:id" element={<CategoryEdit />} />
+              {/* {renderUserRoutes()} */}
+              {/* {renderAdminRoutes()} */}
+              <Route path="/forgot-password" element={<ForgotPassword />} />
+              <Route path="/reentry-password" element={<ReentryPassword />} />
+              <Route
+                path="/super-admin/dashboard"
+                element={<SuperAdminDashboard />}
+              />
+              <Route path="/admin/product" element={<ProductListAdmin />} />
+              <Route path="/profile" element={<ProfilePage />} />
+              <Route
+                path="/super-admin/product"
+                element={<ProductListSprAdm />}
+              />
+              <Route
+                path="/super-admin/product/add"
+                element={<AddProductSprAdm />}
+              />
+              <Route
+                path="/super-admin/product/:id"
+                element={<ProductDetailSprAdm />}
+              />
+              <Route
+                path="/admin/product/:id"
+                element={<ProductDetailAdmin />}
+              />
+              <Route path="/product/:id" element={<ProductDetailUser />} />
+              <Route
+                path="/admin/transaction/"
+                element={<AdminTransaction />}
+              />
+              <Route
+                path="/admin/transaction/:id"
+                element={<AdminTransactionDetail />}
+              />
+              <Route
+                path="/admin/product-mutation"
+                element={<AdminProductMutation />}
+              />
+              <Route path="/404" element={<NotFound />} />
+              <Route
+                path="/super-admin/category/:id"
+                element={<CategoryEdit />}
+              />
+              <Route
+                path="/super-admin/create-branch"
+                element={<CreateBranch />}
+              />
+              <Route path="/super-admin/branch" element={<UserSprAdmin />} />
+              <Route path="/user/cart" element={<CartUser />} />
+              <Route path="/user/order" element={<OrderUser />} />
+              <Route path="/admin/voucher" element={<VoucherAdmin />} />
+              <Route path="/admin/voucher/:url" element={<AddVoucherAdmin />} />
+              <Route path="/user/payment/:id" element={<Payment />} />
+              <Route path="/user/address" element={<AddressPage />} />
+            </Routes>
+          </Box>
         </>
       );
     }
@@ -123,7 +201,6 @@ const App = () => {
           />
         </Box>
       </Box>
-      // <div>Loading...</div>
     );
   }
 
@@ -177,10 +254,16 @@ const App = () => {
             path="/admin/product-mutation"
             element={<AdminProductMutation />}
           />
+
           <Route path="/404" element={<NotFound />} />
           <Route path="/super-admin/category/:id" element={<CategoryEdit />} />
           <Route path="/super-admin/create-branch" element={<CreateBranch />} />
           <Route path="/super-admin/branch" element={<UserSprAdmin />} />
+          <Route path="/user/order/:id" element={<OrderUser />} />
+          <Route path="/user/address" element={<AddressPage />} />
+          <Route path="/user/payment/:id" element={<Payment />} />
+          <Route path="/admin/voucher" element={<VoucherAdmin />} />
+          <Route path="/admin/voucher/:url" element={<AddVoucherAdmin />} />
           <Route path="/user/cart" element={<CartUser />} />
           <Route path="/user/order" element={<OrderUser />} />
           <Route path="/admin/voucher" element={<VoucherAdmin />} />

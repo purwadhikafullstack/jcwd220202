@@ -32,7 +32,9 @@ const Navigation = () => {
   const renderIcon = () => {
     return items.map((item) => {
       return (
-        <GridItem h="65px">
+        <GridItem
+        key={item.path}
+        h="65px">
           <Link to={item.path}>
             <Box display={"grid"}>
               <Image

@@ -9,7 +9,7 @@ const job = schedule.scheduleJob("0 * * * * *", async () => {
       expired_date: {
         [Op.lt]: moment(),
       },
-      transaction_status: "waiting for payment",
+      transaction_status: "Waiting For Payment",
     },
   });
 
@@ -17,7 +17,7 @@ const job = schedule.scheduleJob("0 * * * * *", async () => {
 
   await db.Transaction.update(
     {
-      transaction_status: "cancel",
+      transaction_status: "Cancel",
     },
     {
       where: {

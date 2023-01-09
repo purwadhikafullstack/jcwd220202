@@ -1,200 +1,481 @@
 const { Op } = require("sequelize");
 const db = require("../../models");
-const moment = require("moment");
 
 const transactionController = {
-    addToCart: async (req, res) => {
-        const { ProductBranchId, quantity, total_product_price } = req.body;
+  addToCart: async (req, res) => {
+    const { ProductBranchId, quantity, total_product_price, current_price } =
+      req.body;
 
-        try {
-            const conditionDouble = await db.Cart.findOne({
-                where: {
-                    [Op.and]: [
-                        { ProductBranchId: req.body.ProductBranchId },
-                        { UserId: req.user.id },
-                    ],
-                },
-            });
-            if (conditionDouble) {
-                return res.status(400).json({
-                    message: "Product already added",
-                });
-            } else {
-                const addProduct = await db.Cart.create({
-                    UserId: req.user.id,
-                    ProductBranchId,
-                    quantity,
-                    total_product_price,
-                });
+    try {
+      const conditionDouble = await db.Cart.findOne({
+        where: {
+          [Op.and]: [
+            { is_checked: 0 },
+            { ProductBranchId: req.body.ProductBranchId },
+            { UserId: req.user.id },
+          ],
+        },
+      });
+      if (conditionDouble) {
+        // await db.Cart.increment(
+        //   { quantity: +1 },
+        //   {
+        //     where: {
+        //       where: {
+        //         [Op.and]: [
+        //           { ProductBranchId: req.body.ProductBranchId },
+        //           { UserId: req.user.id },
+        //         ],
+        //       },
+        //     },
+        //   }
+        // );
+        return res.status(400).json({
+          message: "Product already added",
+        });
+      } else {
+        const addProduct = await db.Cart.create({
+          UserId: req.user.id,
+          ProductBranchId,
+          quantity,
+          current_price: current_price,
+          total_product_price: current_price,
+        });
+        return res.status(200).json({
+          message: "Added to cart",
+          data: addProduct,
+        });
+      }
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({
+        message: "Server error",
+      });
+    }
+  },
+  showUserCart: async (req, res) => {
+    try {
+      const userCart = await db.Cart.findAll({
+        where: {
+          [Op.and]: [{ is_checked: 0 }, { UserId: req.user.id }],
+        },
+        include: [
+          { model: db.ProductBranch, include: [{ model: db.Product }] },
+        ],
+      });
 
-                return res.status(200).json({
-                    message: "Added to cart",
-                    data: addProduct,
-                });
-            }
-        } catch (err) {
-            console.log(err);
-            return res.status(500).json({
-                message: "Server error",
-            });
+      // let totalHarga = 0;
+
+      // for (let i = 0; i < userCart.length; i++) {
+      //   totalHarga += userCart[i].total_product_price;
+      // }
+
+      return res.status(200).json({
+        message: "Showing user cart",
+        data: userCart,
+      });
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({
+        message: "Server error",
+      });
+    }
+  },
+  checkoutItems: async (req, res) => {
+    try {
+      const currentCart = await db.Cart.findAll({
+        where: {
+          [Op.and]: [{ is_checked: 0 }, { UserId: req.user.id }],
+        },
+        include: [{ model: db.ProductBranch }],
+      });
+      console.log(JSON.parse(JSON.stringify(currentCart)));
+
+      // await db.Cart.update(
+      //   {
+      //     is_checked: true,
+      //   },
+      //   {
+      //     where: {
+      //       [Op.and]: [{ is_checked: 0 }, { UserId: req.user.id }],
+      //     },
+      //     include: [{ model: db.ProductBranch }],
+      //   }
+      // );
+      let totalBayar = 0;
+      let totalQuantity = 0;
+
+      for (let i = 0; i < currentCart.length; i++) {
+        totalBayar += currentCart[i].total_product_price;
+        totalQuantity += currentCart[i].quantity;
+      }
+
+      const thisTransactionId = await db.Transaction.create({
+        BranchId: currentCart[0].ProductBranch.BranchId,
+        total_quantity: totalQuantity,
+        total_price: totalBayar,
+        UserId: req.user.id,
+        transaction_status: "waiting",
+      });
+
+      currentCart.map(async (val) => {
+        await db.TransactionItem.create({
+          TransactionId: thisTransactionId.id,
+          ProductBranchId: val.ProductBranchId,
+          quantity: val.quantity,
+          current_price: val.current_price,
+          price_per_product: val.total_product_price * val.quantity,
+          applied_discount: val.applied_discount,
+        });
+      });
+
+      return res.status(200).json({
+        message: "Product checked out",
+        data: thisTransactionId,
+      });
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({
+        message: "Server error handling cart",
+      });
+    }
+  },
+  updateQuantity: async (req, res) => {
+    try {
+      const currentPrice = await db.Cart.findOne({
+        where: {
+          [Op.and]: [
+            // { is_checked: false },
+            { UserId: req.user.id },
+            { ProductBranchId: req.body.ProductBranchId },
+          ],
+        },
+      });
+
+      await db.Cart.update(
+        {
+          quantity: req.body.qty,
+          total_product_price:
+            parseInt(currentPrice.quantity) * currentPrice.current_price,
+        },
+        {
+          where: {
+            [Op.and]: [
+              { is_checked: false },
+              { UserId: req.user.id },
+              { ProductBranchId: req.body.ProductBranchId },
+            ],
+          },
         }
-    },
-    showUserCart: async (req, res) => {
-        const { ProductBranchId, quantity, total_product_price } = req.body;
+      );
 
-        try {
-            const userCart = await db.Cart.findAll({
-                where: {
-                    UserId: req.user.id,
-                },
-                include: [
-                    {
-                        model: db.ProductBranch,
-                        include: [{ model: db.Product }],
-                    },
-                ],
-            });
+      // await db.Cart.update(
+      //   {
+      //     total_product_price:
+      //       currentPrice.quantity * currentPrice.current_price,
+      //   },
+      //   {
+      //     where: {
+      //       [Op.and]: [
+      //         { is_checked: false },
+      //         { UserId: req.user.id },
+      //         { ProductBranchId: req.body.ProductBranchId },
+      //       ],
+      //     },
+      //   }
+      // );
 
-            return res.status(200).json({
-                message: "Showing user cart",
-                data: userCart,
-            });
-        } catch (err) {
-            console.log(err);
-            return res.status(500).json({
-                message: "Server error",
-            });
+      return res.status(200).json({
+        message: "Product added",
+      });
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({
+        message: "Failed to add product",
+      });
+    }
+  },
+  deleteItem: async (req, res) => {
+    try {
+      await db.Cart.destroy({
+        where: { id: req.params.id },
+      });
+
+      return res.status(200).json({
+        message: "Product deleted",
+      });
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({
+        message: "Failed to delete product",
+      });
+    }
+  },
+  updatePayment: async (req, res) => {
+    try {
+      const get = await db.Transaction.findOne({
+        where: {
+          id: req.params.id,
+        },
+        attributes: ["expired_date"],
+      });
+
+      const getExpDate = Object.values(get.dataValues);
+      const currentDate = moment().format("YYYY-MM-DD HH:mm:ss");
+      const expDate = moment(getExpDate[0])
+        .add(-7, "hours")
+        .format("YYYY-MM-DD HH:mm:ss");
+
+      if (currentDate > expDate) {
+        return res.status(200).json({
+          message: "Payment expired",
+        });
+      }
+
+      await db.Transaction.update(
+        {
+          payment_proof_img: req.file.filename,
+        },
+        {
+          where: {
+            id: req.params.id,
+          },
         }
-    },
-    showUserCart: async (req, res) => {
-        const { ProductBranchId, quantity, total_product_price } = req.body;
+      );
 
-        try {
-            const userCart = await db.Cart.findAll({
-                where: {
-                    UserId: req.user.id,
-                },
-                include: [
-                    {
-                        model: db.ProductBranch,
-                        include: [{ model: db.Product }],
-                    },
-                ],
-            });
+      return res.status(200).json({
+        message: "Payment uploaded",
+      });
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({
+        message: "Server error upload payment",
+      });
+    }
+  },
+  getTransactionData: async (req, res) => {
+    try {
+      const get = await db.Transaction.findOne({
+        where: {
+          id: req.params.id,
+        },
+        attributes: ["expired_date", "total_price"],
+      });
 
-            return res.status(200).json({
-                message: "Showing user cart",
-                data: userCart,
-            });
-        } catch (err) {
-            console.log(err);
-            return res.status(500).json({
-                message: "Server error",
-            });
+      const getExpDate = Object.values(get.dataValues);
+      const price = Object.values(get.dataValues)[1];
+      const expDate = moment(getExpDate[0]).add(-7, "hours").format("LLL");
+
+      return res.status(200).json({
+        message: "Get successful",
+        price,
+        expDate,
+      });
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({
+        message: err.message,
+      });
+    }
+  },
+  orderItems: async (req, res) => {
+    try {
+      const thisCart = await db.Cart.findAll({
+        where: {
+          [Op.and]: [{ is_checked: 0 }, { UserId: req.user.id }],
+        },
+        include: [
+          { model: db.ProductBranch, include: [{ model: db.Product }] },
+        ],
+      });
+
+      return res.status(200).json({
+        message: "Showing user cart",
+        data: thisCart,
+      });
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({
+        message: "Server error",
+      });
+    }
+  },
+  payOrder: async (req, res) => {
+    try {
+      const currentCart = await db.Cart.findAll({
+        where: {
+          [Op.and]: [{ is_checked: 0 }, { UserId: req.user.id }],
+        },
+        include: [{ model: db.ProductBranch }],
+      });
+      // console.log(JSON.parse(JSON.stringify(currentCart)));
+
+      let totalBayar = 0;
+      let totalQuantity = 0;
+
+      for (let i = 0; i < currentCart.length; i++) {
+        totalBayar += currentCart[i].total_product_price;
+        totalQuantity += currentCart[i].quantity;
+      }
+
+      // const thisTransactionId = await db.Transaction.findAll({
+      //   where: {
+      //     [Op.and]: [
+      //       { UserId: req.user.id },
+      //       // { BranchId: currentCart.BranchId },
+      //       { transaction_status: "Waiting For Payment" },
+      //     ],
+      //   },
+      // });
+
+      // currentCart.map(async (val) => {
+      //   await db.TransactionItem.create({
+      //     TransactionId: thisTransactionId.id,
+      //     ProductBranchId: val.ProductBranchId,
+      //     quantity: val.quantity,
+      //     current_price: val.current_price,
+      //     price_per_product: val.total_product_price,
+      //     applied_discount: val.applied_discount,
+      //   });
+      // });
+
+      await db.Transaction.update(
+        {
+          transaction_status: "Waiting For Payment",
+        },
+        {
+          where: {
+            [Op.and]: [
+              { UserId: req.user.id },
+              // { BranchId: currentCart.BranchId },
+              { transaction_status: "waiting" },
+            ],
+          },
         }
-    },
-    checkoutItems: async (req, res) => {
-        try {
-            const currentCart = await db.Cart.findAll({
-                where: {
-                    UserId: req.user.id,
-                },
-            });
-            // console.log(currentCart.id);
-            // console.log(JSON.parse(JSON.stringify()))
-            const createTransaction = await db.Transaction.create({
-                BranchId: currentCart.BranchId,
-                total_price: 7777,
-                total_quantity: 888,
-                ProductBranchId: currentCart.ProductBranchId,
-            });
-            currentCart.map((val) => {
-                db.TransactionItem.create({
-                    TransactionId: createTransaction.id,
-                    // applied_discount,
-                    current_price: 99999,
-                    ProductBranchId: val.ProductBranchId,
-                });
-            });
-            return res.status(200).json({
-                message: "Product checked out",
-            });
-        } catch (err) {
-            console.log(err);
-            return res.status(500).json({
-                message: "Server error handling cart",
-            });
-        }
-    },
-    updatePayment: async (req, res) => {
-        try {
-            const get = await db.Transaction.findOne({
-                where: {
-                    id: req.params.id,
-                },
-                attributes: ["expired_date"],
-            });
+      );
 
-            const getExpDate = Object.values(get.dataValues);
-            const currentDate = moment().format("YYYY-MM-DD HH:mm:ss");
-            const expDate = moment(getExpDate[0])
-                .add(-7, "hours")
-                .format("YYYY-MM-DD HH:mm:ss");
+      return res.status(200).json({
+        message: "Product paid out",
+      });
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({
+        message: "Server error handling order",
+      });
+    }
+  },
+  shipmentCourse: async (req, res) => {
+    try {
+      const currentBranchId = await db.Transaction.findOne({
+        where: { UserId: req.user.id },
+        include: [{ model: db.Branch, include: [{ model: db.User }] }],
+      });
+      // alamat buyer
+      const origin = await db.Address.findOne({
+        where: { [Op.and]: [{ UserId: req.user.id }, { is_active: 1 }] },
+      });
+      // alamat seller
+      const destination = await db.Address.findOne({
+        where: {
+          [Op.and]: [
+            { UserId: currentBranchId.Branch.User.id },
+            { is_active: 1 },
+          ],
+        },
+      });
 
-            if (currentDate > expDate) {
-                return res.status(200).json({
-                    message: "Payment expired",
-                });
-            }
+      // const destination = db.Address.findOne()
 
-            await db.Transaction.update(
-                {
-                    payment_proof_img: req.file.filename,
-                },
-                {
-                    where: {
-                        id: req.params.id,
-                    },
-                }
-            );
+      return res.status(200).json({
+        origin: origin,
+        destination: destination,
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  },
+  getAllVoucher: async (req, res) => {
+    try {
+      const currentItems = await db.TransactionItem.findAll({
+        where: {
+          TransactionId: req.params.id,
+        },
+        include: [{ model: db.ProductBranch }],
+      });
 
-            return res.status(200).json({
-                message: "Payment uploaded",
-            });
-        } catch (err) {
-            console.log(err);
-            return res.status(500).json({
-                message: "Server error upload payment",
-            });
-        }
-    },
-    getTransactionData: async (req, res) => {
-        try {
-            const get = await db.Transaction.findOne({
-                where: {
-                    id: req.params.id,
-                },
-                attributes: ["expired_date", "total_price"],
-            });
+      const thisProductId = currentItems.map((val) => {
+        return val.ProductBranch.ProductId;
+      });
 
-            const getExpDate = Object.values(get.dataValues);
-            const price = Object.values(get.dataValues)[1];
-            const expDate = moment(getExpDate[0])
-                .add(-7, "hours")
-                .format("LLL");
+      const getVoucher = await db.Voucher.findAll({
+        where: {
+          [Op.and]: [
+            { BranchId: currentItems[0].ProductBranch.BranchId },
+            { ProductId: thisProductId },
+          ],
+          // [Op.lt]: [
+          //   {quantity: 0}
+          // ]
+        },
+      });
 
-            return res.status(200).json({
-                message: "Get successful",
-                price,
-                expDate,
-            });
-        } catch (err) {
-            console.log(err);
-            res.status(500).json({
-                message: err.message,
-            });
-        }
-    },
+      console.log(JSON.parse(JSON.stringify(getVoucher)));
+      return res.status(200).json({
+        message: "Fetching all voucher available",
+        data: getVoucher,
+      });
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({
+        message: "Server can't find voucher",
+      });
+    }
+  },
+  useVoucher: async (req, res) => {
+    const { finalBanget, VoucherId } = req.body;
+    try {
+      // const thisTransaction = await db.Transaction.findByPk(req.params.id);
+      const voucherValue = await db.Voucher.findByPk(VoucherId);
+
+      await db.Transaction.update(
+        {
+          total_price: finalBanget,
+          VoucherId: VoucherId,
+          transaction_status: "Waiting For Payment",
+        },
+        { where: { id: req.params.id } }
+      );
+      await db.Voucher.update(
+        {
+          quantity: voucherValue.quantity - 1,
+        },
+        { where: { id: VoucherId } }
+      );
+
+      // if (thisTransaction.VoucherId) {
+      //   return res.status(400)
+      // }
+      // if (voucherValue.VoucherTypeId == 1) {
+      //   await db.Transaction.update(
+      //     {
+      //       total_price:
+      //         thisTransaction.total_price -
+      //         voucherValue.discount_amount_nominal,
+      //       VoucherId: voucherValue.id
+      //     },
+      //     { where: { id: req.params.id } }
+      //   );
+      //
+      // }
+      // console.log(voucherValue.discount_amount_nominal);
+      // console.log(thisTransaction.total_price);
+      return res.status(200).json({
+        message: "paid",
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  },
 };
 
 module.exports = transactionController;

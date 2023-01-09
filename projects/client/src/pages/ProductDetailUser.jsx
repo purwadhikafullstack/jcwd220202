@@ -18,6 +18,14 @@ const ProductDetailUser = () => {
   const [productDetails, setProductDetails] = useState();
   const [productStock, setProductStock] = useState();
 
+  const formatRupiah = (value) => {
+    return new Intl.NumberFormat("id-ID", {
+      style: "currency",
+      currency: "IDR",
+      minimumFractionDigits: 0,
+    }).format(value);
+  };
+
   const fetchProductDetails = async () => {
     try {
       const response = await axiosInstance.get(`/product/${params.id}`);
@@ -34,14 +42,14 @@ const ProductDetailUser = () => {
       let productToAdd = {
         ProductBranchId: productStock.id,
         quantity: 1,
-        total_product_price: productDetails.product_price,
+        current_price: productDetails.product_price,
       };
       await axiosInstance.post("/transaction/addcart", productToAdd);
       console.log(productToAdd);
       toast({ title: "Add product to cart", status: "success" });
     } catch (err) {
       console.log(err);
-      toast({ title: "Product already been added", status: "error" });
+      toast({ title: "Server error", status: "error" });
     }
   };
 
@@ -84,7 +92,7 @@ const ProductDetailUser = () => {
                 fontWeight={"extrabold"}
                 color={"#E07A5F"}
               >
-                Rp {productDetails?.product_price}
+                {formatRupiah(productDetails?.product_price)}
               </Text>
             </Box>
 

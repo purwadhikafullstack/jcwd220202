@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Address.hasMany(models.User);
+      Address.belongsTo(models.User);
     }
   }
   Address.init(
@@ -24,6 +24,10 @@ module.exports = (sequelize, DataTypes) => {
       },
       longitude: {
         type: DataTypes.FLOAT(10, 6),
+        allowNull: true,
+      },
+      is_active: {
+        type: DataTypes.BOOLEAN,
         allowNull: true,
       },
     },

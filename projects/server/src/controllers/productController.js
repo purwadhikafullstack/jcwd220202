@@ -11,18 +11,19 @@ const productController = {
       // const search = req.query._keywordHandler || "";
       // const order = req.query._sortDir || "DESC";
 
-      const userCoordinate = await db.User.findOne({
+      const userCoordinate = await db.Address.findOne({
         where: {
-          id: req.user.id,
+          UserId: req.user.id,
         },
         include: [
           {
-            model: db.Address,
+            model: db.User, 
           },
         ],
       });
-      const lat = userCoordinate.Address.latitude;
-      const lon = userCoordinate.Address.longitude;
+      // console.log(JSON.parse(JSON.stringify(userCoordinate)))
+      const lat = userCoordinate.latitude;
+      const lon = userCoordinate.longitude;
 
       const query = `(6371 *
         acos(
@@ -280,18 +281,18 @@ const productController = {
   },
   detailProductByPk: async (req, res) => {
     try {
-      const userCoordinate = await db.User.findOne({
+      const userCoordinate = await db.Address.findOne({
         where: {
-          id: req.user.id,
+          UserId: req.user.id,
         },
         include: [
           {
-            model: db.Address,
+            model: db.User,
           },
         ],
       });
-      const lat = userCoordinate.Address.latitude;
-      const lon = userCoordinate.Address.longitude;
+      const lat = userCoordinate.latitude;
+      const lon = userCoordinate.longitude;
 
       const query = `(6371 *
         acos(
