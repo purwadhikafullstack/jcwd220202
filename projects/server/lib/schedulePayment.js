@@ -23,4 +23,4 @@ const checkPayment = (objectTransaction) => {
     };
 };
 
-module.exports = checkPayment;
+module.export = checkPayment;

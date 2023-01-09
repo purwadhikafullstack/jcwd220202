@@ -158,7 +158,10 @@ const App = () => {
               <Route path="/admin/voucher/:url" element={<AddVoucherAdmin />} />
               <Route path="/user/payment/:id" element={<Payment />} />
               <Route path="/user/address" element={<AddressPage />} />
-              <Route path="/product/category" element={<ProductByCategory />} />
+              <Route
+                path="/product/filter/category"
+                element={<ProductByCategory />}
+              />
             </Routes>
           </Box>
         </>
@@ -275,6 +278,10 @@ const App = () => {
             element={<SprAdminStatisctic />}
           />
           <Route path="/admin/statistic" element={<AdminStatistic />} />
+          <Route
+            path="/product/filter/category"
+            element={<ProductByCategory />}
+          />
         </Routes>
       </Box>
     </>

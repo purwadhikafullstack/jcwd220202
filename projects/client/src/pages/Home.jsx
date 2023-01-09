@@ -21,7 +21,6 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import { SearchIcon } from "@chakra-ui/icons";
 import Navigation from "../components/NavigationBar";
-import { categories } from "../components/category";
 import other from "../assets/4square.png";
 import banner1 from "../assets/banner1.png";
 import searchIcon from "../assets/search.png";
@@ -75,7 +74,7 @@ const Home = () => {
   const navigate = useNavigate();
 
   const redirectCategory = (id) => {
-    let path = `/product/category?category_id=${id}`;
+    let path = `/product/filter/category?category_id=${id}`;
     navigate(path);
   };
 
@@ -137,6 +136,8 @@ const Home = () => {
       // setProduct([...product, ...response.data.data[0].ProductBranches]);
       setProduct(response.data.data[0].ProductBranches);
 
+      console.log("inii", response);
+
       // console.log(response.data.data[0].ProductBranches);
       // setTotalCount(response.data.dataCount);
       // setMaxPage(Math.ceil(response.data.dataCount / maxItemsPerPage));
@@ -146,6 +147,7 @@ const Home = () => {
       console.log(error);
     }
   };
+  console.log(product);
 
   const sortProductHandler = (event) => {
     setSortBy(event.value.split(" ")[0]);
@@ -213,7 +215,7 @@ const Home = () => {
   return (
     <Box bgColor={"#81B29A"} mt={"20px"}>
       <SearchBar />
-      <Box h={"200px"} bgColor={"#F4F1DE"}>
+      <Box h={"200px"} bgColor={"#F4F1DE"} mt={"75px"}>
         <Carousel />
       </Box>
       {category.length <= 8 ? (

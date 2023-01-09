@@ -1,5 +1,6 @@
 const { Op } = require("sequelize");
 const db = require("../../models");
+const checkPayment = require("../../lib/schedulePayment");
 
 const transactionController = {
   addToCart: async (req, res) => {
@@ -351,6 +352,36 @@ const transactionController = {
         }
       );
 
+      // kaka, ini bentuk create yang aku butuh biar schedule aku bisa jalan, klo ini bisa aku udah ga butuh controller createPayment
+      // nanti coba aja buat const expDate = moment().add(30, "seconds").format("YYYY-MM-DD HH:mm:ss");
+      // trus pas kita pencet pay me di FE dia harusnya udah jalan otomatis ko schedule nya
+
+      // klo code aku dipake, berarti update yg atas udah gaperlu dipake
+
+      // =========== dari sini
+
+      // const expDate = moment().add(2, "hours").format("YYYY-MM-DD HH:mm:ss");
+
+      // const transaction = await db.Transaction.update(
+      //   {
+      //     transaction_status: "Waiting For Payment",
+      //     expired_date: expDate,
+      //   },
+      //   {
+      //     where: {
+      //       [Op.and]: [
+      //         { UserId: req.user.id },
+      //         // { BranchId: currentCart.BranchId },
+      //         { transaction_status: "waiting" },
+      //       ],
+      //     },
+      //   }
+      // );
+
+      //   checkPayment(transaction)
+
+      // ========= sampe sini
+
       return res.status(200).json({
         message: "Product paid out",
       });
@@ -475,13 +506,15 @@ const transactionController = {
   },
   createPayment: async (req, res) => {
     try {
-      const date = moment().add(2, "hours").format("YYYY-MM-DD HH:mm:ss");
+      const expDate = moment().add(2, "hours").format("YYYY-MM-DD HH:mm:ss");
 
-      await db.Transaction.create({
+      const transaction = await db.Transaction.create({
         ...req.body,
-        expired_date: date,
+        expired_date: expDate,
         transaction_status: "waiting for payment",
       });
+
+      checkPayment(transaction);
 
       return res.status(200).json({
         message: "create transaction",

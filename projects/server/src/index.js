@@ -8,7 +8,6 @@ const fs = require("fs");
 const startVoucherScheduler = require("../lib/startVoucherScheduler");
 const endVoucherScheduler = require("../lib/endVoucherSchedule");
 const salesReportScheduler = require("../lib/salesReportScheduler");
-const schedule = require("../lib/schedulePayment");
 
 dotenv.config();
 
@@ -119,4 +118,3 @@ app.listen(PORT, async (err) => {
 startVoucherScheduler.invoke();
 endVoucherScheduler.invoke();
 salesReportScheduler.invoke();
-schedule.invoke();

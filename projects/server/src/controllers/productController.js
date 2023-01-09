@@ -24,7 +24,7 @@ const productController = {
       // console.log(JSON.parse(JSON.stringify(userCoordinate)))
       const lat = userCoordinate.latitude;
       const lon = userCoordinate.longitude;
-
+      // console.log(userCoordinate);
       const query = `(6371 *
             acos(
               cos(radians(${lat})) *
@@ -45,6 +45,7 @@ const productController = {
         attributes: { include: [[sequelize.literal(query), "distance"]] },
         order: sequelize.col("distance"),
       });
+      console.log(JSON.parse(JSON.stringify(pickBranch)));
       // const coba = JSON.parse(JSON.stringify(pickBranch[0].id));
       // console.log(coba);
 
