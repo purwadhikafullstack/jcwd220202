@@ -37,6 +37,8 @@ import uploadProfile from "../assets/upload_image.png";
 import * as Yup from "yup";
 import backIcon from "../assets/back_icon.png";
 import grocerinLogo from "../assets/grocerin_logo_aja.png";
+import { DatePicker } from "antd";
+import moment from "moment";
 
 const ProfilePage = () => {
   const [userData, setUserData] = useState({});
@@ -50,6 +52,8 @@ const ProfilePage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
+  const [userLocation, setUserLocation] = useState();
+  // const { onCopy, copyReferral, setCopyReferral, hasCopied } = useClipboard("");
 
   const togglePassword = () => {
     setShowPassword(!showPassword);
@@ -66,12 +70,23 @@ const ProfilePage = () => {
   const fetchProfile = async () => {
     try {
       const response = await axiosInstance.get(`/profile`);
-
+      console.log(response);
       setUserData(response.data.data);
 
       formik.setFieldValue("username", response.data.data.username);
       formik.setFieldValue("gender", response.data.data.gender);
       formik.setFieldValue("birth", response.data.data.birth);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const fetchAddress = async () => {
+    try {
+      const responseAddress = await axiosInstance.get(`/profile/activeAddress`);
+      console.log(responseAddress);
+      setUserLocation(responseAddress.data.data.Addresses[0]);
+
     } catch (err) {
       console.log(err);
     }
@@ -90,7 +105,7 @@ const ProfilePage = () => {
 
         userData.append("username", values.username);
         userData.append("gender", values.gender);
-        userData.append("birth", values.birth);
+        userData.append("birth", birthDate);
         userData.append("profile_picture", values.profile_picture);
 
         await axiosInstance.patch(`/profile`, userData);
@@ -148,6 +163,13 @@ const ProfilePage = () => {
     const { name, value } = target;
     formik.setFieldValue(name, value);
   };
+  // console.log(formik.values);
+  const [birthDate, setBirthDate] = useState("");
+  // console.log("ini", birthDate)
+
+  const birthChangeHandler = () => {
+    formik.setFieldValue("birth", birthDate);
+  };
 
   const formChangePasswordHandler = ({ target }) => {
     const { name, value } = target;
@@ -163,6 +185,7 @@ const ProfilePage = () => {
       title: "User logout",
     });
   };
+  console.log(userLocation);
 
   const sendVerificationEmail = async () => {
     try {
@@ -183,6 +206,7 @@ const ProfilePage = () => {
 
   useEffect(() => {
     fetchProfile();
+    fetchAddress();
   }, []);
 
   return (
@@ -299,23 +323,30 @@ const ProfilePage = () => {
             bgColor={"white"}
           />
           <Text fontWeight={"bold"}>Gender:</Text>
-          <Input
-            value={formik.values.gender}
+          <Select
             name="gender"
-            onChange={formChangeHandler}
+            value={formik.values.gender}
             placeholder={userData.gender}
-            size="md"
-            bgColor={"white"}
-          />
-          <Text fontWeight={"bold"}>Date of Birth:</Text>
-          <Input
-            value={formik.values.birth}
-            name="birth"
             onChange={formChangeHandler}
-            placeholder={userData.birth}
             size="md"
             bgColor={"white"}
-          />
+          >
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Other">Other...</option>
+          </Select>
+
+          <Text fontWeight={"bold"}>Date of Birth:</Text>
+
+          <Box>
+            <DatePicker
+              defaultValue={moment(userData.birth)}
+              onChange={(value) => {
+                let newDate = moment(new Date(value)).format("YYYY-MM-DD");
+                setBirthDate(newDate);
+              }}
+            />
+          </Box>
           <Box marginTop={"20px"} textAlign={"center"}>
             <Button
               mt={"15px"}
@@ -335,22 +366,19 @@ const ProfilePage = () => {
       )}
 
       <Stack spacing={3} margin="10">
-        <Text fontWeight={"bold"}>Address:</Text>
-        <Select placeholder="Jalan apa hayooo" size="md" bgColor={"white"}>
-          <option value="option1">Jalan aja</option>
-          <option value="option2">Jalan yuk</option>
-          <option value="option3">Jalan deh yaaaa</option>
-          <option value="option3">+ </option>
-          <Text>halo</Text>
-        </Select>
+        <HStack>
+          <Text fontWeight={"bold"}>Address:</Text>
+          <Spacer />
+          <Link to="/user/address">
+            <Text fontStyle={"italic"}>Change address</Text>
+          </Link>
+        </HStack>
+        <Text fontSize={"16"}>{userLocation?.address}</Text>
 
         <Text fontWeight={"bold"}>Email:</Text>
         <HStack>
           <Text fontSize={"16"}>{userData.email}</Text>
           <Spacer />
-          <Link to="/address">
-            <Text fontStyle={"italic"}>Change email</Text>
-          </Link>
         </HStack>
         <Text fontWeight={"bold"}>Password:</Text>
         <Flex>
@@ -512,7 +540,7 @@ const ProfilePage = () => {
           </Modal>
         </Flex>
         <Text fontWeight={"bold"}>Referral Code:</Text>
-        <Text fontWeight={"bold"}>H4J12030</Text>
+        <Text>{userData.my_referral_code}</Text>
       </Stack>
       {userData.is_verified === false ? (
         <Box

@@ -9,8 +9,6 @@ const SalesHistoryCard = ({
   total_price,
   TransactionId,
 }) => {
-  console.log(transaction_items);
-
   const formatRupiah = (value) => {
     return new Intl.NumberFormat("id-ID", {
       style: "currency",
@@ -19,19 +17,10 @@ const SalesHistoryCard = ({
     }).format(value);
   };
 
-  // let grossPrice = 0;
-
-  // transaction_items.forEach((element) => {
-  //   grossPrice = grossPrice + element.price_per_product;
-  // });
-
-  // const countGMV = grossPrice * total_quantity;
-
   return (
     <>
       <Box marginTop={"20px"} mx={"20px"}>
         <Box
-          // maxHeight={"185px"}
           fontFamily={"roboto"}
           color={"black"}
           border={"2px solid #E07A5F"}

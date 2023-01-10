@@ -22,7 +22,7 @@ router.post(
 router.post(
   "/free-shipment",
   verifyToken,
-  // validateFreeShipmentVoucher,
+  validateFreeShipmentVoucher,
   adminVoucherController.createFreeShipmentVoucher
 );
 router.post(

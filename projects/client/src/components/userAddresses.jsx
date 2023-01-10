@@ -7,7 +7,7 @@ const AddressList = ({}) => {
 
     const fetchAddress = async () => {
         try {
-            const response = await axiosInstance.get("/address")
+            const response = await axiosInstance.get("/profile/address")
 
             setAddress(response.data.data)
         } catch (err) {

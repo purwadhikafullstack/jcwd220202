@@ -27,13 +27,6 @@ const productHistoryController = {
             offset: (_page - 1) * _limit,
             where: {
               BranchId: findAdmin.id,
-              // createdAt: {
-              // [Op.between]: [
-              //   moment("2022-12-08").format("YYYY-MM-DD"),
-              //   moment("2022-12-09").add(1, "days").format("YYYY-MM-DD"),
-              // ],
-              // [Op.between]: [_startDate, _endDate],
-              // },
             },
             include: [
               {
@@ -69,10 +62,6 @@ const productHistoryController = {
           where: {
             BranchId: findAdmin.id,
             createdAt: {
-              // [Op.between]: [
-              //   ...moment(_startDate).format("YYYY-MM-DD"),
-              //   ...moment(_endDate).add(1, "days").format("YYYY-MM-DD"),
-              // ],
               [Op.between]: [_startDate, _endDate],
             },
           },

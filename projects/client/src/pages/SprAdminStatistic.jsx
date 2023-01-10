@@ -21,12 +21,12 @@ import { useFormik } from "formik";
 import ReactPaginate from "react-paginate";
 import "../style/pagination.css";
 import productNotFound from "../assets/feelsorry.png";
-import filterIcon from "../assets/funnel.png";
 import sortIcon from "../assets/sort.png";
 import LineChartSuperAdmin from "../components/LineChartSuperAdmin";
 import SalesHistoryCard from "../components/SalesHistoryCard";
 import { DatePicker } from "antd";
 import moment from "moment";
+import { useRef } from "react";
 
 const maxItemsPerPage = 12;
 
@@ -39,6 +39,14 @@ const SprAdminStatisctic = () => {
   const [activePage, setActivePage] = useState(1);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+
+  const divRef = useRef(null);
+
+  const scrollToTop = () => {
+    divRef.current.scroll({
+      top: 0,
+    });
+  };
 
   const optionsSort = [
     { value: "createdAt ASC", label: "oldest" },
@@ -155,6 +163,7 @@ const SprAdminStatisctic = () => {
 
   useEffect(() => {
     fetchSalesHistory();
+    scrollToTop();
   }, [sortBy, sortDir, currentSearch, activePage, endDate, startDate]);
 
   return (
@@ -199,6 +208,7 @@ const SprAdminStatisctic = () => {
           height={"40px"}
           mt={"20px"}
           mb={"10px"}
+          ref={divRef}
         >
           Sales History
         </Box>
@@ -315,7 +325,6 @@ const SprAdminStatisctic = () => {
 
                     setStartDate(newStartDate);
                   }}
-                  // allowClear={false}
                 />
               </GridItem>
             </Grid>
@@ -342,10 +351,25 @@ const SprAdminStatisctic = () => {
                 }
                 setEndDate(newEndDate);
               }}
-              // allowClear={false}
             />
           </GridItem>
         </Grid>
+        {!sales.length ? (
+          <Box display={"grid"} mt={"15vh"}>
+            <Text textAlign={"center"} fontWeight={"bold"}>
+              No item(s) found
+            </Text>
+            <Image
+              src={productNotFound}
+              alt="not found"
+              width={"70%"}
+              objectFit={"contain"}
+              justifySelf={"center"}
+            />
+          </Box>
+        ) : (
+          <Box>{renderSalesHistory()}</Box>
+        )}
         {!sales.length ? null : (
           <Box marginTop={"20px"}>
             <ReactPaginate
@@ -367,22 +391,6 @@ const SprAdminStatisctic = () => {
               breakLinkClassName={"page-link"}
             />
           </Box>
-        )}
-        {!sales.length ? (
-          <Box display={"grid"} mt={"15vh"}>
-            <Text textAlign={"center"} fontWeight={"bold"}>
-              No item(s) found
-            </Text>
-            <Image
-              src={productNotFound}
-              alt="not found"
-              width={"70%"}
-              objectFit={"contain"}
-              justifySelf={"center"}
-            />
-          </Box>
-        ) : (
-          <Box>{renderSalesHistory()}</Box>
         )}
       </Box>
       <Box>

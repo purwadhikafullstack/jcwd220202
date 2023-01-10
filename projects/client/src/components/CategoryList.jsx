@@ -1,11 +1,4 @@
 import {
-  AlertDialog,
-  AlertDialogBody,
-  AlertDialogContent,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogOverlay,
-  Button,
   Icon,
   Menu,
   MenuButton,
@@ -13,26 +6,16 @@ import {
   MenuList,
   Td,
   Tr,
-  useDisclosure,
 } from "@chakra-ui/react";
 import { BsThreeDots } from "react-icons/bs";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-const CategoryList = ({ no, category_name, onDelete, id, onOpenAlert }) => {
-  //   const { isOpen, onOpen, onClose } = useDisclosure();
-  //   const params = useParams();
-
+const CategoryList = ({ category_name, id, onOpenAlert }) => {
   let navigate = useNavigate();
   const editCategory = () => {
     let path = `/category/${id}`;
     navigate(path);
   };
-
-  //   const confirmDeleteBtnHandler = () => {
-  //     onClose();
-  //     onDelete();
-  //     document.body.style.overflow = "unset";
-  //   };
 
   const openDeleteAlert = () => {
     onOpenAlert();
@@ -41,17 +24,9 @@ const CategoryList = ({ no, category_name, onDelete, id, onOpenAlert }) => {
     document.body.style.overflow = "hidden";
   };
 
-  //   const closeDeleteAlert = () => {
-  //     onClose();
-
-  //     document.body.style.overflow = "unset";
-  //   };
-
   return (
     <>
-      {/* table body */}
       <Tr height={"80px"}>
-        {/* <Td>{no}</Td> */}
         <Td fontWeight={"bold"}>{category_name || "Loading..."}</Td>
         <Td textAlign={"right"}>
           <Menu>

@@ -1,15 +1,5 @@
-import {
-  Badge,
-  Box,
-  Button,
-  Flex,
-  Grid,
-  GridItem,
-  Image,
-  Text,
-} from "@chakra-ui/react";
-import { Link } from "react-router-dom";
-import uploadProduct from "../assets/product_upload.png";
+import { Badge, Box, Flex, Text } from "@chakra-ui/react";
+import moment from "moment";
 
 const AdminProductMutationCard = ({
   branch_name,
@@ -36,7 +26,7 @@ const AdminProductMutationCard = ({
     if (initial_stock < current_stock) {
       return (
         <Text ml={"5px"} color={"green"}>
-          {`+${stock_movement}` || "Loading"}
+          {`+${stock_movement}` || 0}
         </Text>
       );
     }
@@ -44,7 +34,7 @@ const AdminProductMutationCard = ({
     if (initial_stock > current_stock) {
       return (
         <Text ml={"5px"} color={"red"}>
-          {stock_movement || "Loading"}
+          {stock_movement || 0}
         </Text>
       );
     }
@@ -52,7 +42,7 @@ const AdminProductMutationCard = ({
     if (stock_movement === 0) {
       return (
         <Text ml={"5px"} color={"black"}>
-          {`0` || "Loading"}
+          {`0` || 0}
         </Text>
       );
     }
@@ -98,23 +88,30 @@ const AdminProductMutationCard = ({
               <Text>Transc. Item ID:</Text>
               {showTransItemId()}
             </Box>
-            <Box>{createdAt.split("T")[0] || "12-02-2022"}</Box>
+            <Box>
+              {moment(createdAt).utcOffset("+07:00").format("YYYY-MM-DD") ||
+                "Loading..."}
+            </Box>
           </Box>
           <Box flex="1" mt={"40px"} mr={"10px"}>
             <Box>
-              <Badge colorScheme="red">{remarks || "warehouse activity"}</Badge>
+              {remarks === "Warehouse Activity" ? (
+                <Badge colorScheme="red">{remarks || "Loading..."}</Badge>
+              ) : (
+                <Badge colorScheme="green">{remarks || "Loading..."}</Badge>
+              )}
             </Box>
             <Box fontWeight={"bold"}>{showStockMovement()}</Box>
             <Box fontWeight={"bold"} display={"flex"}>
               <Text>Initial Stock:</Text>
               <Text ml={"5px"} color={"red"}>
-                {initial_stock || "10"}
+                {initial_stock || 0}
               </Text>
             </Box>
             <Box fontWeight={"bold"} display={"flex"}>
               <Text>Current Stock:</Text>
               <Text ml={"5px"} color={"green"}>
-                {current_stock || "16"}
+                {current_stock || 0}
               </Text>
             </Box>
           </Box>

@@ -4,10 +4,18 @@ import {
   Flex,
   Grid,
   GridItem,
+  HStack,
   Image,
+  Input,
   Stack,
   Text,
+  useNumberInput,
   VStack,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
+  NumberIncrementStepper,
+  NumberDecrementStepper,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -17,9 +25,15 @@ import { axiosInstance } from "../api";
 const CheckoutCart = ({
   id,
   product_name,
+  current_price,
   total_product_price,
   quantity,
   product_image,
+  onDelete,
+  ProductBranchId,
+  onQty,
+  handleQty,
+  qty,
 }) => {
   const formatRupiah = (value) => {
     return new Intl.NumberFormat("id-ID", {
@@ -28,6 +42,26 @@ const CheckoutCart = ({
       minimumFractionDigits: 0,
     }).format(value);
   };
+
+  const qtyBtnHandler = async (qty) => {
+    try {
+      await axiosInstance.patch("/transaction/update", {
+        qty,
+        ProductBranchId,
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const confirmDeleteBtnHandler = () => {
+    onDelete();
+  };
+
+  useEffect(() => {
+    qtyBtnHandler()
+  }, []);
+
   return (
     <>
       <Box marginTop={"20px"} mx={"20px"}>
@@ -81,12 +115,31 @@ const CheckoutCart = ({
                 whiteSpace={"nowrap"}
                 maxWidth={"150px"}
               >
-                {total_product_price}
+                {formatRupiah(current_price)}
               </Text>
             </Box>
             <Box>
-              <Text>{quantity}</Text>
+              <Text>{qty}</Text>
+              <NumberInput
+                size="sm"
+                maxW={20}
+                defaultValue={quantity}
+                min={1}
+                bgColor={"white"}
+                name={"qty"}
+                value={qty}
+                onChange={qtyBtnHandler}
+              >
+                <NumberInputField />
+                <NumberInputStepper>
+                  <NumberIncrementStepper />
+                  <NumberDecrementStepper />
+                </NumberInputStepper>
+              </NumberInput>
             </Box>
+            <Button colorScheme="red" onClick={confirmDeleteBtnHandler} ml={3}>
+              Delete
+            </Button>
           </Box>
         </Flex>
       </Box>

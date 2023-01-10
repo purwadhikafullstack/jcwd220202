@@ -24,7 +24,7 @@ import {
 import TransactionListBar from "../components/TransactionListBar";
 import { useState } from "react";
 import { axiosInstance } from "../api";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useEffect } from "react";
 import Select from "react-select";
 import { useFormik } from "formik";
@@ -33,8 +33,6 @@ import * as Yup from "yup";
 const AdminTransactionDetail = () => {
   const [transactionDetail, setTransactionDetail] = useState({});
   const [transactionItem, setTransactionItem] = useState([]);
-
-  console.log(transactionItem);
 
   const params = useParams();
   const toast = useToast();
@@ -91,8 +89,6 @@ const AdminTransactionDetail = () => {
       console.log(err);
     }
   };
-
-  console.log(transactionDetail);
 
   const formik = useFormik({
     initialValues: {
@@ -204,7 +200,15 @@ const AdminTransactionDetail = () => {
     if (transactionDetail.ReferralVoucherId !== null) {
       return (
         <Text fontWeight={"normal"}>
-          {transactionDetail?.ReferralVoucher?.voucher_name || "Loading..."}
+          {/* {transactionDetail?.ReferralVoucher?.voucher_name || "Loading..."} */}
+          <Badge
+            colorScheme="green"
+            textAlign={"center"}
+            width={"auto"}
+            fontSize={"13px"}
+          >
+            Referral Voucher Used
+          </Badge>
         </Text>
       );
     }
@@ -226,7 +230,14 @@ const AdminTransactionDetail = () => {
       ) {
         return (
           <>
-            <Text fontWeight={"bold"}>{"Free Shipment"}</Text>
+            <Badge
+              colorScheme="green"
+              textAlign={"center"}
+              width={"auto"}
+              fontSize={"13px"}
+            >
+              Free Shipment Voucher
+            </Badge>
             <Text fontWeight={"normal"}>
               {transactionDetail?.Voucher?.voucher_name || "Loading..."}
             </Text>
@@ -240,7 +251,14 @@ const AdminTransactionDetail = () => {
       ) {
         return (
           <>
-            <Text fontWeight={"bold"}>{"Discount Voucher"}</Text>
+            <Badge
+              colorScheme="green"
+              textAlign={"center"}
+              width={"auto"}
+              fontSize={"13px"}
+            >
+              Discount Voucher
+            </Badge>
             <Text fontWeight={"normal"}>
               {transactionDetail?.Voucher?.voucher_name || "Loading..."}
             </Text>
@@ -253,7 +271,14 @@ const AdminTransactionDetail = () => {
       ) {
         return (
           <>
-            <Text fontWeight={"bold"}>{"Buy 1 Get 1"}</Text>
+            <Badge
+              colorScheme="green"
+              textAlign={"center"}
+              width={"auto"}
+              fontSize={"13px"}
+            >
+              Buy 1 Get 1
+            </Badge>
             <Text fontWeight={"normal"}>
               {transactionDetail?.Voucher?.voucher_name || "Loading..."}
             </Text>
@@ -447,7 +472,6 @@ const AdminTransactionDetail = () => {
                 {transactionDetail?.id || "Loading..."}
               </GridItem>
               <GridItem w="100%" textAlign={"center"}>
-                {/* <Link to={"http://localhost:8000/public/1669690582575.jpeg"}> */}
                 <a href={transactionDetail.payment_proof_img} target="_blank">
                   <Button
                     height={"40px"}
@@ -459,7 +483,6 @@ const AdminTransactionDetail = () => {
                     Payment Proof
                   </Button>
                 </a>
-                {/* </Link> */}
               </GridItem>
             </Grid>
             <Grid templateColumns="repeat(2, 1fr)" gap={3} mt={"5px"}>
@@ -535,7 +558,6 @@ const AdminTransactionDetail = () => {
             <Text fontWeight={"bold"}>Address:</Text>
             <Text fontWeight={"normal"}>
               {transactionDetail?.User?.Address?.address || "Loading"}
-              {/* {"Loading"} */}
             </Text>
             <Text fontWeight={"bold"} mt={"5px"}>
               Shipping Method:
@@ -570,30 +592,30 @@ const AdminTransactionDetail = () => {
             pt={"20px"}
           >
             <Text>Total Price :</Text>
-            <Text>{formatRupiah(totalPrice()) || "Loading..."}</Text>
+            <Text>{formatRupiah(totalPrice()) || "Rp 0"}</Text>
           </Box>
           <Box h="auto" display={"flex"} justifyContent={"space-between"}>
             <Text>Shipment Price :</Text>
             <Text>
               {transactionDetail.shipment_price
                 ? formatRupiah(transactionDetail?.shipment_price)
-                : "Loading..."}
+                : "Rp 0"}
             </Text>
           </Box>
           <Box h="auto" display={"flex"} justifyContent={"space-between"}>
             <Text>Discount :</Text>
-            <Text>- {formatRupiah(totalDiscount()) || "Loading..."}</Text>
+            <Text>- {formatRupiah(totalDiscount()) || "- Rp 0"}</Text>
           </Box>
           <Box h="auto" display={"flex"} justifyContent={"space-between"}>
             <Text>Voucher :</Text>
-            {finalVoucher()}
+            {finalVoucher() || "- Rp 0"}
           </Box>
           <Box h="auto" display={"flex"} justifyContent={"space-between"}>
             <Text>Grand Total Price :</Text>
             <Text>
               {transactionDetail.total_price
                 ? formatRupiah(transactionDetail?.total_price)
-                : "Loading..."}
+                : "Rp 0"}
             </Text>
           </Box>
         </VStack>

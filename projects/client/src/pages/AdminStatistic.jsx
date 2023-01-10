@@ -26,6 +26,7 @@ import AdminNavbar from "../components/AdminNavbar";
 import { DatePicker } from "antd";
 import moment from "moment";
 import LineChartAdmin from "../components/LineChartAdmin";
+import { useRef } from "react";
 
 const maxItemsPerPage = 12;
 
@@ -38,6 +39,14 @@ const AdminStatistic = () => {
   const [activePage, setActivePage] = useState(1);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+
+  const divRef = useRef(null);
+
+  const scrollToTop = () => {
+    divRef.current.scroll({
+      top: 0,
+    });
+  };
 
   const optionsSort = [
     { value: "createdAt ASC", label: "oldest" },
@@ -154,6 +163,7 @@ const AdminStatistic = () => {
 
   useEffect(() => {
     fetchBranchSalesHistory();
+    scrollToTop();
   }, [sortBy, sortDir, currentSearch, activePage, endDate, startDate]);
 
   return (
@@ -198,6 +208,7 @@ const AdminStatistic = () => {
           height={"40px"}
           mt={"20px"}
           mb={"10px"}
+          ref={divRef}
         >
           Sales History
         </Box>
@@ -305,7 +316,6 @@ const AdminStatistic = () => {
 
                 setStartDate(newStartDate);
               }}
-              // allowClear={false}
             />
           </GridItem>
           <GridItem w="100%" h="10">
@@ -330,10 +340,25 @@ const AdminStatistic = () => {
                 }
                 setEndDate(newEndDate);
               }}
-              // allowClear={false}
             />
           </GridItem>
         </Grid>
+        {!sales.length ? (
+          <Box display={"grid"} mt={"15vh"}>
+            <Text textAlign={"center"} fontWeight={"bold"}>
+              No item(s) found
+            </Text>
+            <Image
+              src={productNotFound}
+              alt="not found"
+              width={"70%"}
+              objectFit={"contain"}
+              justifySelf={"center"}
+            />
+          </Box>
+        ) : (
+          <Box>{renderSalesHistory()}</Box>
+        )}
         {!sales.length ? null : (
           <Box marginTop={"20px"}>
             <ReactPaginate
@@ -355,22 +380,6 @@ const AdminStatistic = () => {
               breakLinkClassName={"page-link"}
             />
           </Box>
-        )}
-        {!sales.length ? (
-          <Box display={"grid"} mt={"15vh"}>
-            <Text textAlign={"center"} fontWeight={"bold"}>
-              No item(s) found
-            </Text>
-            <Image
-              src={productNotFound}
-              alt="not found"
-              width={"70%"}
-              objectFit={"contain"}
-              justifySelf={"center"}
-            />
-          </Box>
-        ) : (
-          <Box>{renderSalesHistory()}</Box>
         )}
       </Box>
       <Box>

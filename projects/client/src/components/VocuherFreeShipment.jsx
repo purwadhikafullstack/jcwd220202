@@ -1,18 +1,14 @@
 import {
   Box,
   Button,
-  Flex,
   FormControl,
   FormErrorMessage,
   FormLabel,
-  Grid,
-  GridItem,
   Image,
   Input,
   InputGroup,
   InputLeftAddon,
   InputRightAddon,
-  InputRightElement,
   NumberDecrementStepper,
   NumberIncrementStepper,
   NumberInput,
@@ -22,19 +18,14 @@ import {
   useToast,
   VStack,
 } from "@chakra-ui/react";
-import Select from "react-select";
 import { DatePicker } from "antd";
 import moment from "moment";
-import { useState } from "react";
 import freeShipmentStory from "../assets/shipment.png";
 import { axiosInstance } from "../api";
-import { useEffect } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
 const VoucherFreeShipment = () => {
-  const [startDate, setStartDate] = useState(null);
-
   const toast = useToast();
 
   const formik = useFormik({
@@ -175,7 +166,6 @@ const VoucherFreeShipment = () => {
           alt="search"
           objectFit={"contain"}
           height={"200px"}
-          // maxW={"300px"}
         />
         <Box h="auto" px={"30px"}>
           <FormControl mt={"5px"} isInvalid={formik.errors.voucher_name}>
@@ -219,7 +209,7 @@ const VoucherFreeShipment = () => {
               </InputLeftAddon>
               <Input
                 type="number"
-                placeholder="Enter product discount"
+                placeholder="Enter shipment discount"
                 _placeholder={{ color: "black.500" }}
                 name="discount_amount_nominal"
                 bgColor={"white"}
@@ -243,7 +233,6 @@ const VoucherFreeShipment = () => {
                 borderRadius={"5px"}
                 width={"100%"}
                 name="discount_amount_percentage"
-                placeholder="Enter product discount"
                 max={99}
                 value={formik.values.discount_amount_percentage}
                 onChange={discountPercentageHandler}
@@ -251,7 +240,7 @@ const VoucherFreeShipment = () => {
                 <NumberInputField
                   width={"100%"}
                   borderRightRadius={"0"}
-                  placeholder="Enter product discount"
+                  placeholder="Enter shipment discount"
                 />
                 <NumberInputStepper>
                   <NumberIncrementStepper />
@@ -286,7 +275,7 @@ const VoucherFreeShipment = () => {
               value={formik.values.minimum_transaction_done}
               onChange={minimumTransactionHandler}
             >
-              <NumberInputField placeholder="Enter Minimum Transaction" />
+              <NumberInputField placeholder="Enter minimum transaction" />
               <NumberInputStepper>
                 <NumberIncrementStepper />
                 <NumberDecrementStepper />
@@ -311,7 +300,6 @@ const VoucherFreeShipment = () => {
                   width: "100%",
                   borderRadius: "5px",
                 }}
-                // value={formik.values.voucher_start_date}
                 placement="bottomLeft"
                 placeholder="Start Date"
                 size="large"
@@ -348,7 +336,6 @@ const VoucherFreeShipment = () => {
                 }}
                 placement="bottomRight"
                 placeholder="End Date"
-                // value={formik.values.voucher_end_date}
                 size="large"
                 popupStyle={{
                   size: "small",
@@ -408,6 +395,7 @@ const VoucherFreeShipment = () => {
             marginX={"30px"}
             mt={"10px"}
             onClick={formik.handleSubmit}
+            isDisabled={formik.isSubmitting}
           >
             Add Voucher
           </Button>

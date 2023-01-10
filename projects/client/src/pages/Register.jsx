@@ -97,8 +97,6 @@ const Register = () => {
     formik.setFieldValue(name, value);
   };
 
-  console.log(formik.values);
-
   return (
     <>
       <Box height={"932px"} border={"2px solid lightgrey"}>
@@ -128,10 +126,7 @@ const Register = () => {
           marginTop={0}
           fontFamily={"Roboto"}
         >
-          <form
-            onSubmit={formik.handleSubmit}
-            // isDisabled={formik.isSubmitting}
-          >
+          <form onSubmit={formik.handleSubmit}>
             <FormControl mt={"10px"} isInvalid={formik.errors.email}>
               <FormLabel fontWeight={"bold"}>Email</FormLabel>
               <Input

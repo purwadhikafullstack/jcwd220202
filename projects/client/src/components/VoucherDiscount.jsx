@@ -1,18 +1,14 @@
 import {
   Box,
   Button,
-  Flex,
   FormControl,
   FormErrorMessage,
   FormLabel,
-  Grid,
-  GridItem,
   Image,
   Input,
   InputGroup,
   InputLeftAddon,
   InputRightAddon,
-  InputRightElement,
   NumberDecrementStepper,
   NumberIncrementStepper,
   NumberInput,
@@ -36,7 +32,6 @@ import * as Yup from "yup";
 const VoucherDiscount = () => {
   const [activeProduct, setActiveProduct] = useState([]);
   const [appliedProduct, setAppliedProduct] = useState([]);
-  const [startDate, setStartDate] = useState(null);
 
   const toast = useToast();
 
@@ -88,7 +83,6 @@ const VoucherDiscount = () => {
       voucher_name,
       discount_amount_nominal,
       discount_amount_percentage,
-      products,
       minimum_payment,
       voucher_start_date,
       voucher_end_date,
@@ -185,8 +179,6 @@ const VoucherDiscount = () => {
     formik.setFieldValue(name, value);
   };
 
-  console.log(formik.values);
-
   useEffect(() => {
     fetchProduct();
   }, []);
@@ -220,7 +212,6 @@ const VoucherDiscount = () => {
           alt="discount"
           objectFit={"contain"}
           height={"200px"}
-          // maxW={"300px"}
         />
         <Box h="auto" px={"30px"}>
           <FormControl mt={"5px"} isInvalid={formik.errors.voucher_name}>
@@ -351,7 +342,7 @@ const VoucherDiscount = () => {
               </InputLeftAddon>
               <Input
                 type="number"
-                placeholder="Enter Minimum Payment"
+                placeholder="Enter minimum payment"
                 _placeholder={{ color: "black.500" }}
                 name="minimum_payment"
                 bgColor={"white"}
@@ -419,7 +410,6 @@ const VoucherDiscount = () => {
                   position: "revert",
                   width: "280px",
                 }}
-                // value={formik?.values?.voucher_end_date || null}
                 onChange={(value) => {
                   let newEndDate = moment(new Date(value)).format("YYYY-MM-DD");
 
@@ -483,6 +473,7 @@ const VoucherDiscount = () => {
             marginX={"30px"}
             mt={"10px"}
             onClick={formik.handleSubmit}
+            isDisabled={formik.isSubmitting}
           >
             Add Voucher
           </Button>

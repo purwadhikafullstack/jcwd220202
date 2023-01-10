@@ -10,8 +10,6 @@ import {
   FormControl,
   FormErrorMessage,
   FormLabel,
-  Grid,
-  GridItem,
   Image,
   Input,
   InputGroup,
@@ -23,7 +21,6 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import ProductListBar from "../components/ProductListBar";
-import uploadProduct from "../assets/product_upload.png";
 import { useRef, useState, useEffect } from "react";
 import Select from "react-select";
 import { axiosInstance } from "../api";
@@ -74,8 +71,6 @@ const ProductDetailSprAdm = () => {
       console.log(error);
     }
   };
-
-  // console.log(productDetail);
 
   const fetchCategory = async () => {
     try {
@@ -345,7 +340,6 @@ const ProductDetailSprAdm = () => {
               <FormControl mt={"5px"} isInvalid={formik.errors.CategoryId}>
                 <FormLabel fontWeight={"bold"}>Category:</FormLabel>
                 <Select
-                  // value={formik.values.CategoryId || null}
                   value={
                     formik.values.CategoryId === null
                       ? renderCategory.find(

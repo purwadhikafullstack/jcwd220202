@@ -56,7 +56,7 @@ const SearchBar = () => {
                 </FormControl>
                 {!authSelector.RoleId == "1" ? (
                     <Box
-                        p={"2"}
+                        p={"3"}
                         mr={"5"}
                         color="#E07A5F"
                         borderRadius="10px"

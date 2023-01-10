@@ -41,7 +41,6 @@ const LoginPage = () => {
           email,
           password,
         });
-        console.log(response);
 
         localStorage.setItem("auth_token", response.data.token);
         dispatch(
@@ -50,6 +49,7 @@ const LoginPage = () => {
             email: response.data.data.email,
             id: response.data.data.id,
             RoleId: response.data.data.RoleId,
+            is_verified: response.data.data.is_verified,
           })
         );
         navigate("/");

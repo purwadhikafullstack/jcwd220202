@@ -5,6 +5,8 @@ const initialState = {
   username: "",
   email: "",
   RoleId: "",
+  branch_name: "",
+  is_verified: "",
 };
 
 const authSlice = createSlice({
@@ -16,12 +18,16 @@ const authSlice = createSlice({
       state.username = action.payload.username;
       state.email = action.payload.email;
       state.RoleId = action.payload.RoleId;
+      state.branch_name = action.payload.branch_name;
+      state.is_verified = action.payload.is_verified;
     },
     logout: (state) => {
       state.id = 0;
       state.username = "";
       state.email = "";
       state.RoleId = "";
+      state.branch_name = "";
+      state.is_verified = "";
     },
   },
 });
