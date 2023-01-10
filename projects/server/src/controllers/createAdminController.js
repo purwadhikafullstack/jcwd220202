@@ -1,126 +1,77 @@
-const db = require("../../models")
-const bcrypt = require("bcrypt")
-const axios = require("axios")
+const db = require("../../models");
+const bcrypt = require("bcrypt");
+const axios = require("axios");
+const OpenCageKey = process.env.OPENCAGE_API_KEY;
 
 const createAdminController = {
-    createAdmin: async (req, res) => {
-        try {
-            const { email, password, cityName, branch_name } = req.body
+  createAdmin: async (req, res) => {
+    try {
+      const { email, password, cityName, branch_name } = req.body;
 
-            const hashedPassword = bcrypt.hashSync(password, 5)
+      const hashedPassword = bcrypt.hashSync(password, 5);
 
-            const defaultUsername = (email) => {
-                const splitEmail = email.split("@")
+      const defaultUsername = (email) => {
+        const splitEmail = email.split("@");
 
-                return splitEmail[0]
-            }
+        return splitEmail[0];
+      };
 
-            const newAdmin = await db.User.create({
-                email: email,
-                password: hashedPassword,
-                username: defaultUsername(email),
-                RoleId: 2,
-            })
+      const location = await axios.get(
+        `https://api.opencagedata.com/geocode/v1/json?key=${OpenCageKey}&q=${cityName}`
+      );
 
-            const location = await axios.get(
-                `https://api.opencagedata.com/geocode/v1/json?key=35f5a57bf6e34a37b2e73c0d586eb358&q=${cityName}`
-            )
+      const latitude = location.data.results[0].geometry.lat;
+      const longitude = location.data.results[0].geometry.lng;
 
-            const latitude = location.data.results[0].geometry.lat
-            const longitude = location.data.results[0].geometry.lng
+      const address = await db.Address.create({
+        address: cityName,
+        latitude: latitude,
+        longitude: longitude,
+      });
 
-            const address = await db.Address.create({
-                UserId: newAdmin.id,
-                address_name: cityName,
-                lat: latitude,
-                lng: longitude,
-            })
+      const newAdmin = await db.User.create({
+        email: email,
+        password: hashedPassword,
+        username: defaultUsername(email),
+        RoleId: 2,
+        AddressId: address.id,
+      });
 
-            const newBranch = await db.Branch.create({
-                UserId: newAdmin.id,
-                branch_name: branch_name,
-            })
+      const newBranch = await db.Branch.create({
+        UserId: newAdmin.id,
+        branch_name: branch_name,
+        AddressId: address.id,
+      });
 
-            const findAllProducts = await db.Product.findAll()
+      const findAllProducts = await db.Product.findAll();
 
-            const parseFindAllProducts = JSON.parse(
-                JSON.stringify(findAllProducts)
-            )
+      const parseFindAllProducts = JSON.parse(JSON.stringify(findAllProducts));
 
-            const createProductBranch = parseFindAllProducts.map((val) => {
-                return {
-                    ProductId: val.id,
-                    BranchId: newBranch.id,
-                }
-            })
+      const createProductBranch = parseFindAllProducts.map((val) => {
+        return {
+          ProductId: val.id,
+          BranchId: newBranch.id,
+        };
+      });
 
-            const productBranchRes = await db.ProductBranch.bulkCreate(
-                createProductBranch
-            )
+      const productBranchRes = await db.ProductBranch.bulkCreate(
+        createProductBranch
+      );
 
-            return res.status(200).json({
-                dataAdmin: newAdmin,
-                dataBranch: newBranch,
-                dataProductBranch: productBranchRes,
-                dataAddress: address,
-                message: "admin, branch, and product created",
-            })
-        } catch (error) {
-            return res.status(500).json({
-                message: "server error",
-            })
-        }
-    },
-    // testAddress: async (req, res) => {
-    //     try {
-    //         const { cityName } = req.body
+      return res.status(200).json({
+        dataAdmin: newAdmin,
+        dataBranch: newBranch,
+        dataProductBranch: productBranchRes,
+        dataAddress: address,
+        message: "admin, branch, and product created",
+      });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({
+        message: "server error",
+      });
+    }
+  },
+};
 
-    //         const location = await axios.get(
-    //             `https://api.opencagedata.com/geocode/v1/json?key=35f5a57bf6e34a37b2e73c0d586eb358&q=${cityName}`
-    //         )
-
-    //         const latitude = location.data.results[0].geometry.lat
-    //         const longitude = location.data.results[0].geometry.lng
-
-    //         const address = await db.Address.create({
-    //             // UserId: req.user.id,
-    //             address_name: cityName,
-    //             lat: latitude,
-    //             lng: longitude,
-    //         })
-    //         return res.status(200).json({
-    //             dataAddress: address,
-    //             message: "address created",
-    //         })
-    //     } catch (error) {
-    //         return res.status(500).json({
-    //             message: "server error",
-    //         })
-    //     }
-    // },
-    // getTest: async (req, res) => {
-    //     try {
-    //         const { cityName } = req.body
-
-    //         const location = await axios.get(
-    //             `https://api.opencagedata.com/geocode/v1/json?key=35f5a57bf6e34a37b2e73c0d586eb358&q=${cityName}`
-    //         )
-
-    //         const latitude = location.data.results[0].geometry.lat
-    //         const longitude = location.data.results[0].geometry.lng
-
-    //         return res.status(200).json({
-    //             address_name: cityName,
-    //             lat: latitude,
-    //             lng: longitude,
-    //         })
-    //     } catch (error) {
-    //         console.log(error)
-    //         return res.status(500).json({
-    //             message: "server error",
-    //         })
-    //     }
-    // },
-}
-
-module.exports = createAdminController
+module.exports = createAdminController;

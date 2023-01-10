@@ -1,20 +1,4 @@
-import {
-  Box,
-  Drawer,
-  DrawerBody,
-  DrawerContent,
-  DrawerHeader,
-  DrawerOverlay,
-  Grid,
-  GridItem,
-  Image,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuList,
-  Text,
-  useDisclosure,
-} from "@chakra-ui/react";
+import { Box, Grid, GridItem, Image, Text } from "@chakra-ui/react";
 import { useState } from "react";
 import homeLogo from "../assets/home.png";
 import productLogo from "../assets/product.png";
@@ -25,7 +9,6 @@ import { Link, useLocation } from "react-router-dom";
 
 const AdminNavbar = () => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  const { isOpen, onOpen, onClose } = useDisclosure();
   const location = useLocation();
 
   const closeModal = () => {

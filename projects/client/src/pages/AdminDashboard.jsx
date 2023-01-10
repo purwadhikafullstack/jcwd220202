@@ -9,11 +9,13 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import { axiosInstance } from "../api";
 import { useEffect } from "react";
+import { useSelector } from "react-redux";
 
 const AdminDashboard = () => {
   const [orderInStore, setOrderInStore] = useState(0);
   const [productToSend, setProductToSend] = useState(0);
   const [activeVoucher, setActiveVoucher] = useState(0);
+  const authSelector = useSelector((state) => state.auth);
 
   const fetchOrderInStore = async () => {
     try {
@@ -50,15 +52,18 @@ const AdminDashboard = () => {
   };
 
   useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  useEffect(() => {
     fetchOrderInStore();
     fetchProductToSend();
     fetchVoucher();
-    window.scrollTo(0, 0);
   }, []);
 
   return (
     <Box backgroundColor={"#F4F1DE"} height={"1100px"}>
-      <UpperBarAdmin />
+      <UpperBarAdmin branch_name={authSelector.branch_name} />
       <Box
         ml={"30px"}
         pt={"100px"}
@@ -110,7 +115,6 @@ const AdminDashboard = () => {
           boxShadow={"2px 2px 2px grey"}
           display={"flex"}
           width={"100%"}
-          // maxWidth={"385px"}
           justifyContent={"space-evenly"}
         >
           <Box width={"120px"}>
@@ -145,7 +149,6 @@ const AdminDashboard = () => {
           boxShadow={"2px 2px 2px grey"}
           display={"flex"}
           width={"100%"}
-          // maxWidth={"385px"}
           justifyContent={"space-evenly"}
         >
           <Box width={"120px"}>

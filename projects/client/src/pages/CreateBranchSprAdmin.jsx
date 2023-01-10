@@ -11,31 +11,31 @@ import {
     InputRightElement,
     Spacer,
     useToast,
-} from "@chakra-ui/react"
-import { useState } from "react"
-import { useFormik } from "formik"
-import { useNavigate } from "react-router-dom"
-import * as Yup from "yup"
-import grocerinLogo from "../assets/grocerin_logo_aja.png"
-import backIcon from "../assets/back_icon.png"
-import signUp from "../assets/signup.png"
-import { axiosInstance } from "../api"
+} from "@chakra-ui/react";
+import { useState } from "react";
+import { useFormik } from "formik";
+import { useNavigate } from "react-router-dom";
+import * as Yup from "yup";
+import grocerinLogo from "../assets/grocerin_logo_aja.png";
+import backIcon from "../assets/back_icon.png";
+import signUp from "../assets/signup.png";
+import { axiosInstance } from "../api";
 
 const CreateBranch = () => {
-    const [showPassword, setShowPassword] = useState(false)
-    const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-    const navigate = useNavigate()
+    const navigate = useNavigate();
 
     const togglePassword = () => {
-        setShowPassword(!showPassword)
-    }
+        setShowPassword(!showPassword);
+    };
 
     const toggleConfirmPassword = () => {
-        setShowConfirmPassword(!showConfirmPassword)
-    }
+        setShowConfirmPassword(!showConfirmPassword);
+    };
 
-    const toast = useToast()
+    const toast = useToast();
 
     const formik = useFormik({
         initialValues: {
@@ -52,20 +52,20 @@ const CreateBranch = () => {
                     password: password,
                     cityName: cityName,
                     branch_name: branch_name,
-                })
+                });
 
                 toast({
                     title: "Registration Successful",
                     description: response.data.message,
                     status: "success",
-                })
+                });
             } catch (error) {
-                console.log(error.response)
+                console.log(error.response);
                 toast({
                     title: "Registration Failed",
                     description: error.response.data.message,
                     status: "error",
-                })
+                });
             }
         },
         validationSchema: Yup.object({
@@ -83,12 +83,12 @@ const CreateBranch = () => {
             branch_name: Yup.string(),
         }),
         validateOnChange: false,
-    })
+    });
 
     const formChangeHandler = ({ target }) => {
-        const { name, value } = target
-        formik.setFieldValue(name, value)
-    }
+        const { name, value } = target;
+        formik.setFieldValue(name, value);
+    };
 
     return (
         <>
@@ -102,6 +102,8 @@ const CreateBranch = () => {
                     left={"0"}
                     fontWeight={"bold"}
                     zIndex={"4"}
+                    margin={"auto"}
+                    maxWidth={"480px"}
                 >
                     <Flex fontSize={"18px"} fontFamily={"roboto"}>
                         <Box marginLeft={"10px"} marginTop={"18px"}>
@@ -303,7 +305,7 @@ const CreateBranch = () => {
                 </Box>
             </Box>
         </>
-    )
-}
+    );
+};
 
-export default CreateBranch
+export default CreateBranch;

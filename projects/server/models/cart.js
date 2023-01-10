@@ -18,11 +18,15 @@ module.exports = (sequelize, DataTypes) => {
       quantity: {
         type: DataTypes.INTEGER,
       },
+      current_price: {
+        type: DataTypes.INTEGER,
+      },
       total_product_price: {
         type: DataTypes.INTEGER,
       },
       is_checked: {
         type: DataTypes.BOOLEAN,
+        defaultValue: false,
       },
     },
     {

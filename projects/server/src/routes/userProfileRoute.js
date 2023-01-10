@@ -14,7 +14,10 @@ router.patch(
     profileController.updateProfile
 )
 router.get("/", verifyToken, profileController.detailUser)
-router.post("/", verifyToken, profileController.addNewAddress)
+router.post("/newAddress", verifyToken, profileController.addNewAddress)
 router.get("/address", verifyToken, profileController.showUserAddress)
+router.patch("/selectAddress/:id", verifyToken, profileController.selectUserAddress)
+router.get("/activeAddress", verifyToken, profileController.activeAddress)
+router.delete("/:id", verifyToken, profileController.deleteAddress)
 
 module.exports = router

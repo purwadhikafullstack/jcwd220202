@@ -1,15 +1,4 @@
-import {
-  Badge,
-  Box,
-  Button,
-  Flex,
-  Grid,
-  GridItem,
-  Image,
-  Text,
-} from "@chakra-ui/react";
-import { Link } from "react-router-dom";
-import uploadProduct from "../assets/product_upload.png";
+import { Badge, Box, Button, Flex, Image, Text } from "@chakra-ui/react";
 import voucherDiscountStory from "../assets/discount_voucher.png";
 import freeShipmentStory from "../assets/shipment.png";
 import buy1Get1Story from "../assets/buy1get1.png";
@@ -149,7 +138,6 @@ const VoucherCard = ({
     <>
       <Box marginTop={"20px"} mx={"20px"}>
         <Box
-          // maxHeight={"185px"}
           fontFamily={"roboto"}
           color={"black"}
           border={"2px solid #E07A5F"}
@@ -223,7 +211,7 @@ const VoucherCard = ({
               {is_Deleted == 0 ? (
                 <Button
                   bg={"#E07A5F"}
-                  _hover={{ bgColor: "#E07A5F" }}
+                  _hover={{ bgColor: "#E07A5F", color: "white" }}
                   onClick={openDeleteAlert}
                 >
                   Delete

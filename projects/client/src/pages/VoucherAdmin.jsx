@@ -20,7 +20,6 @@ import {
   ModalBody,
   ModalCloseButton,
   ModalContent,
-  ModalFooter,
   ModalHeader,
   ModalOverlay,
   Text,
@@ -31,12 +30,10 @@ import {
 import searchIcon from "../assets/search.png";
 import filterIcon from "../assets/funnel.png";
 import sortIcon from "../assets/sort.png";
-import ProductListBar from "../components/ProductListBar";
 import Select from "react-select";
 import { axiosInstance } from "../api";
 import { useEffect, useState } from "react";
 import AdminNavbar from "../components/AdminNavbar";
-import ProductCardAdmin from "../components/ProductCardAdmin";
 import { useFormik } from "formik";
 import ReactPaginate from "react-paginate";
 import "../style/pagination.css";
@@ -44,8 +41,9 @@ import productNotFound from "../assets/feelsorry.png";
 import VoucherBar from "../components/VocuherBar";
 import addIcon from "../assets/add.png";
 import { voucherTypeSelection } from "../assets/voucherType";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import VoucherCard from "../components/VoucherCard";
+import { useRef } from "react";
 
 const maxItemsPerPage = 10;
 
@@ -59,6 +57,14 @@ const VoucherAdmin = () => {
   const [totalVoucher, setTotalVoucher] = useState(0);
   const [activePage, setActivePage] = useState(1);
   const [alert, setAlert] = useState(null);
+
+  const divRef = useRef(null);
+
+  const scrollToTop = () => {
+    divRef.current.scroll({
+      top: 0,
+    });
+  };
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
@@ -222,6 +228,7 @@ const VoucherAdmin = () => {
       toast({ title: "voucher deleted", status: "info" });
     } catch (err) {
       console.log(err);
+      toast({ title: "voucher not deleted", status: "error" });
     }
   };
 
@@ -263,6 +270,7 @@ const VoucherAdmin = () => {
 
   useEffect(() => {
     fetchAdminVoucher();
+    scrollToTop();
   }, [sortBy, sortDir, filter, currentSearch, activePage]);
 
   return (
@@ -273,6 +281,7 @@ const VoucherAdmin = () => {
       fontSize={"16px"}
       overflow={"scroll"}
       pb={"120px"}
+      ref={divRef}
     >
       <Box>
         <VoucherBar />
@@ -393,6 +402,22 @@ const VoucherAdmin = () => {
           </GridItem>
         </Grid>
       </Box>
+      {!voucher.length ? (
+        <Box display={"grid"} mt={"15vh"}>
+          <Text textAlign={"center"} fontWeight={"bold"}>
+            No item(s) found
+          </Text>
+          <Image
+            src={productNotFound}
+            alt="not found"
+            width={"70%"}
+            objectFit={"contain"}
+            justifySelf={"center"}
+          />
+        </Box>
+      ) : (
+        <Box>{renderVoucher()}</Box>
+      )}
       {!voucher.length ? null : (
         <Box marginTop={"20px"}>
           <ReactPaginate
@@ -414,22 +439,6 @@ const VoucherAdmin = () => {
             breakLinkClassName={"page-link"}
           />
         </Box>
-      )}
-      {!voucher.length ? (
-        <Box display={"grid"} mt={"15vh"}>
-          <Text textAlign={"center"} fontWeight={"bold"}>
-            No item(s) found
-          </Text>
-          <Image
-            src={productNotFound}
-            alt="not found"
-            width={"70%"}
-            objectFit={"contain"}
-            justifySelf={"center"}
-          />
-        </Box>
-      ) : (
-        <Box>{renderVoucher()}</Box>
       )}
       <Box>
         <AdminNavbar />

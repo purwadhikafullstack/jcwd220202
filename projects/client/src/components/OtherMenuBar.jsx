@@ -1,21 +1,16 @@
 import {
   Box,
-  Button,
   Image,
   Modal,
   ModalBody,
-  ModalCloseButton,
   ModalContent,
-  ModalFooter,
   ModalHeader,
   ModalOverlay,
   Text,
-  useDisclosure,
   useToast,
 } from "@chakra-ui/react";
-import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import logoutLogo from "../assets/logout.png";
 import statisticLogo from "../assets/statistic.png";
 import { logout } from "../redux/features/authSlice";

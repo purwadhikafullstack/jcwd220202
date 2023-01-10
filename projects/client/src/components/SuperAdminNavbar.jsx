@@ -39,7 +39,6 @@ const SuperAdminNavbar = () => {
         zIndex={"3"}
       >
         <Grid templateColumns="repeat(4, 1fr)" gap={1} margin={"5px"}>
-          {/* {renderIcon()} */}
           {location.pathname === "/super-admin/dashboard" ? (
             <GridItem h="65px">
               <Link to={"/super-admin/dashboard"}>

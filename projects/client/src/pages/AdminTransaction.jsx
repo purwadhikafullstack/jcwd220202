@@ -25,6 +25,7 @@ import { useState } from "react";
 import { axiosInstance } from "../api";
 import { useFormik } from "formik";
 import productNotFound from "../assets/feelsorry.png";
+import { useRef } from "react";
 
 const maxItemsPerPage = 12;
 
@@ -36,6 +37,14 @@ const AdminTransaction = () => {
   const [currentSearch, setCurrentSearch] = useState("");
   const [totalTransaction, setTotalTransaction] = useState(0);
   const [activePage, setActivePage] = useState(1);
+
+  const divRef = useRef(null);
+
+  const scrollToTop = () => {
+    divRef.current.scroll({
+      top: 0,
+    });
+  };
 
   const optionsSort = [
     { value: "createdAt ASC", label: "Latest" },
@@ -49,7 +58,7 @@ const AdminTransaction = () => {
     { value: "Payment Approved", label: "Payment Approved" },
     { value: "Product in Shipment", label: "Product in Shipment" },
     { value: "Success", label: "Success" },
-    { value: "Cancelled", label: "Cancelled" },
+    { value: "Cancel", label: "Cancelled" },
   ];
 
   const fetchAdminTransaction = async () => {
@@ -148,7 +157,7 @@ const AdminTransaction = () => {
 
   const renderAdminTransaction = () => {
     return adminTransaction.map((val) => {
-      return val.transaction_status || val.transaction_status === null ? (
+      return val.transaction_status ? (
         <TransactionCardAdmin
           key={val.id.toString()}
           TransactionId={val.id}
@@ -164,6 +173,7 @@ const AdminTransaction = () => {
 
   useEffect(() => {
     fetchAdminTransaction();
+    scrollToTop();
   }, [sortBy, sortDir, filter, currentSearch, activePage]);
 
   return (
@@ -174,6 +184,7 @@ const AdminTransaction = () => {
       fontSize={"16px"}
       overflow={"scroll"}
       pb={"120px"}
+      ref={divRef}
     >
       <Box>
         <TransactionListBar />
@@ -268,6 +279,23 @@ const AdminTransaction = () => {
           <GridItem w="100%" h="10"></GridItem>
         </Grid>
       </Box>
+
+      {!adminTransaction.length ? (
+        <Box display={"grid"} mt={"15vh"}>
+          <Text textAlign={"center"} fontWeight={"bold"}>
+            No item(s) found
+          </Text>
+          <Image
+            src={productNotFound}
+            alt="not found"
+            width={"70%"}
+            objectFit={"contain"}
+            justifySelf={"center"}
+          />
+        </Box>
+      ) : (
+        <Box>{renderAdminTransaction()}</Box>
+      )}
       {!adminTransaction.length ? null : (
         <Box marginTop={"20px"}>
           <ReactPaginate
@@ -289,23 +317,6 @@ const AdminTransaction = () => {
             breakLinkClassName={"page-link"}
           />
         </Box>
-      )}
-
-      {!adminTransaction.length ? (
-        <Box display={"grid"} mt={"15vh"}>
-          <Text textAlign={"center"} fontWeight={"bold"}>
-            No item(s) found
-          </Text>
-          <Image
-            src={productNotFound}
-            alt="not found"
-            width={"70%"}
-            objectFit={"contain"}
-            justifySelf={"center"}
-          />
-        </Box>
-      ) : (
-        <Box>{renderAdminTransaction()}</Box>
       )}
       <Box>
         <AdminNavbar />

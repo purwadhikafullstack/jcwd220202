@@ -1,18 +1,13 @@
 import {
   Box,
   Button,
-  Flex,
   FormControl,
   FormErrorMessage,
   FormLabel,
-  Grid,
-  GridItem,
   Image,
   Input,
   InputGroup,
   InputLeftAddon,
-  InputRightAddon,
-  InputRightElement,
   NumberDecrementStepper,
   NumberIncrementStepper,
   NumberInput,
@@ -82,7 +77,6 @@ const VoucherBuy1Get1 = () => {
     },
     onSubmit: async ({
       voucher_name,
-      products,
       minimum_payment,
       voucher_start_date,
       voucher_end_date,
@@ -143,8 +137,6 @@ const VoucherBuy1Get1 = () => {
     validateOnChange: false,
   });
 
-  console.log(formik.values);
-
   const quantityHandler = (value) => {
     formik.setFieldValue("quantity", value);
   };
@@ -187,7 +179,6 @@ const VoucherBuy1Get1 = () => {
           alt="search"
           objectFit={"contain"}
           height={"200px"}
-          // maxW={"300px"}
         />
         <Box h="auto" px={"30px"}>
           <FormControl mt={"5px"} isInvalid={formik.errors.voucher_name}>
@@ -240,7 +231,7 @@ const VoucherBuy1Get1 = () => {
               </InputLeftAddon>
               <Input
                 type="number"
-                placeholder="Enter Minimum Payment"
+                placeholder="Enter minimum payment"
                 _placeholder={{ color: "black.500" }}
                 name="minimum_payment"
                 bgColor={"white"}
@@ -371,6 +362,7 @@ const VoucherBuy1Get1 = () => {
             marginX={"30px"}
             mt={"10px"}
             onClick={formik.handleSubmit}
+            isDisabled={formik.isSubmitting}
           >
             Add Voucher
           </Button>

@@ -27,9 +27,10 @@ const Payment = () => {
     const toast = useToast();
     const [price, setPrice] = useState();
     const [date, setDate] = useState();
+    const [status, setStatus] = useState();
     const [selectedImage, setSelectedImage] = useState(payment);
 
-    const fetchPrice = async () => {
+    const fetchTransaction = async () => {
         try {
             const response = await axiosInstance.get(
                 `/transaction/${params.id}`
@@ -37,6 +38,7 @@ const Payment = () => {
 
             setPrice(response.data.price);
             setDate(response.data.expDate);
+            setStatus(response.data.status);
         } catch (err) {
             console.log(err);
         }
@@ -77,7 +79,7 @@ const Payment = () => {
     });
 
     useEffect(() => {
-        fetchPrice();
+        fetchTransaction();
     }, []);
 
     return (
@@ -257,30 +259,56 @@ const Payment = () => {
                         />
                     </Box>
                 </Stack>
-                <Box
-                    backgroundColor={"#E07A5F"}
-                    height={"75px"}
-                    position={"fixed"}
-                    bottom={"0"}
-                    right={"0"}
-                    left={"0"}
-                    fontWeight={"bold"}
-                    margin={"auto"}
-                    maxWidth={"480px"}
-                >
-                    <Button
-                        w={"90%"}
-                        mx={5}
-                        my={4}
-                        onClick={formik.handleSubmit}
-                        isDisabled={formik.isSubmitting}
-                        bgColor={"#81B29A"}
-                        color={"white"}
-                        borderRadius={"20px"}
+                {status === "waiting for approval" ? (
+                    <Box
+                        backgroundColor={"#E07A5F"}
+                        height={"75px"}
+                        position={"fixed"}
+                        bottom={"0"}
+                        right={"0"}
+                        left={"0"}
+                        fontWeight={"bold"}
+                        margin={"auto"}
+                        maxWidth={"480px"}
                     >
-                        Pay now
-                    </Button>
-                </Box>
+                        <Button
+                            w={"90%"}
+                            mx={5}
+                            my={4}
+                            bgColor={"#81B29A"}
+                            color={"black"}
+                            borderRadius={"20px"}
+                            isDisabled
+                        >
+                            Waiting Approval
+                        </Button>
+                    </Box>
+                ) : (
+                    <Box
+                        backgroundColor={"#E07A5F"}
+                        height={"75px"}
+                        position={"fixed"}
+                        bottom={"0"}
+                        right={"0"}
+                        left={"0"}
+                        fontWeight={"bold"}
+                        margin={"auto"}
+                        maxWidth={"480px"}
+                    >
+                        <Button
+                            w={"90%"}
+                            mx={5}
+                            my={4}
+                            onClick={formik.handleSubmit}
+                            isDisabled={formik.isSubmitting}
+                            bgColor={"#81B29A"}
+                            color={"white"}
+                            borderRadius={"20px"}
+                        >
+                            Pay now
+                        </Button>
+                    </Box>
+                )}
             </Box>
         </Box>
     );

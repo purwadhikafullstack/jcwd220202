@@ -1,7 +1,5 @@
 import { Box, Button, Flex, Image, Text } from "@chakra-ui/react";
-import { useEffect } from "react";
-import { Link, useParams } from "react-router-dom";
-import { axiosInstance } from "../api";
+import { Link } from "react-router-dom";
 
 const ProductCardAdmin = ({
   product_image,
@@ -13,11 +11,6 @@ const ProductCardAdmin = ({
   discount_amount_percentage,
   ProductId,
 }) => {
-  // const truncate = (string, length) => {
-  //   if (string.length > length) return string.substring(0, length) + "...";
-  //   else return string;
-  // };
-
   const formatRupiah = (value) => {
     return new Intl.NumberFormat("id-ID", {
       style: "currency",

@@ -1,5 +1,4 @@
-import { Box, Grid, GridItem, Image, Text, VStack } from "@chakra-ui/react";
-import shoppingPic from "../assets/login_logo.png";
+import { Box, Image, Text, VStack } from "@chakra-ui/react";
 import SuperAdminNavbar from "../components/SuperAdminNavbar";
 import UpperBarSprAdm from "../components/UpperBarSprAdm";
 import LineChartSuperAdmin from "../components/LineChartSuperAdmin";
@@ -34,9 +33,12 @@ const SuperAdminDashboard = () => {
   };
 
   useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  useEffect(() => {
     fetchProduct();
     fetchBranch();
-    window.scrollTo(0, 0);
   }, []);
 
   return (
@@ -93,7 +95,6 @@ const SuperAdminDashboard = () => {
           boxShadow={"2px 2px 2px grey"}
           display={"flex"}
           width={"100%"}
-          // maxWidth={"385px"}
           justifyContent={"space-evenly"}
         >
           <Box width={"120px"}>

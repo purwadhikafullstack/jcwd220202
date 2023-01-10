@@ -71,11 +71,16 @@ const ProductDetailAdmin = () => {
       discount_amount_percentage,
     }) => {
       try {
-        await axiosInstance.patch(`/admin-product/branch/${params.id}`, {
-          stock: stock,
-          discount_amount_nominal: discount_amount_nominal,
-          discount_amount_percentage: discount_amount_percentage,
-        });
+        const response = await axiosInstance.patch(
+          `/admin-product/branch/${params.id}`,
+          {
+            stock: stock,
+            discount_amount_nominal: discount_amount_nominal,
+            discount_amount_percentage: discount_amount_percentage,
+          }
+        );
+
+        console.log(response);
 
         fetchProductDetail();
         setEditMode(false);
@@ -102,6 +107,8 @@ const ProductDetailAdmin = () => {
     }),
     validateOnChange: false,
   });
+
+  console.log(formik.values);
 
   const discountPercentageHandler = (value) => {
     formik.setFieldValue("discount_amount_percentage", value);
@@ -370,7 +377,6 @@ const ProductDetailAdmin = () => {
               >
                 <FormLabel fontWeight={"bold"}>Stock:</FormLabel>
                 <NumberInput
-                  // min={0}
                   bgColor={"white"}
                   mt={"8px"}
                   borderRadius={"5px"}
@@ -430,17 +436,14 @@ const ProductDetailAdmin = () => {
               >
                 <InputGroup>
                   <NumberInput
-                    // min={0}
                     bgColor={"white"}
                     mt={"10px"}
                     borderRadius={"5px"}
                     width={"100%"}
                     name="discount_amount_percentage"
                     placeholder="Enter product discount"
-                    // defaultValue={formik.values.discount_amount_percentage}
                     value={formik.values.discount_amount_percentage}
                     onChange={discountPercentageHandler}
-                    // max={99}
                   >
                     <NumberInputField
                       width={"100%"}

@@ -1,25 +1,4 @@
-import {
-  Box,
-  Button,
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
-  Image,
-  Input,
-  InputGroup,
-  InputLeftAddon,
-  Text,
-  Textarea,
-  useToast,
-  VStack,
-} from "@chakra-ui/react";
-
-import uploadProduct from "../assets/product_upload.png";
-import Select from "react-select";
-import { axiosInstance } from "../api";
-import { useEffect, useState, useRef } from "react";
-import { useFormik } from "formik";
-import * as Yup from "yup";
+import { Box } from "@chakra-ui/react";
 import VoucherBar from "../components/VocuherBar";
 import { useLocation } from "react-router-dom";
 import VoucherDiscount from "../components/VoucherDiscount";

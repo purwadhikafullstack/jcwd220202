@@ -52,7 +52,6 @@ const OtherMenuBarSuperAdm = ({ isOpen, closeModal }) => {
   return (
     <>
       <Modal isOpen={isOpen} onClose={closeModal}>
-        {/* ini yang disamadenganin adalah props yang akan dipassing */}
         <ModalOverlay />
         <ModalContent
           position={"fixed"}

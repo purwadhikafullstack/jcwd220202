@@ -54,6 +54,7 @@ const profileController = {
         where: {
           UserId: req.user.id,
         },
+        include: [{ model: db.User }],
       });
 
       return res.status(200).json({
@@ -68,15 +69,33 @@ const profileController = {
     }
   },
   addNewAddress: async (req, res) => {
-    const { address } = req.body;
+    const { address, latitude, longitude } = req.body;
     try {
-      const newAddress = await db.Address.create({
-        address: address,
+      const registeredAddress = await db.Address.findOne({
+        where: {
+          [Op.and]: [
+            { UserId: req.user.id },
+            { latitude: req.body.latitude },
+            { longitude: req.body.longitude },
+          ],
+        },
       });
-      return res.status(200).json({
-        message: "User address added",
-        data: newAddress,
-      });
+      if (registeredAddress) {
+        return res.status(400).json({
+          message: "Address already added",
+        });
+      } else {
+        const newAddress = await db.Address.create({
+          address: req.body.address,
+          latitude: req.body.latitude,
+          longitude: req.body.longitude,
+          UserId: req.user.id,
+        });
+        return res.status(200).json({
+          message: "User address added",
+          data: newAddress,
+        });
+      }
     } catch (err) {
       console.log(err);
       return res.status(500).json({
@@ -86,13 +105,63 @@ const profileController = {
   },
   selectUserAddress: async (req, res) => {
     try {
+      await db.Address.update(
+        {
+          is_active: 0,
+        },
+        {
+          where: {
+            UserId: req.user.id,
+          },
+        }
+      );
+
+      await db.Address.update(
+        {
+          is_active: 1,
+        },
+        { where: { id: req.params.id } }
+      );
+
       return res.status(200).json({
         message: "Select user address",
       });
     } catch (err) {
       console.log(err);
       return res.status(500).json({
-        message: "Server error fetching address",
+        message: "Server error selecting address",
+      });
+    }
+  },
+  activeAddress: async (req, res) => {
+    try {
+      const findUserAddress = await db.User.findOne({
+        where: { id: req.user.id },
+        include: [{ model: db.Address, where: { is_active: 1 } }],
+      });
+      return res.status(200).json({
+        data: findUserAddress
+      });
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({
+        message: "Can't find address",
+      });
+    }
+  },
+  deleteAddress: async (req, res) => {
+    try {
+      await db.Address.destroy({
+        where: { id: req.params.id },
+      });
+
+      return res.status(200).json({
+        message: "Address deleted",
+      });
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({
+        message: "Failed to delete address",
       });
     }
   },

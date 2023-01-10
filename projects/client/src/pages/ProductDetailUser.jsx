@@ -1,32 +1,30 @@
 import {
-  AlertDialog,
-  AlertDialogBody,
-  AlertDialogContent,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogOverlay,
   Box,
   Button,
   HStack,
   Image,
   Text,
-  useDisclosure,
   VStack,
   useToast,
 } from "@chakra-ui/react";
 import ProductListBar from "../components/ProductListBar";
-import uploadProduct from "../assets/product_upload.png";
 import { useState, useEffect } from "react";
-import Select from "react-select";
 import { axiosInstance } from "../api";
 import { useParams } from "react-router-dom";
-import { useSelector } from "react-redux";
 
 const ProductDetailUser = () => {
   const toast = useToast();
   const params = useParams();
   const [productDetails, setProductDetails] = useState();
   const [productStock, setProductStock] = useState();
+
+  const formatRupiah = (value) => {
+    return new Intl.NumberFormat("id-ID", {
+      style: "currency",
+      currency: "IDR",
+      minimumFractionDigits: 0,
+    }).format(value);
+  };
 
   const fetchProductDetails = async () => {
     try {
@@ -44,14 +42,14 @@ const ProductDetailUser = () => {
       let productToAdd = {
         ProductBranchId: productStock.id,
         quantity: 1,
-        total_product_price: productDetails.product_price,
+        current_price: productDetails.product_price,
       };
       await axiosInstance.post("/transaction/addcart", productToAdd);
       console.log(productToAdd);
       toast({ title: "Add product to cart", status: "success" });
     } catch (err) {
       console.log(err);
-      toast({ title: "Product already been added", status: "error" });
+      toast({ title: "Server error", status: "error" });
     }
   };
 
@@ -94,7 +92,7 @@ const ProductDetailUser = () => {
                 fontWeight={"extrabold"}
                 color={"#E07A5F"}
               >
-                Rp {productDetails?.product_price}
+                {formatRupiah(productDetails?.product_price)}
               </Text>
             </Box>
 
