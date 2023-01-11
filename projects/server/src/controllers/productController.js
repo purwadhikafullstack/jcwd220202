@@ -367,6 +367,159 @@ const productController = {
       });
     }
   },
+  getNearestProductByCategory: async (req, res) => {
+    try {
+      const userCoordinate = await db.Address.findOne({
+        where: {
+          UserId: req.user.id,
+        },
+        include: [
+          {
+            model: db.User,
+          },
+        ],
+      });
+      const lat = userCoordinate.latitude;
+      const lon = userCoordinate.longitude;
+
+      const query = `(6371 *
+            acos(
+              cos(radians(${lat})) *
+                cos(radians(latitude)) *
+                cos(radians(longitude) - radians(${lon})) +
+                sin(radians(${lat})) * sin(radians(latitude))
+            ))`;
+
+      const pickBranch = await db.User.findAll({
+        where: {
+          RoleId: 2,
+        },
+        include: [
+          {
+            model: db.Address,
+          },
+        ],
+        attributes: { include: [[sequelize.literal(query), "distance"]] },
+        order: sequelize.col("distance"),
+      });
+
+      const parsePickBranch = JSON.parse(JSON.stringify(pickBranch));
+
+      console.log(parsePickBranch[0].id);
+
+      const {
+        product_name = "",
+        product_price = "",
+        _sortBy = "product_name",
+        _sortDir = "ASC",
+        _limit = 12,
+        _page = 1,
+      } = req.query;
+
+      const { CategoryId } = req.params;
+
+      if (
+        _sortBy === "product_name" ||
+        _sortBy === "product_price" ||
+        product_name ||
+        product_price
+      ) {
+        const findBranchById = await db.Branch.findAndCountAll({
+          limit: Number(_limit),
+          offset: (_page - 1) * _limit,
+          subQuery: false,
+          where: {
+            UserId: pickBranch[0].id,
+          },
+          attributes: {
+            exclude: ["branch_address", "distance", "createdAt", "updatedAt"],
+          },
+          include: [
+            {
+              model: db.ProductBranch,
+              include: [
+                {
+                  model: db.Product,
+                  where: {
+                    [Op.or]: [
+                      {
+                        product_name: {
+                          [Op.like]: `%${product_name}%`,
+                        },
+                      },
+                    ],
+                  },
+                  include: [
+                    {
+                      model: db.Category,
+                      where: {
+                        id: CategoryId,
+                      },
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+          order: [
+            [
+              { model: db.ProductBranch },
+              { model: db.Product },
+              _sortBy,
+              _sortDir,
+            ],
+          ],
+        });
+
+        return res.status(200).json({
+          data: findBranchById.rows,
+          dataCount: findBranchById.count,
+          message: "get branch data",
+        });
+      }
+
+      const findBranchById = await db.Branch.findAndCountAlll({
+        limit: Number(_limit),
+        offset: (_page - 1) * _limit,
+        subQuery: false,
+        where: {
+          UserId: pickBranch[0].id,
+        },
+        attributes: {
+          exclude: ["branch_address", "distance", "createdAt", "updatedAt"],
+        },
+        include: [
+          {
+            model: db.ProductBranch,
+            include: [
+              {
+                model: db.Product,
+                include: [
+                  {
+                    model: db.Category,
+                    where: {
+                      id: CategoryId,
+                    },
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      });
+
+      return res.status(200).json({
+        data: findBranchById.rows,
+        dataCount: findBranchById.count,
+        message: "get branch data",
+      });
+    } catch (error) {
+      console.log(err);
+      return res.status(500).json({
+        message: "server error",
+      });
+    }
+  },
 };
 
 module.exports = productController;
