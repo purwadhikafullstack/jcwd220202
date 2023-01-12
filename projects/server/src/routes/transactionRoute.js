@@ -38,10 +38,10 @@ router.get(
 //     transactionController.updatePayment
 // )
 
-router.patch(
-  "/paymen-done/check/:id",
+router.put(
+  "/payment-done/check/:id",
   uploader({
-    acceptedFileTypes: ["png", "jpg"],
+    acceptedFileTypes: ["png", "jpeg", "jpg"],
     filePrefix: "PROF",
   }).single("payment_proof_img"),
   transactionController.updatePayment
