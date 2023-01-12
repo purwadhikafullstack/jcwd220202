@@ -124,8 +124,28 @@ const ProductDetailUser = () => {
         left={"0"}
         fontWeight={"bold"}
       >
-        <Box>
-          <Button onClick={addCartBtn}>add to cart</Button>
+        <Box
+          backgroundColor={"#E07A5F"}
+          height={"75px"}
+          position={"fixed"}
+          bottom={"0"}
+          right={"0"}
+          left={"0"}
+          fontWeight={"bold"}
+          margin={"auto"}
+          maxWidth={"480px"}
+        >
+          <Button
+            w={"90%"}
+            mx={5}
+            my={4}
+            bgColor={"#81B29A"}
+            color={"white"}
+            borderRadius={"20px"}
+            onClick={addCartBtn}
+          >
+            + Add to cart
+          </Button>
         </Box>
       </Box>
     </Box>

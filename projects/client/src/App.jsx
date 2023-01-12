@@ -42,6 +42,8 @@ import CategoryEdit from "./pages/EditCategory";
 import ProductByCategory from "./pages/ProductByCategory";
 import SprAdminStatisctic from "./pages/SprAdminStatistic";
 import AdminStatistic from "./pages/AdminStatistic";
+import UserTransactions from "./pages/UserTransaction";
+import UserTransactionDetail from "./pages/UserTransactionDetail";
 
 const App = () => {
   const authSelector = useSelector((state) => state.auth);
@@ -290,6 +292,11 @@ const App = () => {
           <Route
             path="/product/filter/category"
             element={<ProductByCategory />}
+          />
+          <Route path="/user/transaction-list" element={<UserTransactions />} />
+          <Route
+            path="/user/transaction-detail/:id"
+            element={<UserTransactionDetail />}
           />
         </Routes>
       </Box>

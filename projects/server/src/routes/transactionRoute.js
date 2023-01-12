@@ -9,7 +9,7 @@ router.get("/cart", verifyToken, transactionController.showUserCart);
 router.post("/checkout", verifyToken, transactionController.checkoutItems);
 router.patch("/update", verifyToken, transactionController.updateQuantity);
 router.delete("/:id", verifyToken, transactionController.deleteItem);
-router.get("/orders", verifyToken, transactionController.orderItems);
+router.get("/orders/:id", verifyToken, transactionController.orderItems);
 router.post("/payout", verifyToken, transactionController.payOrder);
 router.get(
   "/checkvoucher/:id",
@@ -22,6 +22,11 @@ router.patch(
   transactionController.useVoucher
 );
 router.get("/shipment", verifyToken, transactionController.shipmentCourse);
+router.get(
+  "/user-transaction",
+  verifyToken,
+  transactionController.allUserTransactions
+);
 
 // router.post("/", transactionController.createPayment)
 // router.patch(
@@ -34,14 +39,23 @@ router.get("/shipment", verifyToken, transactionController.shipmentCourse);
 // )
 
 router.patch(
-  "/:id",
+  "/paymen-done/check/:id",
   uploader({
     acceptedFileTypes: ["png", "jpg"],
     filePrefix: "PROF",
   }).single("payment_proof_img"),
   transactionController.updatePayment
 );
-router.get("/:id", verifyToken, transactionController.getTransactionData);
+router.get(
+  "/payment-final/:id",
+  verifyToken,
+  transactionController.getTransactionData
+);
 router.post("/", transactionController.createPayment);
+router.get("/all-transaction", transactionController.getAllTransactionUser);
+router.get(
+  "/detail-transaction/:id",
+  transactionController.userTransactionById
+);
 
 module.exports = router;

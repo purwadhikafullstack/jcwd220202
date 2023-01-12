@@ -10,6 +10,7 @@ import {
   Grid,
   GridItem,
   HStack,
+  Image,
   Input,
   InputGroup,
   InputRightElement,
@@ -29,6 +30,7 @@ import ProductBox from "../components/ProductBox";
 import InfiniteScroll from "react-infinite-scroll-component";
 import CheckoutCart from "../components/CheckoutCartList";
 import CartHeader from "../components/CartHeader";
+import productNotFound from "../assets/feelsorry.png";
 
 const CartUser = () => {
   const toast = useToast();
@@ -79,9 +81,6 @@ const CartUser = () => {
       console.log(err);
     }
   };
-  // console.log(cartItems);
-
-  
 
   const renderCartItems = () => {
     return cartItems.map((val) => {
@@ -106,27 +105,47 @@ const CartUser = () => {
   return (
     <>
       <CartHeader />
-      <Box
-        backgroundColor={"#F4F1DE"}
-        height={"100vh"}
-        fontFamily={"roboto"}
-        fontSize={"16px"}
-        overflow={"scroll"}
-        pb={"120px"}
-      >
-        <Flex display={"flex"}>
-          <Text fontSize={"38px"}> Ini adalah carttttt</Text>
-        </Flex>
-        {/* <Box height={"600px"} overflowY={"auto"} > */}
-        {renderCartItems()}
-        {/* </Box> */}
-        <Button
-          mt={"10px"}
-          onClick={cartItems.length == 0 ? noItem : checkoutButton}
+      {!cartItems.length ? (
+        <Box display={"grid"} mt={"15vh"}>
+          <Text textAlign={"center"} fontWeight={"bold"}>
+            No item(s) found
+          </Text>
+          <Image
+            src={productNotFound}
+            alt="not found"
+            width={"70%"}
+            objectFit={"contain"}
+            justifySelf={"center"}
+          />
+        </Box>
+      ) : (
+        <Box
+          backgroundColor={"#F4F1DE"}
+          height={"100vh"}
+          fontFamily={"roboto"}
+          fontSize={"16px"}
+          overflow={"scroll"}
+          pb={"120px"}
         >
-          {"Ceckout gannnnn"}
-        </Button>
-      </Box>
+          <Flex display={"flex"}>
+            <Text fontSize={"38px"}> Ini adalah carttttt</Text>
+          </Flex>
+          {renderCartItems()}
+          <Box>
+            <Button
+              w={"90%"}
+              mx={5}
+              my={4}
+              bgColor={"#81B29A"}
+              color={"white"}
+              borderRadius={"20px"}
+              onClick={cartItems.length == 0 ? noItem : checkoutButton}
+            >
+              Checkout me!
+            </Button>
+          </Box>
+        </Box>
+      )}
 
       <Navigation />
     </>

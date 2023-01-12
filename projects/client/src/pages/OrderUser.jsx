@@ -85,14 +85,15 @@ const OrderUser = () => {
   const fetchShipmentPrice = async () => {
     try {
       const pinpoint = await axiosInstance.get("/transaction/shipment");
-      console.log(pinpoint.data.origin.address.split(",")[0]);
+
       const originCity = renderCityCode.find((val) => {
         return val.city_name === pinpoint.data.origin.address.split(",")[0];
       });
       const destinationCity = renderCityCode.find((val) => {
-        return val.city_name === pinpoint.data.destination.address;
+        return (
+          val.city_name === pinpoint.data.destination.address.split(",")[0]
+        );
       });
-
       const ongkirs = await axiosInstance.get(
         `/geocode/expeditionprice/${originCity.city_id}/${
           destinationCity.city_id
@@ -103,7 +104,6 @@ const OrderUser = () => {
       console.log(err);
     }
   };
-  console.log("iniongkir", ongkirs);
 
   const renderOngkirOptions = ongkirs.map((val) => {
     return {
@@ -116,14 +116,16 @@ const OrderUser = () => {
 
   const fetchCheckoutOrders = async () => {
     try {
-      const response = await axiosInstance.get("/transaction/orders");
-
+      const response = await axiosInstance.get(
+        `/transaction/orders/${params.id}`
+      );
+      // console.log(response.data.data);
       setCheckoutItems(response.data.data);
     } catch (err) {
       console.log(err);
     }
   };
-  // console.log(checkoutItems);
+  console.log(checkoutItems);
 
   const renderOrderItem = () => {
     return checkoutItems.map((val) => {
@@ -137,13 +139,14 @@ const OrderUser = () => {
           quantity={val.quantity}
           current_price={val.current_price}
           total_product_price={val.total_product_price}
+          price_per_product={val.price_per_product}
         />
       );
     });
   };
 
   const currentPriceToBePaid = checkoutItems.map((val) => {
-    return { total_product_price: val.total_product_price };
+    return { total_product_price: val.price_per_product };
   });
 
   const grandTotal = () => {
@@ -169,7 +172,7 @@ const OrderUser = () => {
       const bayarGrand = total * percentDisc + ongkosKirim;
       return bayarGrand;
     } else if (!selectedVoucher?.VoucherTypeId) {
-      const bayarGrand = total;
+      const bayarGrand = total + ongkosKirim;
       return bayarGrand;
     }
   };
@@ -185,6 +188,8 @@ const OrderUser = () => {
         {
           finalBanget: grandTotal(),
           VoucherId: selectedVoucher?.value,
+          shipping_method: selectedOngkir?.label,
+          shipment_price: selectedOngkir?.hargaOngkir,
         }
       );
       navigate(`/user/payment/${params.id}`);
@@ -192,7 +197,7 @@ const OrderUser = () => {
       console.log(err);
     }
   };
-
+  console.log(selectedOngkir);
   useEffect(() => {
     fetchCheckoutOrders();
     fetchShipmentPrice();
@@ -239,6 +244,8 @@ const OrderUser = () => {
             right={"0"}
             left={"0"}
             fontWeight={"bold"}
+            margin={"auto"}
+            maxWidth={"480px"}
           >
             <SimpleGrid columns={2} spacing={5}>
               <Box height="80px" paddingLeft={"5"}>

@@ -34,6 +34,7 @@ const CheckoutOrders = ({
   onQty,
   handleQty,
   qty,
+  price_per_product,
 }) => {
   const formatRupiah = (value) => {
     return new Intl.NumberFormat("id-ID", {
@@ -43,8 +44,7 @@ const CheckoutOrders = ({
     }).format(value);
   };
 
-  useEffect(() => {
-  }, []);
+  useEffect(() => {}, []);
 
   return (
     <>
@@ -97,7 +97,7 @@ const CheckoutOrders = ({
               <Text>x {quantity}</Text>
             </Box>
             <Box>
-              <Text>{formatRupiah(total_product_price)}</Text>
+              <Text>{formatRupiah(current_price * quantity)}</Text>
             </Box>
           </Box>
         </Flex>
