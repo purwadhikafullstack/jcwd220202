@@ -16,7 +16,7 @@ import {
 } from "@chakra-ui/react";
 import { useFormik } from "formik";
 import { axiosInstance } from "../api";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import TransactionListBar from "../components/TransactionListBar";
 import payment from "../assets/payment.png";
 import { useEffect, useRef, useState } from "react";
@@ -29,6 +29,8 @@ const Payment = () => {
   const [date, setDate] = useState();
   const [status, setStatus] = useState();
   const [selectedImage, setSelectedImage] = useState(payment);
+
+  const navigate = useNavigate();
 
   const fetchTransaction = async () => {
     try {
@@ -54,10 +56,12 @@ const Payment = () => {
 
         transactionData.append("payment_proof_img", values.payment_proof_img);
 
-        const response = await axiosInstance.put(
+        const response = await axiosInstance.patch(
           `/transaction/payment-done/check/${params.id}`,
           transactionData
         );
+
+        navigate(`/user/transaction-detail/${params.id}`);
 
         toast({
           title: "Payment Uploaded",

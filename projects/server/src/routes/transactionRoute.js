@@ -38,7 +38,7 @@ router.get(
 //     transactionController.updatePayment
 // )
 
-router.put(
+router.patch(
   "/payment-done/check/:id",
   uploader({
     acceptedFileTypes: ["png", "jpeg", "jpg"],

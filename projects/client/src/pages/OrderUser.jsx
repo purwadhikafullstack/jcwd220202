@@ -86,6 +86,8 @@ const OrderUser = () => {
     try {
       const pinpoint = await axiosInstance.get("/transaction/shipment");
 
+      // console.log(pinpoint);
+
       const originCity = renderCityCode.find((val) => {
         return val.city_name === pinpoint.data.origin.address.split(",")[0];
       });
