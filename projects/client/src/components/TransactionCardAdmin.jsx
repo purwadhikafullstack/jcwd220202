@@ -156,7 +156,8 @@ const TransactionCardAdmin = ({
                 alt="search"
                 objectFit={"contain"}
                 height={"70px"}
-                maxW={"300px"}
+                width={"70px"}
+                bgColor={"white"}
                 border={"2px solid #E07A5F"}
                 borderRadius={"10px"}
               />

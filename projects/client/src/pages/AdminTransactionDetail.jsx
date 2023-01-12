@@ -200,7 +200,6 @@ const AdminTransactionDetail = () => {
     if (transactionDetail.ReferralVoucherId !== null) {
       return (
         <Text fontWeight={"normal"}>
-          {/* {transactionDetail?.ReferralVoucher?.voucher_name || "Loading..."} */}
           <Badge
             colorScheme="green"
             textAlign={"center"}
@@ -381,10 +380,11 @@ const AdminTransactionDetail = () => {
         <Box display={"flex"} mt={"10px"} key={val.id.toString()}>
           <Image
             src={val.ProductBranch?.Product?.product_image || "Loading..."}
-            alt="search"
+            alt="image"
             objectFit={"contain"}
             height={"100px"}
-            maxW={"300px"}
+            width={"100px"}
+            bgColor={"white"}
             border={"2px solid #E07A5F"}
             borderRadius={"10px"}
           />
@@ -557,7 +557,7 @@ const AdminTransactionDetail = () => {
           <Box>
             <Text fontWeight={"bold"}>Address:</Text>
             <Text fontWeight={"normal"}>
-              {transactionDetail?.User?.Address?.address || "Loading"}
+              {transactionDetail?.shipping_address || "Loading..."}
             </Text>
             <Text fontWeight={"bold"} mt={"5px"}>
               Shipping Method:
