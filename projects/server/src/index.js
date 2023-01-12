@@ -115,6 +115,6 @@ app.listen(PORT, async (err) => {
   }
 });
 
-// startVoucherScheduler.invoke();
-// endVoucherScheduler.invoke();
-// salesReportScheduler.invoke();
+startVoucherScheduler.invoke();
+endVoucherScheduler.invoke();
+salesReportScheduler.invoke();
