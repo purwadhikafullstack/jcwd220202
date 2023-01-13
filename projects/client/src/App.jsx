@@ -61,22 +61,13 @@ const App = () => {
 
       const response = await axiosInstance.get("/user/refreshToken");
 
-      if (response.data.data.RoleId === 2) {
-        dispatch(
-          login({
-            id: response.data.data.id,
-            RoleId: 2,
-            branch_name: response.data.data.Branch.branch_name,
-          })
-        );
-      }
-
       dispatch(
         login({
           username: response.data.data.username,
           email: response.data.data.email,
           id: response.data.data.id,
           RoleId: response.data.data.RoleId,
+          branch_name: response.data.data.Branch.branch_name,
           is_verified: response.data.data.is_verified,
         })
       );
