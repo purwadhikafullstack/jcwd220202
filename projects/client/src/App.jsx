@@ -61,16 +61,29 @@ const App = () => {
 
       const response = await axiosInstance.get("/user/refreshToken");
 
-      dispatch(
-        login({
-          username: response.data.data.username,
-          email: response.data.data.email,
-          id: response.data.data.id,
-          RoleId: response.data.data.RoleId,
-          branch_name: response.data.data.Branch.branch_name,
-          is_verified: response.data.data.is_verified,
-        })
-      );
+      if (response.data.data.RoleId === 1 || response.data.data.RoleId === 3) {
+        dispatch(
+          login({
+            username: response.data.data.username,
+            email: response.data.data.email,
+            id: response.data.data.id,
+            RoleId: response.data.data.RoleId,
+            branch_name: "",
+            is_verified: response.data.data.is_verified,
+          })
+        );
+      } else {
+        dispatch(
+          login({
+            username: response.data.data.username,
+            email: response.data.data.email,
+            id: response.data.data.id,
+            RoleId: response.data.data.RoleId,
+            branch_name: response.data.data.Branch.branch_name,
+            is_verified: response.data.data.is_verified,
+          })
+        );
+      }
 
       localStorage.setItem("auth_token", response.data.token);
       setAuthCheck(true);
