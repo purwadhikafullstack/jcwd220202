@@ -27,6 +27,7 @@ const createAdminController = {
         address: cityName,
         latitude: latitude,
         longitude: longitude,
+        is_active: 1,
       });
 
       const newAdmin = await db.User.create({

@@ -123,6 +123,8 @@ const ProductDetailUser = () => {
         right={"0"}
         left={"0"}
         fontWeight={"bold"}
+        margin={"auto"}
+        maxWidth={"480px"}
       >
         <Box
           backgroundColor={"#E07A5F"}

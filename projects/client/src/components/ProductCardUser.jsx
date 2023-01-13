@@ -1,13 +1,4 @@
-import {
-  Badge,
-  Box,
-  Button,
-  Flex,
-  Image,
-  Stack,
-  Text,
-  useToast,
-} from "@chakra-ui/react";
+import { Box, Flex, Image, Text, useToast } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 
 const ProductCardUser = ({
@@ -17,10 +8,10 @@ const ProductCardUser = ({
   product_image,
   id,
 }) => {
-  //   const truncate = (string, length) => {
-  //     if (string.length > length) return string.substring(0, length) + "...";
-  //     else return string;
-  //   };
+  const truncate = (string, length) => {
+    if (string.length > length) return string.substring(0, length) + "...";
+    else return string;
+  };
 
   const formatRupiah = (value) => {
     return new Intl.NumberFormat("id-ID", {
@@ -81,16 +72,16 @@ const ProductCardUser = ({
                   {formatRupiah(product_price) || "Rp. 1.000.000"}
                 </Text>
                 <Text
-                  fontSize={"13px"}
+                  fontSize={"15px"}
                   color={"black"}
                   overflow={"hidden"}
                   textOverflow={"----"}
                 >
-                  {/* {truncate(product_description, lengthDesc) ||
+                  {truncate(product_description, lengthDesc) ||
                     truncate(
                       "Batagor merupakan lorem ipsum handnakdnknkaedaskaksnkanksnakskans",
                       lengthDesc
-                    )} */}
+                    )}
                 </Text>
               </Box>
             </Box>

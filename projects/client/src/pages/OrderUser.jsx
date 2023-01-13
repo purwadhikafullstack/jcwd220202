@@ -264,7 +264,7 @@ const OrderUser = () => {
                 </VStack>
               </Box>
               <Box height="80px" justifyContent={"center"}>
-                <Button size={"lg"} margin={"2"} onClick={postTotal}>
+                <Button size={"lg"} margin={"3"} ml={"20"} onClick={postTotal}>
                   Pay me
                 </Button>
               </Box>
