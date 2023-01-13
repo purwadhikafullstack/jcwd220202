@@ -12,7 +12,7 @@ import { Link } from "react-router-dom";
 import uploadProduct from "../assets/product_upload.png";
 import moment from "moment";
 
-const TransactionCardAdmin = ({
+const UserTransactionListCard = ({
   TransactionId,
   total_price,
   createdAt,
@@ -104,10 +104,7 @@ const TransactionCardAdmin = ({
                 {formatRupiah(total_price) || "Loading..."}
               </Text>
             </Box>
-            <Box>
-              {moment(createdAt).utcOffset("+07:00").format("YYYY-MM-DD") ||
-                "Loading..."}
-            </Box>
+
             <Box>
               {transaction_status === "Payment Approved" ||
               transaction_status === "Product In Shipment" ||
@@ -138,7 +135,7 @@ const TransactionCardAdmin = ({
               )}
             </Box>
             <Box mt={"5px"}>
-              <Link to={`/admin/transaction/${TransactionId}`}>
+              <Link to={`/user/transaction-detail/${TransactionId}`}>
                 <Button
                   width={"100px"}
                   bgColor={"#81B29A"}
@@ -156,8 +153,7 @@ const TransactionCardAdmin = ({
                 alt="search"
                 objectFit={"contain"}
                 height={"70px"}
-                width={"70px"}
-                bgColor={"white"}
+                maxW={"300px"}
                 border={"2px solid #E07A5F"}
                 borderRadius={"10px"}
               />
@@ -190,4 +186,4 @@ const TransactionCardAdmin = ({
   );
 };
 
-export default TransactionCardAdmin;
+export default UserTransactionListCard;

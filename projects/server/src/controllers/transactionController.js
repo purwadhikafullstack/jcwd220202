@@ -1,6 +1,7 @@
 const { Op } = require("sequelize");
 const db = require("../../models");
 const checkPayment = require("../../lib/schedulePayment");
+const moment = require("moment");
 
 const transactionController = {
   addToCart: async (req, res) => {
@@ -116,19 +117,22 @@ const transactionController = {
         total_quantity: totalQuantity,
         total_price: totalBayar,
         UserId: req.user.id,
-        transaction_status: "waiting",
       });
-
-      currentCart.map(async (val) => {
-        await db.TransactionItem.create({
+      const createTransactionItem = currentCart.map((val) => {
+        return {
           TransactionId: thisTransactionId.id,
           ProductBranchId: val.ProductBranchId,
           quantity: val.quantity,
           current_price: val.current_price,
-          price_per_product: val.total_product_price * val.quantity,
+          price_per_product: val.current_price * val.quantity,
           applied_discount: val.applied_discount,
-        });
+        };
       });
+      await db.TransactionItem.bulkCreate(createTransactionItem);
+
+      // await db.Cart.destroy({
+      //   where: { UserId: req.user.id },
+      // });
 
       return res.status(200).json({
         message: "Product checked out",
@@ -152,12 +156,11 @@ const transactionController = {
           ],
         },
       });
-
+      console.log(JSON.parse(JSON.stringify(currentPrice)));
       await db.Cart.update(
         {
           quantity: req.body.qty,
-          total_product_price:
-            parseInt(currentPrice.quantity) * currentPrice.current_price,
+          total_product_price: req.body.qty * currentPrice.current_price,
         },
         {
           where: {
@@ -169,22 +172,6 @@ const transactionController = {
           },
         }
       );
-
-      // await db.Cart.update(
-      //   {
-      //     total_product_price:
-      //       currentPrice.quantity * currentPrice.current_price,
-      //   },
-      //   {
-      //     where: {
-      //       [Op.and]: [
-      //         { is_checked: false },
-      //         { UserId: req.user.id },
-      //         { ProductBranchId: req.body.ProductBranchId },
-      //       ],
-      //     },
-      //   }
-      // );
 
       return res.status(200).json({
         message: "Product added",
@@ -278,15 +265,22 @@ const transactionController = {
   },
   orderItems: async (req, res) => {
     try {
-      const thisCart = await db.Cart.findAll({
+      const thisCart = await db.TransactionItem.findAll({
         where: {
-          [Op.and]: [{ is_checked: 0 }, { UserId: req.user.id }],
+          TransactionId: req.params.id,
         },
         include: [
           { model: db.ProductBranch, include: [{ model: db.Product }] },
         ],
       });
-
+      // const thisCart = await db.Cart.findAll({
+      //   where: {
+      //     [Op.and]: [{ is_checked: 0 }, { UserId: req.user.id }],
+      //   },
+      //   include: [
+      //     { model: db.ProductBranch, include: [{ model: db.Product }] },
+      //   ],
+      // });
       return res.status(200).json({
         message: "Showing user cart",
         data: thisCart,
@@ -340,13 +334,13 @@ const transactionController = {
       await db.Transaction.update(
         {
           transaction_status: "Waiting For Payment",
+          shipping_method: "isi",
         },
         {
           where: {
             [Op.and]: [
               { UserId: req.user.id },
               // { BranchId: currentCart.BranchId },
-              { transaction_status: "waiting" },
             ],
           },
         }
@@ -371,7 +365,7 @@ const transactionController = {
       //     where: {
       //       [Op.and]: [
       //         { UserId: req.user.id },
-      //         // { BranchId: currentCart.BranchId },
+      //         { BranchId: currentCart.BranchId },
       //         { transaction_status: "waiting" },
       //       ],
       //     },
@@ -460,25 +454,37 @@ const transactionController = {
     }
   },
   useVoucher: async (req, res) => {
-    const { finalBanget, VoucherId } = req.body;
+    const { finalBanget, VoucherId, shipping_method, shipment_price } =
+      req.body;
     try {
+      const currentUser = await db.User.findOne({
+        where: { id: req.user.id },
+        include: { model: db.Address, where: { is_active: true } },
+      });
       // const thisTransaction = await db.Transaction.findByPk(req.params.id);
       const voucherValue = await db.Voucher.findByPk(VoucherId);
-
+      const expDate = moment().add(2, "hours").format("YYYY-MM-DD HH:mm:ss");
+      // console.log(JSON.parse(JSON.stringify(currentUser.Addresses[0].address)));
       await db.Transaction.update(
         {
           total_price: finalBanget,
           VoucherId: VoucherId,
           transaction_status: "Waiting For Payment",
+          shipping_method: shipping_method,
+          shipment_price: shipment_price,
+          shipping_address: currentUser.Addresses[0].address,
+          expired_date: expDate,
         },
         { where: { id: req.params.id } }
       );
-      await db.Voucher.update(
-        {
-          quantity: voucherValue.quantity - 1,
-        },
-        { where: { id: VoucherId } }
-      );
+      if (VoucherId) {
+        await db.Voucher.update(
+          {
+            quantity: voucherValue.quantity - 1,
+          },
+          { where: { id: VoucherId } }
+        );
+      }
 
       // if (thisTransaction.VoucherId) {
       //   return res.status(400)
@@ -523,6 +529,228 @@ const transactionController = {
       console.log(err);
       return res.status(500).json({
         message: "Server error",
+      });
+    }
+  },
+  allUserTransactions: async (req, res) => {
+    try {
+      return res.status(200).json({
+        message: "Showing all user transactions",
+      });
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({
+        message: "Server error",
+      });
+    }
+  },
+  getAllTransactionUser: async (req, res) => {
+    try {
+      const {
+        username = "",
+        transaction_status = "",
+        _sortBy = "createdAt",
+        _sortDir = "ASC",
+        _limit = 12,
+        _page = 1,
+      } = req.query;
+
+      const findAdmin = await db.Branch.findOne({
+        where: {
+          UserId: 3,
+        },
+      });
+
+      if (_sortBy === "createdAt" || username || transaction_status) {
+        if (!transaction_status) {
+          const findAllTransaction = await db.Transaction.findAndCountAll({
+            limit: Number(_limit),
+            offset: (_page - 1) * _limit,
+            where: {
+              BranchId: 3,
+            },
+            include: [
+              {
+                model: db.User,
+                where: {
+                  [Op.or]: [
+                    {
+                      username: {
+                        [Op.like]: `%${username}%`,
+                      },
+                    },
+                  ],
+                },
+              },
+              {
+                model: db.TransactionItem,
+                separate: true,
+                include: [
+                  {
+                    model: db.ProductBranch,
+                    include: [
+                      {
+                        model: db.Product,
+                        paranoid: false,
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+            order: [[_sortBy, _sortDir]],
+          });
+
+          return res.status(200).json({
+            message: "get all user transaction",
+            data: findAllTransaction.rows,
+            dataCount: findAllTransaction.count,
+          });
+        }
+
+        const findAllTransaction = await db.Transaction.findAndCountAll({
+          limit: Number(_limit),
+          offset: (_page - 1) * _limit,
+          where: {
+            BranchId: 3,
+            transaction_status: transaction_status,
+          },
+          include: [
+            {
+              model: db.User,
+              where: {
+                [Op.or]: [
+                  {
+                    username: {
+                      [Op.like]: `%${username}%`,
+                    },
+                  },
+                ],
+              },
+            },
+            {
+              model: db.TransactionItem,
+              separate: true,
+              include: [
+                {
+                  model: db.ProductBranch,
+                  include: [
+                    {
+                      model: db.Product,
+                      paranoid: false,
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+          order: [[_sortBy, _sortDir]],
+        });
+
+        return res.status(200).json({
+          message: "get all user transaction",
+          data: findAllTransaction.rows,
+          dataCount: findAllTransaction.count,
+        });
+      }
+
+      const findAllTransaction = await db.Transaction.findAndCountAll({
+        limit: Number(_limit),
+        offset: (_page - 1) * _limit,
+        where: {
+          BranchId: 3,
+        },
+        include: [
+          {
+            model: db.User,
+          },
+          {
+            model: db.TransactionItem,
+            separate: true,
+            include: [
+              {
+                model: db.ProductBranch,
+                include: [
+                  {
+                    model: db.Product,
+                    paranoid: false,
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      });
+
+      return res.status(200).json({
+        message: "get all user transaction",
+        data: findAllTransaction.rows,
+        dataCount: findAllTransaction.count,
+      });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({
+        message: "server error",
+      });
+    }
+  },
+  userTransactionById: async (req, res) => {
+    try {
+      const findTransaction = await db.Transaction.findOne({
+        where: {
+          id: req.params.id,
+        },
+      });
+      console.log(findTransaction);
+      const findTransactionById = await db.Transaction.findOne({
+        where: {
+          id: req.params.id,
+          BranchId: findTransaction.BranchId,
+        },
+        include: [
+          {
+            model: db.User,
+            include: db.Address,
+          },
+          {
+            model: db.TransactionItem,
+            include: [
+              {
+                model: db.ProductBranch,
+                include: [
+                  {
+                    model: db.Product,
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            model: db.ReferralVoucher,
+          },
+          {
+            model: db.Voucher,
+            include: [
+              {
+                model: db.Product,
+                include: db.ProductBranch,
+              },
+              {
+                model: db.VoucherType,
+              },
+            ],
+          },
+        ],
+      });
+
+      return res.status(200).json({
+        message: "get transaction by branch and id",
+        data: findTransactionById,
+      });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({
+        message: "server error",
       });
     }
   },

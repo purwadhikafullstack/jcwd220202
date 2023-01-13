@@ -7,7 +7,6 @@ const checkPayment = (objectTransaction) => {
       const getTransaction = await db.Transaction.findByPk(
         objectTransaction.id
       );
-
       if (objectTransaction.status === "Waiting For Payment") {
         await db.Transaction.update(
           {
