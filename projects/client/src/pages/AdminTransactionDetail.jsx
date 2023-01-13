@@ -291,8 +291,6 @@ const AdminTransactionDetail = () => {
     }
   };
 
-  console.log(transactionDetail.VoucherId);
-
   const finalVoucher = () => {
     if (
       transactionDetail?.VoucherId === null &&
@@ -471,7 +469,12 @@ const AdminTransactionDetail = () => {
             </Grid>
             <Grid templateColumns="repeat(2, 1fr)" gap={3} mt={"5px"}>
               <GridItem w="100%" mt={"8px"} fontWeight={"bold"}>
-                {transactionDetail?.id || "Loading..."}
+                <Box display={"flex"}>
+                  <Text>Transaction ID:</Text>
+                  <Text ml={"5px"}>
+                    {transactionDetail?.id || "Loading..."}
+                  </Text>
+                </Box>
               </GridItem>
               <GridItem w="100%" textAlign={"center"}>
                 <a href={transactionDetail.payment_proof_img} target="_blank">
