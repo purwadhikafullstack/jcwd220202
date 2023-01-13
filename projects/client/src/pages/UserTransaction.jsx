@@ -30,7 +30,7 @@ import Navigation from "../components/NavigationBar";
 const maxItemsPerPage = 12;
 
 const UserTransactions = () => {
-  const [adminTransaction, setAdminTransaction] = useState([]);
+  const [userTransaction, setUserTransaction] = useState([]);
   const [sortBy, setSortBy] = useState("createdAt");
   const [sortDir, setSortDir] = useState("ASC");
   const [filter, setFilter] = useState("");
@@ -61,7 +61,7 @@ const UserTransactions = () => {
     { value: "Cancel", label: "Cancelled" },
   ];
 
-  const fetchAdminTransaction = async () => {
+  const fetchUserTransaction = async () => {
     try {
       const response = await axiosInstance.get("/transaction/all-transaction", {
         params: {
@@ -74,7 +74,7 @@ const UserTransactions = () => {
         },
       });
 
-      setAdminTransaction(response.data.data);
+      setUserTransaction(response.data.data);
 
       setTotalTransaction(response.data.dataCount);
     } catch (error) {
@@ -156,7 +156,7 @@ const UserTransactions = () => {
   };
 
   const renderAdminTransaction = () => {
-    return adminTransaction.map((val) => {
+    return userTransaction.map((val) => {
       return val.transaction_status ? (
         <UserTransactionListCard
           key={val.id.toString()}
@@ -172,7 +172,7 @@ const UserTransactions = () => {
   };
 
   useEffect(() => {
-    fetchAdminTransaction();
+    fetchUserTransaction();
     scrollToTop();
   }, [sortBy, sortDir, filter, currentSearch, activePage]);
 
@@ -187,47 +187,10 @@ const UserTransactions = () => {
       ref={divRef}
     >
       <Box>
-        <TransactionListBar />
-      </Box>
-      <Box>
-        <Flex>
-          <Box p={"2"} marginTop={"80px"} width={"100%"} mr={"8px"}>
-            <FormControl isInvalid={formik.errors.search}>
-              <InputGroup>
-                <Input
-                  name="search"
-                  placeholder="Search By Username"
-                  _placeholder={{ color: "black.500" }}
-                  value={formik.values.search}
-                  onChange={formChangeHandler}
-                  bgColor={"white"}
-                  height={"40px"}
-                  marginLeft={"6px"}
-                />
-                <InputRightElement marginRight={"5px"}>
-                  <Button
-                    size="sm"
-                    color={"white"}
-                    bgColor={"#F2CC8F"}
-                    fontSize={"16px"}
-                    _hover={{
-                      bgColor: "#F2CC8F",
-                    }}
-                    onClick={formik.handleSubmit}
-                  >
-                    <Image
-                      src={searchIcon}
-                      alt="search"
-                      width={"40px"}
-                      objectFit={"contain"}
-                    />
-                  </Button>
-                </InputRightElement>
-              </InputGroup>
-            </FormControl>
-          </Box>
-        </Flex>
-        <Grid templateColumns="repeat(3, 1fr)" gap={2} mx={"15px"}>
+        <Box>
+          <TransactionListBar />
+        </Box>
+        <Grid templateColumns="repeat(3, 1fr)" gap={2} mx={"15px"} mt={"80px"}>
           <GridItem w="100%" h="10">
             <Grid
               templateColumns="repeat(1, 1fr)"
@@ -280,7 +243,7 @@ const UserTransactions = () => {
         </Grid>
       </Box>
 
-      {!adminTransaction.length ? (
+      {!userTransaction.length ? (
         <Box display={"grid"} mt={"15vh"}>
           <Text textAlign={"center"} fontWeight={"bold"}>
             No item(s) found
@@ -296,7 +259,7 @@ const UserTransactions = () => {
       ) : (
         <Box>{renderAdminTransaction()}</Box>
       )}
-      {!adminTransaction.length ? null : (
+      {!userTransaction.length ? null : (
         <Box marginTop={"20px"}>
           <ReactPaginate
             previousLabel={"previous"}

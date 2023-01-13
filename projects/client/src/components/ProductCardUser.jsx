@@ -69,7 +69,7 @@ const ProductCardUser = ({
                   whiteSpace={"nowrap"}
                   maxWidth={"120px"}
                 >
-                  {formatRupiah(product_price) || "Rp. 1.000.000"}
+                  {formatRupiah(product_price) || "Rp ---"}
                 </Text>
                 <Text
                   fontSize={"15px"}

@@ -85,25 +85,18 @@ const transactionController = {
   },
   checkoutItems: async (req, res) => {
     try {
+      // const pusatPrice = await db.Product.findAll();
       const currentCart = await db.Cart.findAll({
         where: {
           [Op.and]: [{ is_checked: 0 }, { UserId: req.user.id }],
         },
-        include: [{ model: db.ProductBranch }],
+        include: [
+          {
+            model: db.ProductBranch,
+            include: [{ model: db.Product }],
+          },
+        ],
       });
-      console.log(JSON.parse(JSON.stringify(currentCart)));
-
-      // await db.Cart.update(
-      //   {
-      //     is_checked: true,
-      //   },
-      //   {
-      //     where: {
-      //       [Op.and]: [{ is_checked: 0 }, { UserId: req.user.id }],
-      //     },
-      //     include: [{ model: db.ProductBranch }],
-      //   }
-      // );
       let totalBayar = 0;
       let totalQuantity = 0;
 
@@ -125,14 +118,15 @@ const transactionController = {
           quantity: val.quantity,
           current_price: val.current_price,
           price_per_product: val.current_price * val.quantity,
-          applied_discount: val.applied_discount,
+          applied_discount:
+            val.ProductBranch.Product.product_price - val.current_price,
         };
       });
       await db.TransactionItem.bulkCreate(createTransactionItem);
 
-      // await db.Cart.destroy({
-      //   where: { UserId: req.user.id },
-      // });
+      await db.Cart.destroy({
+        where: { UserId: req.user.id },
+      });
 
       return res.status(200).json({
         message: "Product checked out",
@@ -434,10 +428,9 @@ const transactionController = {
           [Op.and]: [
             { BranchId: currentItems[0].ProductBranch.BranchId },
             { ProductId: thisProductId },
+
+            { quantity: { [Op.gt]: 0 } },
           ],
-          // [Op.lt]: [
-          //   {quantity: 0}
-          // ]
         },
       });
 
@@ -550,16 +543,10 @@ const transactionController = {
         username = "",
         transaction_status = "",
         _sortBy = "createdAt",
-        _sortDir = "ASC",
+        _sortDir = "DESC",
         _limit = 12,
         _page = 1,
       } = req.query;
-
-      const findAdmin = await db.Branch.findOne({
-        where: {
-          UserId: 3,
-        },
-      });
 
       if (_sortBy === "createdAt" || username || transaction_status) {
         if (!transaction_status) {
@@ -567,7 +554,7 @@ const transactionController = {
             limit: Number(_limit),
             offset: (_page - 1) * _limit,
             where: {
-              BranchId: 3,
+              UserId: req.user.id,
             },
             include: [
               {
@@ -612,7 +599,7 @@ const transactionController = {
           limit: Number(_limit),
           offset: (_page - 1) * _limit,
           where: {
-            BranchId: 3,
+            UserId: req.user.id,
             transaction_status: transaction_status,
           },
           include: [
@@ -658,7 +645,7 @@ const transactionController = {
         limit: Number(_limit),
         offset: (_page - 1) * _limit,
         where: {
-          BranchId: 3,
+          UserId: req.user.id,
         },
         include: [
           {
@@ -746,6 +733,44 @@ const transactionController = {
       return res.status(200).json({
         message: "get transaction by branch and id",
         data: findTransactionById,
+      });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({
+        message: "server error",
+      });
+    }
+  },
+  orderAccepted: async (req, res) => {
+    try {
+      const thisTransaction = await db.TransactionItem.findAll({
+        where: {
+          TransactionId: req.params.id,
+        },
+        include: [{ model: db.ProductBranch }],
+      });
+      const createTransactionHistory = thisTransaction.map((val) => {
+        return {
+          BranchId: thisTransaction[0].ProductBranch.BranchId,
+          ProductId: val.ProductBranch.ProductId,
+          initial_stock: val.ProductBranch.stock,
+          current_stock: val.ProductBranch.stock - val.quantity,
+          stock_movement: val.quantity,
+          remarks: "Market Activity",
+          TransactionItemId: val.id,
+        };
+      });
+      await db.ProductHistory.bulkCreate(createTransactionHistory);
+      await db.Transaction.update(
+        { transaction_status: "Success" },
+        {
+          where: { [Op.and]: [{ UserId: req.user.id }, { id: req.params.id }] },
+        }
+      );
+
+      return res.status(200).json({
+        message: "product history created",
+        data: createTransactionHistory,
       });
     } catch (error) {
       console.log(error);

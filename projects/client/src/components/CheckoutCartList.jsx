@@ -58,10 +58,6 @@ const CheckoutCart = ({
     onDelete();
   };
 
-  // useEffect(() => {
-  //   qtyBtnHandler();
-  // }, []);
-
   return (
     <>
       <Box marginTop={"20px"} mx={"20px"}>

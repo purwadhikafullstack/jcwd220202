@@ -75,6 +75,16 @@ const UserTransactionDetail = () => {
     return discount;
   };
 
+  const orderDonePostToHistory = async () => {
+    try {
+      await axiosInstance.post(`/transaction/history/${params.id}`);
+
+      fetchTransactionDetail();
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   const showReferralVoucher = () => {
     if (transactionDetail.ReferralVoucherId === null) {
       return (
@@ -215,6 +225,7 @@ const UserTransactionDetail = () => {
           >
             Product in Shipment
           </Badge>
+          <Button onClick={orderDonePostToHistory}>Order accepted</Button>
         </>
       );
     }
@@ -452,6 +463,9 @@ const UserTransactionDetail = () => {
             </Text>
             <Text fontWeight={"normal"}>
               JNE {transactionDetail?.shipping_method || "Loading..."}
+            </Text>
+            <Text fontWeight={"normal"}>
+              {transactionDetail?.shipping_address || "Loading..."}
             </Text>
           </Box>
         </VStack>

@@ -33,6 +33,7 @@ import ProductCardAdmin from "../components/ProductCardAdmin";
 import ProductBox from "../components/ProductBox";
 import SearchBar from "../components/SearchBar";
 import Carousel from "../components/Banner";
+import { useSelector } from "react-redux";
 
 const Home = () => {
   const [keywordHandler, setKeywordHandler] = useState("");
@@ -43,6 +44,9 @@ const Home = () => {
   const [sortDir, setSortDir] = useState("ASC");
   const [filter, setFilter] = useState("All");
   const [currentSearch, setCurrentSearch] = useState("");
+  const [productPusat, setProductPusat] = useState([]);
+  const authSelector = useSelector((state) => state.auth);
+  // console.log(authSelector);
   const optionsSort = [
     { value: "product_name ASC", label: "A to Z" },
     { value: "product_name DESC", label: "Z to A" },
@@ -116,12 +120,70 @@ const Home = () => {
       };
     },
   };
-
+  console.log(authSelector);
   const fetchAdminProduct = async () => {
     const maxItemsPerPage = 12;
+    if (authSelector.id === 0) {
+      try {
+        const response = await axiosInstance.get("/product/all-product/guest", {
+          params: {
+            _sortBy: sortBy,
+            _sortDir: sortDir,
+            CategoryId: filter,
+            product_name: currentSearch,
+            // _page: activePage,
+            // _limit: maxItemsPerPage,
+          },
+        });
+        // setActivePage(activePage + 1);
 
+        // setProduct([...product, ...response.data.data[0].ProductBranches]);
+        setProductPusat(response.data.data);
+
+        console.log("ituuu", response.data.data);
+
+        // console.log(response.data.data[0].ProductBranches);
+        // setTotalCount(response.data.dataCount);
+        // setMaxPage(Math.ceil(response.data.dataCount / maxItemsPerPage));
+
+        // console.log(response.data.dataCount);
+      } catch (err) {
+        console.log(err);
+      }
+    } else {
+      try {
+        const response = await axiosInstance.get("/product/nearest", {
+          params: {
+            _sortBy: sortBy,
+            _sortDir: sortDir,
+            CategoryId: filter,
+            product_name: currentSearch,
+            // _page: activePage,
+            // _limit: maxItemsPerPage,
+          },
+        });
+        // setActivePage(activePage + 1);
+
+        // setProduct([...product, ...response.data.data[0].ProductBranches]);
+        setProduct(response.data.data[0].ProductBranches);
+
+        console.log("inii", response);
+
+        // console.log(response.data.data[0].ProductBranches);
+        // setTotalCount(response.data.dataCount);
+        // setMaxPage(Math.ceil(response.data.dataCount / maxItemsPerPage));
+
+        // console.log(response.data.dataCount);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    console.log(authSelector);
+  };
+
+  const fetchProductWithoutUser = async () => {
     try {
-      const response = await axiosInstance.get("/product/nearest", {
+      const response = await axiosInstance.get("/product/all-product/guest", {
         params: {
           _sortBy: sortBy,
           _sortDir: sortDir,
@@ -134,20 +196,19 @@ const Home = () => {
       // setActivePage(activePage + 1);
 
       // setProduct([...product, ...response.data.data[0].ProductBranches]);
-      setProduct(response.data.data[0].ProductBranches);
+      setProductPusat(response.data.data);
 
-      console.log("inii", response);
+      console.log("ituuu", response.data.data);
 
       // console.log(response.data.data[0].ProductBranches);
       // setTotalCount(response.data.dataCount);
       // setMaxPage(Math.ceil(response.data.dataCount / maxItemsPerPage));
 
       // console.log(response.data.dataCount);
-    } catch (error) {
-      console.log(error);
+    } catch (err) {
+      console.log(err);
     }
   };
-  // console.log(product);
 
   const sortProductHandler = (event) => {
     setSortBy(event.value.split(" ")[0]);
@@ -171,24 +232,26 @@ const Home = () => {
     const { name, value } = target;
     formik.setFieldValue(name, value);
   };
-
-  const renderAdminProduct = () => {
-    return product.map((val) => {
-      return (
-        <ProductCardAdmin
-          key={val.id.toString()}
-          product_image={val.Product.product_image}
-          product_name={val.Product.product_name}
-          product_price={val.Product.product_price}
-          CategoryId={val.Product.Category.category_name}
-          stock={val.stock}
-          discount_amount_nominal={val.discount_amount_nominal}
-          discount_amount_percentage={val.discount_amount_percentage}
-          ProductId={val.Product.id}
-        />
-      );
-    });
+  const formatRupiah = (value) => {
+    return new Intl.NumberFormat("id-ID", {
+      style: "currency",
+      currency: "IDR",
+      minimumFractionDigits: 0,
+    }).format(value);
   };
+  const discountPriceFromBranch = (val) => {
+    return (
+      <>
+        <Text fontWeight={"bold"} textDecorationLine={"line-through"}>
+          {"Rp 9999"}
+        </Text>
+        <Text color="blue.600" fontSize="2xl">
+          {formatRupiah(val.product_price)}
+        </Text>
+      </>
+    );
+  };
+
   const renderProduct = () => {
     return product.map((val) => {
       return (
@@ -203,6 +266,21 @@ const Home = () => {
           discount_amount_nominal={val.discount_amount_nominal}
           discount_amount_percentage={val.discount_amount_percentage}
           ProductId={val.Product.id}
+          // priceProduct={discountPriceFromBranch(val)}
+        />
+      );
+    });
+  };
+  const renderProductWithoutUser = () => {
+    return productPusat.map((val) => {
+      return (
+        <ProductBox
+          key={val.id.toString()}
+          id={val.id}
+          product_image={val.product_image}
+          product_name={val.product_name}
+          product_price={val.product_price}
+          CategoryId={val.category_name}
         />
       );
     });
@@ -357,6 +435,7 @@ const Home = () => {
             <GridItem w="100%" h="10"></GridItem>
           </Grid>
           <SimpleGrid minChildWidth="180px" spacing="10px">
+            {renderProductWithoutUser()}
             {renderProduct()}
           </SimpleGrid>
         </Box>

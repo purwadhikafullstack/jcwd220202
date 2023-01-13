@@ -45,7 +45,7 @@ const CartUser = () => {
       const response = await axiosInstance.post("/transaction/checkout");
 
       setCheckoutItems(response.data.data);
-
+      console.log(response);
       if (response.data.data.id) {
         navigate(`/user/order/${response.data.data.id}`);
       }
