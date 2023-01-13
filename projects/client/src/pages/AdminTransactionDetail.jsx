@@ -200,7 +200,6 @@ const AdminTransactionDetail = () => {
     if (transactionDetail.ReferralVoucherId !== null) {
       return (
         <Text fontWeight={"normal"}>
-          {/* {transactionDetail?.ReferralVoucher?.voucher_name || "Loading..."} */}
           <Badge
             colorScheme="green"
             textAlign={"center"}
@@ -292,18 +291,20 @@ const AdminTransactionDetail = () => {
     }
   };
 
+  console.log(transactionDetail.VoucherId);
+
   const finalVoucher = () => {
     if (
       transactionDetail?.VoucherId === null &&
       transactionDetail?.ReferralVoucherId === null
     ) {
-      return <Text textAlign={"center"}>{"-"}</Text>;
+      return <Text textAlign={"center"}>{"- Rp 0"}</Text>;
     } else if (transactionDetail?.ReferralVoucher) {
       return (
         <Text>
           -{" "}
           {formatRupiah(transactionDetail?.ReferralVoucher?.discount_amount) ||
-            "Loading..."}
+            "- Rp 0"}
         </Text>
       );
     } else if (transactionDetail?.Voucher) {
@@ -317,7 +318,7 @@ const AdminTransactionDetail = () => {
               -{" "}
               {formatRupiah(
                 transactionDetail?.Voucher?.discount_amount_nominal
-              ) || "Loading..."}
+              ) || "- Rp 0"}
             </Text>
           );
         } else if (transactionDetail?.Voucher?.discount_amount_percentage) {
@@ -325,14 +326,14 @@ const AdminTransactionDetail = () => {
             (transactionDetail?.Voucher?.discount_amount_percentage / 100) *
             transactionDetail?.shipment_price;
           return (
-            <Text>- {formatRupiah(countShipmentDiscount) || "Loading..."}</Text>
+            <Text>- {formatRupiah(countShipmentDiscount) || "- Rp 0"}</Text>
           );
         }
       }
       if (
         transactionDetail?.Voucher?.VoucherType?.voucher_type === "Buy 1 Get 1"
       ) {
-        return <Text textAlign={"center"}>{"-"}</Text>;
+        return <Text textAlign={"center"}>{"- Rp 0"}</Text>;
       }
 
       if (
@@ -345,7 +346,7 @@ const AdminTransactionDetail = () => {
               -{" "}
               {formatRupiah(
                 transactionDetail?.Voucher?.discount_amount_nominal
-              ) || "Loading..."}
+              ) || "- Rp 0"}
             </Text>
           );
         } else if (transactionDetail?.Voucher?.discount_amount_percentage) {
@@ -353,7 +354,7 @@ const AdminTransactionDetail = () => {
             (transactionDetail?.Voucher?.discount_amount_percentage / 100) *
             transactionDetail?.Voucher?.Product?.product_price;
           return (
-            <Text>- {formatRupiah(countProductDiscount) || "Loading..."}</Text>
+            <Text>- {formatRupiah(countProductDiscount) || "- Rp 0"}</Text>
           );
         }
       }
@@ -381,10 +382,11 @@ const AdminTransactionDetail = () => {
         <Box display={"flex"} mt={"10px"} key={val.id.toString()}>
           <Image
             src={val.ProductBranch?.Product?.product_image || "Loading..."}
-            alt="search"
+            alt="image"
             objectFit={"contain"}
             height={"100px"}
-            maxW={"300px"}
+            width={"100px"}
+            bgColor={"white"}
             border={"2px solid #E07A5F"}
             borderRadius={"10px"}
           />
@@ -557,7 +559,7 @@ const AdminTransactionDetail = () => {
           <Box>
             <Text fontWeight={"bold"}>Address:</Text>
             <Text fontWeight={"normal"}>
-              {transactionDetail?.User?.Address?.address || "Loading"}
+              {transactionDetail?.shipping_address || "Loading..."}
             </Text>
             <Text fontWeight={"bold"} mt={"5px"}>
               Shipping Method:

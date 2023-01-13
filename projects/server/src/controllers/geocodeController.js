@@ -4,8 +4,8 @@ const { signToken } = require("../../lib/jwt");
 const { Op, QueryTypes } = require("sequelize");
 const { sequelize } = require("../../models");
 const axios = require("axios");
-const cityjson = require("../../public/citycode.json")
-const fs = require('fs');
+const cityjson = require("../../public/citycode.json");
+const fs = require("fs");
 
 axios.defaults.baseURL = "https://api.rajaongkir.com/starter";
 axios.defaults.headers.common["key"] = "694d758dd78ff55a382c3b4c55aa8593";
@@ -344,15 +344,13 @@ const geocodeController = {
   },
   testjson: async (req, res) => {
     try {
-      const response = cityjson
+      const response = cityjson;
 
       return res.status(200).json({
-        data: response
-      })
-    } catch (error) {
-      
-    }
-  }
+        data: response,
+      });
+    } catch (error) {}
+  },
 };
 
 module.exports = geocodeController;

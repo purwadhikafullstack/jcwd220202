@@ -147,7 +147,7 @@ const Home = () => {
       console.log(error);
     }
   };
-  console.log(product);
+  // console.log(product);
 
   const sortProductHandler = (event) => {
     setSortBy(event.value.split(" ")[0]);

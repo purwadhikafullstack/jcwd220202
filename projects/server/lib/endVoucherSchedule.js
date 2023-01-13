@@ -18,9 +18,7 @@ const endVoucherScheduler = schedule.scheduleJob("0 * * * * *", async () => {
       ],
     },
   });
-
   const ids = getVoucher.map((val) => val.id);
-
   await db.Voucher.update(
     {
       is_Active: 0,

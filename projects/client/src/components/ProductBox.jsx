@@ -21,7 +21,7 @@ import {
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { axiosInstance } from "../api";
 
 const ProductBox = ({
@@ -33,6 +33,8 @@ const ProductBox = ({
   product_image,
 }) => {
   const authSelector = useSelector((state) => state.auth);
+
+  const navigate = useNavigate();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -55,31 +57,33 @@ const ProductBox = ({
       minimumFractionDigits: 0,
     }).format(value);
   };
-  return (
-    <>
-      {/* ganti link ke product detail */}
-      {authSelector.is_verifed === true ? (
-        <Link to={`/product/${id}`}>
-          <Card maxW="sm">
-            <CardBody>
-              <Image
-                src={product_image}
-                alt="Green double couch with wooden legs"
-                borderRadius="lg"
-              />
-              <Stack mt="6" spacing="3">
-                <Heading size="md">{id}</Heading>
 
-                <Heading size="md">{product_name}</Heading>
+  const toProductDetail = () => {
+    if (authSelector.is_verified === true) {
+      return (
+        <Card maxW="sm" onClick={() => navigate(`/product/${id}`)}>
+          <CardBody>
+            <Image
+              src={product_image}
+              alt="Green double couch with wooden legs"
+              borderRadius="lg"
+            />
+            <Stack mt="6" spacing="3">
+              <Heading size="md">{id}</Heading>
 
-                <Text color="blue.600" fontSize="2xl">
-                  {formatRupiah(product_price)}
-                </Text>
-              </Stack>
-            </CardBody>
-          </Card>
-        </Link>
-      ) : (
+              <Heading size="md">{product_name}</Heading>
+
+              <Text color="blue.600" fontSize="2xl">
+                {formatRupiah(product_price)}
+              </Text>
+            </Stack>
+          </CardBody>
+        </Card>
+      );
+    }
+
+    if (authSelector.is_verified !== true) {
+      return (
         <Card maxW="sm" onClick={openAlert}>
           <CardBody>
             <Image
@@ -98,7 +102,14 @@ const ProductBox = ({
             </Stack>
           </CardBody>
         </Card>
-      )}
+      );
+    }
+  };
+
+  return (
+    <>
+      {toProductDetail()}
+
       {/* alert for verification */}
       <AlertDialog isOpen={isOpen} onClose={closeAlert}>
         <AlertDialogOverlay>

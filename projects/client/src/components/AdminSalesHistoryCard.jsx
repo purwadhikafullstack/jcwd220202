@@ -62,7 +62,15 @@ const SalesHistoryCard = ({
               </Box>
               <Box display={"flex"}>
                 <Text fontWeight={"bold"}>Purchase From: </Text>
-                <Text ml={"5px"}>{username || "Loading..."}</Text>
+                <Text
+                  ml={"5px"}
+                  overflow={"hidden"}
+                  textOverflow={"ellipsis"}
+                  whiteSpace={"nowrap"}
+                  maxWidth={"10px"}
+                >
+                  {username || "Loading..."}
+                </Text>
               </Box>
               <Box display={"flex"}>
                 <Text fontWeight={"bold"}>Selling Pirce:</Text>

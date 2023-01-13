@@ -42,6 +42,8 @@ import CategoryEdit from "./pages/EditCategory";
 import ProductByCategory from "./pages/ProductByCategory";
 import SprAdminStatisctic from "./pages/SprAdminStatistic";
 import AdminStatistic from "./pages/AdminStatistic";
+import UserTransactions from "./pages/UserTransaction";
+import UserTransactionDetail from "./pages/UserTransactionDetail";
 
 const App = () => {
   const authSelector = useSelector((state) => state.auth);
@@ -59,25 +61,29 @@ const App = () => {
 
       const response = await axiosInstance.get("/user/refreshToken");
 
-      if (response.data.data.RoleId === 2) {
+      if (response.data.data.RoleId === 1 || response.data.data.RoleId === 3) {
         dispatch(
           login({
+            username: response.data.data.username,
+            email: response.data.data.email,
             id: response.data.data.id,
-            RoleId: 2,
+            RoleId: response.data.data.RoleId,
+            branch_name: "",
+            is_verified: response.data.data.is_verified,
+          })
+        );
+      } else {
+        dispatch(
+          login({
+            username: response.data.data.username,
+            email: response.data.data.email,
+            id: response.data.data.id,
+            RoleId: response.data.data.RoleId,
             branch_name: response.data.data.Branch.branch_name,
+            is_verified: response.data.data.is_verified,
           })
         );
       }
-
-      dispatch(
-        login({
-          username: response.data.data.username,
-          email: response.data.data.email,
-          id: response.data.data.id,
-          RoleId: response.data.data.RoleId,
-          is_verified: response.data.data.is_verified,
-        })
-      );
 
       localStorage.setItem("auth_token", response.data.token);
       setAuthCheck(true);
@@ -290,6 +296,11 @@ const App = () => {
           <Route
             path="/product/filter/category"
             element={<ProductByCategory />}
+          />
+          <Route path="/user/transaction-list" element={<UserTransactions />} />
+          <Route
+            path="/user/transaction-detail/:id"
+            element={<UserTransactionDetail />}
           />
         </Routes>
       </Box>

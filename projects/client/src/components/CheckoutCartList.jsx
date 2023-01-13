@@ -58,9 +58,9 @@ const CheckoutCart = ({
     onDelete();
   };
 
-  useEffect(() => {
-    qtyBtnHandler()
-  }, []);
+  // useEffect(() => {
+  //   qtyBtnHandler();
+  // }, []);
 
   return (
     <>

@@ -19,7 +19,7 @@ const items = [
   {
     icon: order,
     label: "Order",
-    path: "/user/order",
+    path: "/user/transaction-list",
   },
   {
     icon: profile,
@@ -150,9 +150,9 @@ const Navigation = () => {
               </Link>
             </GridItem>
           )}
-          {location.pathname === "/user/order" ? (
+          {location.pathname === "/user/transaction-list" ? (
             <GridItem h="65px">
-              <Link to={"/user/order"}>
+              <Link to={"/user/transaction-list"}>
                 <Box display={"grid"} bgColor={"#F4F1DE"} borderRadius={"5px"}>
                   <Image
                     src={order}
@@ -172,7 +172,7 @@ const Navigation = () => {
             </GridItem>
           ) : (
             <GridItem h="65px">
-              <Link to={"/user/order"}>
+              <Link to={"/user/transaction-list"}>
                 <Box display={"grid"}>
                   <Image
                     src={order}
