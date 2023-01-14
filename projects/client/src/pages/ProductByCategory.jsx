@@ -15,7 +15,6 @@ import {
 
 import searchIcon from "../assets/search.png";
 import sortIcon from "../assets/sort.png";
-import SuperAdminNavbar from "../components/SuperAdminNavbar";
 import ProductListBar from "../components/ProductListBar";
 import { useLocation } from "react-router-dom";
 import Select from "react-select";
@@ -26,6 +25,7 @@ import ReactPaginate from "react-paginate";
 import "../style/pagination.css";
 import productNotFound from "../assets/feelsorry.png";
 import ProductCardUser from "../components/ProductCardUser";
+import NavigationBar from "../components/NavigationBar";
 
 const maxItemsPerPage = 12;
 
@@ -273,9 +273,6 @@ const ProductByCategory = () => {
       ) : (
         <Box>{renderProducts()}</Box>
       )}
-      <Box>
-        <SuperAdminNavbar />
-      </Box>
     </Box>
   );
 };

@@ -82,7 +82,12 @@ const ProductBox = ({
       if (discount_amount_nominal === 0 && discount_amount_percentage === 0) {
         return (
           <Card maxW="sm" onClick={() => navigate(`/product/${id}`)}>
-            <CardBody>
+            <CardBody
+              bgColor={"white"}
+              border={"2px solid #E07A5F"}
+              borderRadius={"10px"}
+              boxShadow={"1px 1px 4px #E07A5F"}
+            >
               <Image src={product_image} borderRadius="lg" />
               <Stack mt="6" spacing="3">
                 {/* <Heading size="md">{id}</Heading> */}
@@ -105,7 +110,12 @@ const ProductBox = ({
         const total = product_price - discount_amount_nominal;
         return (
           <Card maxW="sm" onClick={() => navigate(`/product/${id}`)}>
-            <CardBody>
+            <CardBody
+              bgColor={"white"}
+              border={"2px solid #E07A5F"}
+              borderRadius={"10px"}
+              boxShadow={"1px 1px 4px #E07A5F"}
+            >
               <Image src={product_image} borderRadius="lg" />
               <Stack mt="6" spacing="3">
                 {/* <Heading size="md">{id}</Heading> */}
@@ -132,7 +142,12 @@ const ProductBox = ({
         const total = product_price * (1 - discount_amount_percentage / 100);
         return (
           <Card maxW="sm" onClick={() => navigate(`/product/${id}`)}>
-            <CardBody>
+            <CardBody
+              bgColor={"white"}
+              border={"2px solid #E07A5F"}
+              borderRadius={"10px"}
+              boxShadow={"1px 1px 4px #E07A5F"}
+            >
               <Image src={product_image} borderRadius="lg" />
               <Stack mt="6" spacing="3">
                 {/* <Heading size="md">{id}</Heading> */}
@@ -159,8 +174,13 @@ const ProductBox = ({
 
     if (authSelector.is_verified !== true) {
       return (
-        <Card maxW="sm" onClick={openAlert}>
-          <CardBody>
+        <Card maxW="sm" onClick={openAlert} height={"auto"}>
+          <CardBody
+            bgColor={"white"}
+            border={"2px solid #E07A5F"}
+            borderRadius={"10px"}
+            boxShadow={"1px 1px 4px #E07A5F"}
+          >
             <Image src={product_image} borderRadius="lg" />
             <Stack mt="6" spacing="3">
               {/* <Heading size="md">{id}</Heading> */}

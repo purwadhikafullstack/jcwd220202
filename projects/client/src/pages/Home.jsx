@@ -382,7 +382,7 @@ const Home = () => {
         h={"100vh"}
         overflow={"scroll"}
       >
-        <Box ml={"5"} mt={"5"} position={"absolute"}>
+        <Box px={"20px"} mt={"30px"}>
           <Grid templateColumns="repeat(3, 1fr)" gap={2} mx={"15px"}>
             <GridItem w="100%" h="10">
               <Grid
@@ -434,7 +434,7 @@ const Home = () => {
             </GridItem>
             <GridItem w="100%" h="10"></GridItem>
           </Grid>
-          <SimpleGrid minChildWidth="180px" spacing="10px">
+          <SimpleGrid minChildWidth="180px" spacing="10px" mt={"30px"}>
             {renderProductWithoutUser()}
             {renderProduct()}
           </SimpleGrid>
