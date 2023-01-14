@@ -85,14 +85,14 @@ const ProductBox = ({
             <CardBody>
               <Image src={product_image} borderRadius="lg" />
               <Stack mt="6" spacing="3">
-                <Heading size="md">{id}</Heading>
+                {/* <Heading size="md">{id}</Heading> */}
 
-                <Heading size="md">{product_name}</Heading>
+                <Heading fontSize="20px">{product_name}</Heading>
                 <Box>
                   {/* <Text fontWeight={"bold"} textDecorationLine={"line-through"}>
                     {"Rp 9999"}
                   </Text> */}
-                  <Text color="blue.600" fontSize="2xl">
+                  <Text color="#E07A5F" fontSize="20px">
                     {formatRupiah(product_price)}
                   </Text>
                 </Box>
@@ -108,14 +108,18 @@ const ProductBox = ({
             <CardBody>
               <Image src={product_image} borderRadius="lg" />
               <Stack mt="6" spacing="3">
-                <Heading size="md">{id}</Heading>
+                {/* <Heading size="md">{id}</Heading> */}
 
-                <Heading size="md">{product_name}</Heading>
+                <Heading fontSize="20px">{product_name}</Heading>
                 <Box>
-                  <Text fontWeight={"bold"} textDecorationLine={"line-through"}>
+                  <Text
+                    fontWeight={"bold"}
+                    textDecorationLine={"line-through"}
+                    fontSize="20px"
+                  >
                     {formatRupiah(product_price)}
                   </Text>
-                  <Text color="blue.600" fontSize="2xl">
+                  <Text color="#E07A5F" fontSize="20px">
                     {formatRupiah(total)}
                   </Text>
                 </Box>
@@ -131,14 +135,18 @@ const ProductBox = ({
             <CardBody>
               <Image src={product_image} borderRadius="lg" />
               <Stack mt="6" spacing="3">
-                <Heading size="md">{id}</Heading>
+                {/* <Heading size="md">{id}</Heading> */}
 
-                <Heading size="md">{product_name}</Heading>
+                <Heading fontSize="20px">{product_name}</Heading>
                 <Box>
-                  <Text fontWeight={"bold"} textDecorationLine={"line-through"}>
-                    {product_price}
+                  <Text
+                    fontWeight={"bold"}
+                    textDecorationLine={"line-through"}
+                    fontSize="20px"
+                  >
+                    {formatRupiah(product_price)}
                   </Text>
-                  <Text color="blue.600" fontSize="2xl">
+                  <Text color="#E07A5F" fontSize="20px">
                     {formatRupiah(total)}
                   </Text>
                 </Box>
@@ -155,11 +163,11 @@ const ProductBox = ({
           <CardBody>
             <Image src={product_image} borderRadius="lg" />
             <Stack mt="6" spacing="3">
-              <Heading size="md">{id}</Heading>
+              {/* <Heading size="md">{id}</Heading> */}
 
-              <Heading size="md">{product_name}</Heading>
+              <Heading fontSize="20px">{product_name}</Heading>
 
-              <Text color="blue.600" fontSize="2xl">
+              <Text color="#E07A5F" fontSize="20px">
                 {formatRupiah(product_price)}
               </Text>
             </Stack>

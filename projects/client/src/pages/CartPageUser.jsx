@@ -130,7 +130,7 @@ const CartUser = () => {
           <Flex display={"flex"}>
             <Text fontSize={"38px"}> Ini adalah carttttt</Text>
           </Flex>
-          {renderCartItems()}
+          <Box mt={"40px"}>{renderCartItems()}</Box>
           <Box>
             <Button
               w={"90%"}

@@ -72,17 +72,17 @@ const CheckoutCart = ({
           fontSize={"15px"}
         >
           <Box flex="1" mx={"5px"} mt={"5px"}>
-            <Box mt={"10px"}>
+            <Box py={"25px"} px={"20px"} width={"160px"}>
               <Image
                 src={product_image}
-                alt="search"
+                alt="image"
                 objectFit={"contain"}
-                height={"80px"}
-                maxW={"300px"}
+                height={"120px"}
+                width={"120px"}
               />
             </Box>
           </Box>
-          <Box flex="1" mr={"20px"}>
+          <Box flex="1" mr={"20px"} mt={"20px"}>
             <Box>
               <Grid templateColumns="repeat(1, 1fr)" gap={1}>
                 <GridItem
@@ -96,9 +96,9 @@ const CheckoutCart = ({
                 </GridItem>
               </Grid>
             </Box>
-            <Box display={"flex"}>
+            {/* <Box display={"flex"}>
               <Text ml={"5px"}>{"TransactionId"}</Text>
-            </Box>
+            </Box> */}
             <Box display={"flex"}>
               <Text fontWeight={"bold"} textDecorationLine={"line-through"}>
                 {"Rp 9999"}
@@ -114,7 +114,7 @@ const CheckoutCart = ({
                 {formatRupiah(current_price)}
               </Text>
             </Box>
-            <Box>
+            <Box mt={"5px"}>
               <Text>{qty}</Text>
               <NumberInput
                 size="sm"
@@ -133,9 +133,11 @@ const CheckoutCart = ({
                 </NumberInputStepper>
               </NumberInput>
             </Box>
-            <Button colorScheme="red" onClick={confirmDeleteBtnHandler} ml={3}>
-              Delete
-            </Button>
+            <Box mt={"15px"}>
+              <Button colorScheme="red" onClick={confirmDeleteBtnHandler}>
+                Delete
+              </Button>
+            </Box>
           </Box>
         </Flex>
       </Box>
