@@ -17,7 +17,6 @@ import sortIcon from "../assets/sort.png";
 import Select from "react-select";
 import ReactPaginate from "react-paginate";
 import "../style/pagination.css";
-import TransactionListBar from "../components/TransactionListBar";
 import UserTransactionListCard from "../components/UserTransactionListCard";
 import { useEffect } from "react";
 import { useState } from "react";
@@ -26,6 +25,7 @@ import { useFormik } from "formik";
 import productNotFound from "../assets/feelsorry.png";
 import { useRef } from "react";
 import Navigation from "../components/NavigationBar";
+import TransactionHeaderHome from "../components/TransactionHeaderHome";
 
 const maxItemsPerPage = 12;
 
@@ -188,7 +188,7 @@ const UserTransactions = () => {
     >
       <Box>
         <Box>
-          <TransactionListBar />
+          <TransactionHeaderHome />
         </Box>
         <Grid templateColumns="repeat(3, 1fr)" gap={2} mx={"15px"} mt={"80px"}>
           <GridItem w="100%" h="10">

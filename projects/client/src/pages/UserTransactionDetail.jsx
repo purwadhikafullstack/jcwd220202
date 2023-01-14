@@ -22,7 +22,7 @@ import {
   VStack,
 } from "@chakra-ui/react";
 
-import TransactionListBar from "../components/TransactionListBar";
+import TransactionHeaderHome from "../components/TransactionHeaderHome";
 import { useState } from "react";
 import { axiosInstance } from "../api";
 import { Link, useNavigate, useParams } from "react-router-dom";
@@ -198,6 +198,22 @@ const UserTransactionDetail = () => {
         </>
       );
     }
+    if (transactionDetail?.transaction_status === "Waiting For Approval") {
+      return (
+        <>
+          <Box>
+            <Badge
+              colorScheme="green"
+              textAlign={"center"}
+              width={"auto"}
+              fontSize={"13px"}
+            >
+              Waiting For Approval
+            </Badge>
+          </Box>
+        </>
+      );
+    }
 
     if (transactionDetail?.transaction_status === "Payment Approved") {
       return (
@@ -264,7 +280,7 @@ const UserTransactionDetail = () => {
       transactionDetail?.VoucherId === null &&
       transactionDetail?.ReferralVoucherId === null
     ) {
-      return <Text textAlign={"center"}>{"-"}</Text>;
+      return <Text textAlign={"center"}>{"- Rp 0"}</Text>;
     } else if (transactionDetail?.ReferralVoucher) {
       return (
         <Text>
@@ -523,7 +539,7 @@ const UserTransactionDetail = () => {
         </VStack>
       </Box>
       <Box>
-        <TransactionListBar />
+        <TransactionHeaderHome />
       </Box>
     </Box>
   );

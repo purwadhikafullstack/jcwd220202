@@ -767,6 +767,9 @@ const transactionController = {
           where: { [Op.and]: [{ UserId: req.user.id }, { id: req.params.id }] },
         }
       );
+      // await db.ProductBranch.bulkCreate(createTransactionHistory, {
+      //   updateOnDuplicate: ["stock", "current_stock"],
+      // });
 
       return res.status(200).json({
         message: "product history created",
