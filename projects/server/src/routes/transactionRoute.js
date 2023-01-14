@@ -30,8 +30,9 @@ router.get(
 
 router.patch(
   "/payment-done/check/:id",
+  verifyToken,
   uploader({
-    acceptedFileTypes: ["png", "jpeg", "jpg"],
+    acceptedFileTypes: ["png", "jpg"],
     filePrefix: "PROF",
   }).single("payment_proof_img"),
   transactionController.updatePayment

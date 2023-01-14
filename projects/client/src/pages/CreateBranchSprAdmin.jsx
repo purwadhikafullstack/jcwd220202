@@ -9,6 +9,7 @@ import {
   Input,
   InputGroup,
   InputRightElement,
+  Select,
   Spacer,
   useToast,
 } from "@chakra-ui/react";
@@ -20,6 +21,7 @@ import grocerinLogo from "../assets/grocerin_logo_aja.png";
 import backIcon from "../assets/back_icon.png";
 import signUp from "../assets/signup.png";
 import { axiosInstance } from "../api";
+import citycode from "../local-json/CityCode.json";
 
 const CreateBranch = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -33,6 +35,12 @@ const CreateBranch = () => {
 
   const toggleConfirmPassword = () => {
     setShowConfirmPassword(!showConfirmPassword);
+  };
+
+  const address = () => {
+    return citycode.map((item) => {
+      return <option value={item.city_name}>{item.city_name}</option>;
+    });
   };
 
   const toast = useToast();
@@ -229,16 +237,18 @@ const CreateBranch = () => {
             </FormControl>
             <FormControl mt={"10px"} isInvalid={formik.errors.cityName}>
               <FormLabel fontWeight={"bold"}>City Name</FormLabel>
-              <Input
-                type="text"
-                placeholder="Enter your city name"
-                value={formik.values.cityName}
+              <Select
                 name="cityName"
+                value={formik.values.cityName}
+                placeholder="Enter your city name"
+                onChange={formChangeHandler}
                 borderRadius={"15px"}
                 _placeholder={{ color: "black.500" }}
+                size="md"
                 bgColor={"white"}
-                onChange={formChangeHandler}
-              />
+              >
+                {address()}
+              </Select>
               <FormErrorMessage>{formik.errors.cityName}</FormErrorMessage>
             </FormControl>
             <FormControl mt={"10px"} isInvalid={formik.errors.branch_name}>

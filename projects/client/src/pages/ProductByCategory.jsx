@@ -9,8 +9,6 @@ import {
   Input,
   InputGroup,
   InputRightElement,
-  ListItem,
-  OrderedList,
   Text,
   useToast,
 } from "@chakra-ui/react";
@@ -19,7 +17,7 @@ import searchIcon from "../assets/search.png";
 import sortIcon from "../assets/sort.png";
 import SuperAdminNavbar from "../components/SuperAdminNavbar";
 import ProductListBar from "../components/ProductListBar";
-import { Link, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import Select from "react-select";
 import { axiosInstance } from "../api";
 import { useEffect, useState } from "react";
@@ -92,8 +90,6 @@ const ProductByCategory = () => {
   const search = useLocation().search;
   const category_id = new URLSearchParams(search).get("category_id");
 
-  console.log(category_id);
-
   const fetchProducts = async () => {
     try {
       const response = await axiosInstance.get(
@@ -110,22 +106,11 @@ const ProductByCategory = () => {
       );
 
       setProduct(response.data.data[0].ProductBranches);
-
-      //   if (response.data.data.length > 0) {
-      //     setProduct(response.data.data);
-      //   } else {
-      //     toast({
-      //       status: "info",
-      //       title: "Product empty",
-      //     });
-      //   }
-      //   setTotalProducts(response.data.dataCount);
+      setTotalProducts(response.data.dataCount);
     } catch (error) {
       console.log(error);
     }
   };
-
-  console.log(product);
 
   const maxPage = Math.ceil(totalProducts / maxItemsPerPage);
 
@@ -138,12 +123,6 @@ const ProductByCategory = () => {
   const sortProductHandler = (event) => {
     setSortBy(event.value.split(" ")[0]);
     setSortDir(event.value.split(" ")[1]);
-  };
-
-  const filterProductHandler = (event) => {
-    setFilter(event.value);
-
-    setActivePage(1);
   };
 
   const formik = useFormik({
@@ -166,9 +145,9 @@ const ProductByCategory = () => {
         <ProductCardUser
           key={val.id.toString()}
           product_name={val.Product.product_name}
-          product_price={val.product_price}
-          product_description={val.product_description}
-          product_image={val.product_image}
+          product_price={val.Product.product_price}
+          product_description={val.Product.product_description}
+          product_image={val.Product.product_image}
           id={val.ProductId}
         />
       );

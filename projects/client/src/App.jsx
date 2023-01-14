@@ -275,7 +275,7 @@ const App = () => {
             element={<AdminProductMutation />}
           />
 
-          <Route path="/404" element={<NotFound />} />
+          <Route path="/*" element={<NotFound />} />
           <Route path="/super-admin/category/:id" element={<CategoryEdit />} />
           <Route path="/super-admin/create-branch" element={<CreateBranch />} />
           <Route path="/super-admin/branch" element={<UserSprAdmin />} />
