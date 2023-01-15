@@ -36,6 +36,7 @@ import Carousel from "../components/Banner";
 import { useSelector } from "react-redux";
 import ReactPaginate from "react-paginate";
 import grocerinLogo from "../assets/grocerin_logo_aja.png";
+import { useRef } from "react";
 
 const Home = () => {
   const [keywordHandler, setKeywordHandler] = useState("");
@@ -66,6 +67,7 @@ const Home = () => {
   }, []);
 
   const navigate = useNavigate();
+  const myRef = useRef(null);
 
   const redirectCategory = (id) => {
     let path = `/product/filter/category?category_id=${id}`;
@@ -117,9 +119,8 @@ const Home = () => {
     let currentPage = data.selected + 1;
 
     setActivePage(currentPage);
+    myRef.current.scrollIntoView();
   };
-  console.log(activePage);
-  console.log(product);
 
   const sortProductHandler = (e) => {
     setSortBy(e.split(" ")[0]);
@@ -140,12 +141,27 @@ const Home = () => {
     formik.setFieldValue(name, value);
   };
 
-  const formatRupiah = (value) => {
-    return new Intl.NumberFormat("id-ID", {
-      style: "currency",
-      currency: "IDR",
-      minimumFractionDigits: 0,
-    }).format(value);
+  const pagination = () => {
+    return (
+      <ReactPaginate
+        previousLabel={"<"}
+        nextLabel={">"}
+        breakLabel={"..."}
+        pageCount={maxPage}
+        marginPagesDisplayed={0}
+        pageRangeDisplayed={0}
+        onPageChange={handlePageClick}
+        containerClassName={"pagination justify-content-center"}
+        pageClassName={"page-item"}
+        pageLinkClassName={"page-link"}
+        previousClassName={"page-item"}
+        previousLinkClassName={"page-link"}
+        nextClassName={"page-item"}
+        nextLinkClassName={"page-link"}
+        breakClassName={"page-item"}
+        breakLinkClassName={"page-link"}
+      />
+    );
   };
 
   const renderProduct = () => {
@@ -343,6 +359,7 @@ const Home = () => {
         position={"sticky"}
         top={"80px"}
         // overflow={"scroll"}
+        ref={myRef}
       >
         <Box px={"20px"} mt={"30px"}>
           <Grid templateColumns="repeat(2, 1fr)" gap={5}>
@@ -377,26 +394,7 @@ const Home = () => {
                 </GridItem>
               </Grid>
             </GridItem>
-            <GridItem w="100%" h="10">
-              <ReactPaginate
-                previousLabel={"previous"}
-                nextLabel={"next"}
-                breakLabel={"..."}
-                pageCount={maxPage}
-                marginPagesDisplayed={5}
-                pageRangeDisplayed={1}
-                onPageChange={handlePageClick}
-                containerClassName={"pagination justify-content-center"}
-                pageClassName={"page-item"}
-                pageLinkClassName={"page-link"}
-                previousClassName={"page-item"}
-                previousLinkClassName={"page-link"}
-                nextClassName={"page-item"}
-                nextLinkClassName={"page-link"}
-                breakClassName={"page-item"}
-                breakLinkClassName={"page-link"}
-              />
-            </GridItem>
+            <GridItem w="100%" h="10"></GridItem>
           </Grid>
           <SimpleGrid minChildWidth="180px" spacing="10px" mt={"30px"}>
             {renderProductWithoutUser()}
@@ -404,12 +402,12 @@ const Home = () => {
           </SimpleGrid>
           <Box marginTop={"20px"}>
             <ReactPaginate
-              previousLabel={"previous"}
-              nextLabel={"next"}
+              previousLabel={"<"}
+              nextLabel={">"}
               breakLabel={"..."}
               pageCount={maxPage}
-              marginPagesDisplayed={5}
-              pageRangeDisplayed={1}
+              marginPagesDisplayed={1}
+              pageRangeDisplayed={2}
               onPageChange={handlePageClick}
               containerClassName={"pagination justify-content-center"}
               pageClassName={"page-item"}
@@ -420,6 +418,7 @@ const Home = () => {
               nextLinkClassName={"page-link"}
               breakClassName={"page-item"}
               breakLinkClassName={"page-link"}
+              activeClassName={"active"}
             />
           </Box>
         </Box>
