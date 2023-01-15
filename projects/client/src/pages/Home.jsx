@@ -121,6 +121,8 @@ const Home = () => {
     setActivePage(currentPage);
     myRef.current.scrollIntoView();
   };
+  console.log(activePage);
+  console.log(product);
 
   const sortProductHandler = (e) => {
     setSortBy(e.split(" ")[0]);
@@ -394,7 +396,6 @@ const Home = () => {
                 </GridItem>
               </Grid>
             </GridItem>
-            <GridItem w="100%" h="10"></GridItem>
           </Grid>
           <SimpleGrid minChildWidth="180px" spacing="10px" mt={"30px"}>
             {renderProductWithoutUser()}
