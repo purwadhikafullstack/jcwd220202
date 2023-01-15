@@ -568,7 +568,7 @@ const AdminTransactionDetail = () => {
               Shipping Method:
             </Text>
             <Text fontWeight={"normal"}>
-              {`JNE ${transactionDetail?.shipping_method}` || "Loading..."}
+              {`${transactionDetail?.shipping_method}` || "Loading..."}
             </Text>
           </Box>
         </VStack>
