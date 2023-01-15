@@ -146,6 +146,7 @@ const productController = {
             include: [
               {
                 model: db.ProductBranch,
+                where: { stock: { [Op.gt]: 0 } },
                 include: [
                   {
                     model: db.Product,
@@ -201,6 +202,7 @@ const productController = {
           include: [
             {
               model: db.ProductBranch,
+              where: { stock: { [Op.gt]: 0 } },
               include: [
                 {
                   model: db.Product,
@@ -253,6 +255,7 @@ const productController = {
         include: [
           {
             model: db.ProductBranch,
+            where: { stock: { [Op.gt]: 0 } },
             include: [
               {
                 model: db.Product,
@@ -388,8 +391,6 @@ const productController = {
 
       const parsePickBranch = JSON.parse(JSON.stringify(pickBranch));
 
-      console.log(parsePickBranch[0].id);
-
       const {
         product_name = "",
         product_price = "",
@@ -653,6 +654,92 @@ const productController = {
       console.log(err);
       return res.status(500).json({
         message: "server error",
+      });
+    }
+  },
+  showNoUserProduct: async (req, res) => {
+    try {
+      const {
+        product_name = "",
+        product_price = "",
+        CategoryId = "",
+        _sortBy = "product_name",
+        _sortDir = "ASC",
+        _limit = 12,
+        _page = 1,
+      } = req.query;
+
+      if (
+        _sortBy === "product_name" ||
+        _sortBy === "CategoryId" ||
+        _sortBy === "product_price" ||
+        product_name ||
+        product_price ||
+        CategoryId
+      ) {
+        if (!Number(CategoryId)) {
+          const findBranchById = await db.Product.findAndCountAll({
+            limit: Number(_limit),
+            offset: (_page - 1) * _limit,
+            subQuery: false,
+            where: {
+              is_Deleted: false,
+            },
+
+            order: [[_sortBy, _sortDir]],
+          });
+
+          // const parseFindBranchById = JSON.parse(
+          //   JSON.stringify(findBranchById)
+          // );
+
+          // const findBranchData = parseFindBranchById[0].ProductBranches;
+
+          // console.log(findBranchData);
+
+          return res.status(200).json({
+            data: findBranchById.rows,
+            dataCount: findBranchById.count,
+            message: "get product data",
+          });
+        }
+
+        const findBranchById = await db.Product.findAndCountAll({
+          limit: Number(_limit),
+          offset: (_page - 1) * _limit,
+          subQuery: false,
+          where: {
+            is_Deleted: false,
+          },
+
+          order: [[_sortBy, _sortDir]],
+        });
+
+        // const parseFindBranchById = JSON.parse(JSON.stringify(findBranchById));
+
+        // const findBranchData = parseFindBranchById[0].ProductBranches;
+
+        return res.status(200).json({
+          message: "get branch data",
+          data: findBranchById.rows,
+          dataCount: findBranchById.count,
+        });
+      }
+
+      // const parseFindBranchById = JSON.parse(JSON.stringify(findBranchById));
+
+      // const findBranchData = parseFindBranchById[0].ProductBranches;
+      // --------------------------------------------------
+      return res.status(200).json({
+        message: "Showing all products",
+        result: result,
+        lastId: result.length ? result[result.length - 1].id : 0,
+        hasMore: result.length >= limit ? true : false,
+      });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({
+        message: "Server error showing products",
       });
     }
   },

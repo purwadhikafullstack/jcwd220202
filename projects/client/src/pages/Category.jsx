@@ -3,6 +3,7 @@ import Navigation from "../components/NavigationBar";
 import { axiosInstance } from "../api";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import CategoryListBar from "../components/CategoryListBar";
 
 const CategoryList = () => {
   const [category, setCategory] = useState([]);
@@ -31,15 +32,19 @@ const CategoryList = () => {
   return (
     <Box h={"932px"} bgColor={"#F4F1DE"} fontFamily={"roboto"}>
       <Box>
-        <Heading p={"30px"} size="md">
+        <CategoryListBar />
+      </Box>
+      <Box>
+        {/* <Heading p={"30px"} size="md">
           Category
-        </Heading>
+        </Heading> */}
         <SimpleGrid
           px={"10px"}
           columns={"4"}
           spacing={5}
           textAlign={"center"}
           alignItems={"center"}
+          pt={"110px"}
         >
           {category.map((item) => {
             return (
@@ -61,7 +66,6 @@ const CategoryList = () => {
           })}
         </SimpleGrid>
       </Box>
-      <Navigation />
     </Box>
   );
 };

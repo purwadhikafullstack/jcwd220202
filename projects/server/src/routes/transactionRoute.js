@@ -30,8 +30,9 @@ router.get(
 
 router.patch(
   "/payment-done/check/:id",
+  verifyToken,
   uploader({
-    acceptedFileTypes: ["png", "jpeg", "jpg"],
+    acceptedFileTypes: ["png", "jpg"],
     filePrefix: "PROF",
   }).single("payment_proof_img"),
   transactionController.updatePayment
@@ -42,10 +43,16 @@ router.get(
   transactionController.getTransactionData
 );
 router.post("/", transactionController.createPayment);
-router.get("/all-transaction", transactionController.getAllTransactionUser);
+router.get(
+  "/all-transaction",
+  verifyToken,
+  transactionController.getAllTransactionUser
+);
 router.get(
   "/detail-transaction/:id",
+  verifyToken,
   transactionController.userTransactionById
 );
+router.post("/history/:id", verifyToken, transactionController.orderAccepted);
 
 module.exports = router;

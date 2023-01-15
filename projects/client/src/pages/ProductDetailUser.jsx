@@ -15,8 +15,8 @@ import { useParams } from "react-router-dom";
 const ProductDetailUser = () => {
   const toast = useToast();
   const params = useParams();
-  const [productDetails, setProductDetails] = useState();
-  const [productStock, setProductStock] = useState();
+  const [productDetails, setProductDetails] = useState({});
+  const [productStock, setProductStock] = useState({});
 
   const formatRupiah = (value) => {
     return new Intl.NumberFormat("id-ID", {
@@ -36,13 +36,37 @@ const ProductDetailUser = () => {
       console.log(err);
     }
   };
+  console.log("stok", productStock);
+  console.log("deteil", productDetails);
+  const priceAfterDisc = () => {
+    let totalPrice = 0;
+    if (
+      Number(productStock?.discount_amount_nominal) === 0 &&
+      Number(productStock?.discount_amount_percentage) === 0
+    ) {
+      totalPrice = productDetails?.product_price;
+      return totalPrice;
+    }
+    if (Number(productStock?.discount_amount_nominal) !== 0) {
+      totalPrice =
+        productDetails?.product_price -
+        Number(productStock?.discount_amount_nominal);
+      return totalPrice;
+    }
+    if (Number(productStock?.discount_amount_percentage) !== 0) {
+      totalPrice =
+        productDetails?.product_price *
+        (1 - Number(productStock?.discount_amount_percentage) / 100);
+      return totalPrice;
+    }
+  };
 
   const pushToCart = async () => {
     try {
       let productToAdd = {
         ProductBranchId: productStock.id,
         quantity: 1,
-        current_price: productDetails.product_price,
+        current_price: priceAfterDisc(),
       };
       await axiosInstance.post("/transaction/addcart", productToAdd);
       console.log(productToAdd);
@@ -92,7 +116,7 @@ const ProductDetailUser = () => {
                 fontWeight={"extrabold"}
                 color={"#E07A5F"}
               >
-                {formatRupiah(productDetails?.product_price)}
+                {formatRupiah(priceAfterDisc())}
               </Text>
             </Box>
 

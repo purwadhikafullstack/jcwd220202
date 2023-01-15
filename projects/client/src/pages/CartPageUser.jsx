@@ -45,7 +45,7 @@ const CartUser = () => {
       const response = await axiosInstance.post("/transaction/checkout");
 
       setCheckoutItems(response.data.data);
-
+      console.log(response);
       if (response.data.data.id) {
         navigate(`/user/order/${response.data.data.id}`);
       }
@@ -106,17 +106,26 @@ const CartUser = () => {
     <>
       <CartHeader />
       {!cartItems.length ? (
-        <Box display={"grid"} mt={"15vh"}>
-          <Text textAlign={"center"} fontWeight={"bold"}>
-            No item(s) found
-          </Text>
-          <Image
-            src={productNotFound}
-            alt="not found"
-            width={"70%"}
-            objectFit={"contain"}
-            justifySelf={"center"}
-          />
+        <Box
+          backgroundColor={"#F4F1DE"}
+          height={"100vh"}
+          fontFamily={"roboto"}
+          fontSize={"16px"}
+          overflow={"scroll"}
+          pb={"120px"}
+        >
+          <Box display={"grid"} mt={"25vh"}>
+            <Text textAlign={"center"} fontWeight={"bold"}>
+              No item(s) found
+            </Text>
+            <Image
+              src={productNotFound}
+              alt="not found"
+              width={"70%"}
+              objectFit={"contain"}
+              justifySelf={"center"}
+            />
+          </Box>
         </Box>
       ) : (
         <Box
@@ -130,7 +139,7 @@ const CartUser = () => {
           <Flex display={"flex"}>
             <Text fontSize={"38px"}> Ini adalah carttttt</Text>
           </Flex>
-          {renderCartItems()}
+          <Box mt={"40px"}>{renderCartItems()}</Box>
           <Box>
             <Button
               w={"90%"}
@@ -141,7 +150,7 @@ const CartUser = () => {
               borderRadius={"20px"}
               onClick={cartItems.length == 0 ? noItem : checkoutButton}
             >
-              Checkout me!
+              Checkout
             </Button>
           </Box>
         </Box>

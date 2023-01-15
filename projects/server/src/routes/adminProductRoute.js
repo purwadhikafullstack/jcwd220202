@@ -72,6 +72,7 @@ router.get(
 
 router.post(
   "/upload",
+  verifyToken,
   uploadProduct({
     acceptedFileTypes: ["png", "jpeg", "jpg"],
   }).single("product_image"),
