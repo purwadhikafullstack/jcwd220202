@@ -434,7 +434,7 @@ const transactionController = {
         },
       });
 
-      console.log(JSON.parse(JSON.stringify(getVoucher)));
+      // console.log(JSON.parse(JSON.stringify(getVoucher)));
       return res.status(200).json({
         message: "Fetching all voucher available",
         data: getVoucher,
