@@ -291,6 +291,8 @@ const AdminTransactionDetail = () => {
     }
   };
 
+  console.log(transactionDetail.VoucherId);
+
   const finalVoucher = () => {
     if (
       transactionDetail?.VoucherId === null &&
