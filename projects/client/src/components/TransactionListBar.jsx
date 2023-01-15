@@ -26,7 +26,7 @@ const TransactionListBar = () => {
             src={backIcon}
             alt="back"
             height={"40px"}
-            onClick={() => navigate(`/`)}
+            onClick={() => navigate(-1)}
           />
         </Box>
         <Spacer />
