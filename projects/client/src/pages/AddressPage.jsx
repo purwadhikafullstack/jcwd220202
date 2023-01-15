@@ -261,34 +261,6 @@ const AddressPage = () => {
             overflow={"scroll"}
             pb={"120px"}
           >
-            <FormControl>
-              <InputGroup>
-                <Input
-                  name="cityName"
-                  placeholder="Search Product"
-                  _placeholder={{ color: "black.500" }}
-                  // value={formik.values.cityName}
-                  // onChange={formChangeHandler}
-                  bgColor={"white"}
-                  height={"40px"}
-                  marginLeft={"6px"}
-                />
-                <InputRightElement marginRight={"5px"}>
-                  <Button
-                    size="sm"
-                    color={"white"}
-                    bgColor={"#F2CC8F"}
-                    fontSize={"16px"}
-                    _hover={{
-                      bgColor: "#F2CC8F",
-                    }}
-                    // onClick={formik.handleSubmit}
-                  >
-                    +
-                  </Button>
-                </InputRightElement>
-              </InputGroup>
-            </FormControl>
             <Select
               placeholder={"Search city"}
               options={renderAddressAvailable}
@@ -297,7 +269,7 @@ const AddressPage = () => {
               }}
               onChange={(value) => formChangeHandler(value)}
             />
-            <Button onClick={searchAddress}>Tambah address!</Button>
+            <Button onClick={searchAddress}>+ add address</Button>
 
             {/* modal address */}
             <Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose}>
@@ -324,7 +296,7 @@ const AddressPage = () => {
                   <Button colorScheme="blue" mr={3} onClick={onClose}>
                     Close
                   </Button>
-                  <Button onClick={submitAddress}>Yakin deh ditambah!</Button>
+                  <Button onClick={submitAddress}>Add this address</Button>
                 </ModalFooter>
               </ModalContent>
             </Modal>

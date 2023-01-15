@@ -34,6 +34,8 @@ import ProductBox from "../components/ProductBox";
 import SearchBar from "../components/SearchBar";
 import Carousel from "../components/Banner";
 import { useSelector } from "react-redux";
+import ReactPaginate from "react-paginate";
+import grocerinLogo from "../assets/grocerin_logo_aja.png";
 
 const Home = () => {
   const [keywordHandler, setKeywordHandler] = useState("");
@@ -46,13 +48,8 @@ const Home = () => {
   const [currentSearch, setCurrentSearch] = useState("");
   const [productPusat, setProductPusat] = useState([]);
   const authSelector = useSelector((state) => state.auth);
-  // console.log(authSelector);
-  const optionsSort = [
-    { value: "product_name ASC", label: "A to Z" },
-    { value: "product_name DESC", label: "Z to A" },
-    { value: "product_price ASC", label: "Lowest to Highest price" },
-    { value: "product_price DESC", label: "Highest to Lowest Price" },
-  ];
+  const [activePage, setActivePage] = useState(1);
+  const [totalProduct, setTotalProduct] = useState(0);
 
   const fetchCategory = async () => {
     try {
@@ -63,13 +60,6 @@ const Home = () => {
       console.log(error);
     }
   };
-
-  const renderCategory = category.map((val) => {
-    return {
-      value: val.id,
-      label: val.category_name,
-    };
-  });
 
   useEffect(() => {
     fetchCategory();
@@ -82,47 +72,8 @@ const Home = () => {
     navigate(path);
   };
 
-  const colourStyles = {
-    control: (base) => ({
-      ...base,
-      height: "40px",
-      width: "90px",
-      color: "red",
-      backgroundColor: "none",
-      border: "none",
-      boxShadow: "none",
-      paddingRight: "15px",
-    }),
-    dropdownIndicator: (base) => ({
-      ...base,
-      color: "black",
-      display: "none",
-    }),
-    indicatorSeparator: (base) => ({
-      ...base,
-      display: "none",
-    }),
-    menu: (base) => ({
-      ...base,
-      fontFamily: "roboto",
-      fontSize: "14px",
-      width: "150px",
-      color: "black",
-    }),
-    placeholder: (defaultStyles) => {
-      return {
-        ...defaultStyles,
-        color: "black",
-        fontWeight: "bold",
-        fontSize: "15px",
-        fontFamily: "roboto",
-        paddingLeft: "5px",
-      };
-    },
-  };
-  console.log(authSelector);
+  const maxItemsPerPage = 6;
   const fetchAdminProduct = async () => {
-    const maxItemsPerPage = 12;
     if (authSelector.id === 0) {
       try {
         const response = await axiosInstance.get("/product/all-product/guest", {
@@ -131,22 +82,11 @@ const Home = () => {
             _sortDir: sortDir,
             CategoryId: filter,
             product_name: currentSearch,
-            // _page: activePage,
-            // _limit: maxItemsPerPage,
+            _page: activePage,
+            _limit: maxItemsPerPage,
           },
         });
-        // setActivePage(activePage + 1);
-
-        // setProduct([...product, ...response.data.data[0].ProductBranches]);
         setProductPusat(response.data.data);
-
-        console.log("ituuu", response.data.data);
-
-        // console.log(response.data.data[0].ProductBranches);
-        // setTotalCount(response.data.dataCount);
-        // setMaxPage(Math.ceil(response.data.dataCount / maxItemsPerPage));
-
-        // console.log(response.data.dataCount);
       } catch (err) {
         console.log(err);
       }
@@ -156,67 +96,34 @@ const Home = () => {
           params: {
             _sortBy: sortBy,
             _sortDir: sortDir,
-            CategoryId: filter,
             product_name: currentSearch,
-            // _page: activePage,
-            // _limit: maxItemsPerPage,
+            _page: activePage,
+            _limit: maxItemsPerPage,
           },
         });
-        // setActivePage(activePage + 1);
-
-        // setProduct([...product, ...response.data.data[0].ProductBranches]);
         setProduct(response.data.data[0].ProductBranches);
+        setTotalProduct(response.data.dataCount);
 
         console.log("inii", response);
-
-        // console.log(response.data.data[0].ProductBranches);
-        // setTotalCount(response.data.dataCount);
-        // setMaxPage(Math.ceil(response.data.dataCount / maxItemsPerPage));
-
-        // console.log(response.data.dataCount);
       } catch (error) {
         console.log(error);
       }
     }
-    console.log(authSelector);
   };
 
-  const fetchProductWithoutUser = async () => {
-    try {
-      const response = await axiosInstance.get("/product/all-product/guest", {
-        params: {
-          _sortBy: sortBy,
-          _sortDir: sortDir,
-          CategoryId: filter,
-          product_name: currentSearch,
-          // _page: activePage,
-          // _limit: maxItemsPerPage,
-        },
-      });
-      // setActivePage(activePage + 1);
+  const maxPage = Math.ceil(totalProduct / maxItemsPerPage);
 
-      // setProduct([...product, ...response.data.data[0].ProductBranches]);
-      setProductPusat(response.data.data);
+  const handlePageClick = (data) => {
+    let currentPage = data.selected + 1;
 
-      console.log("ituuu", response.data.data);
-
-      // console.log(response.data.data[0].ProductBranches);
-      // setTotalCount(response.data.dataCount);
-      // setMaxPage(Math.ceil(response.data.dataCount / maxItemsPerPage));
-
-      // console.log(response.data.dataCount);
-    } catch (err) {
-      console.log(err);
-    }
+    setActivePage(currentPage);
   };
+  console.log(activePage);
+  console.log(product);
 
-  const sortProductHandler = (event) => {
-    setSortBy(event.value.split(" ")[0]);
-    setSortDir(event.value.split(" ")[1]);
-  };
-
-  const filterProductHandler = (event) => {
-    setFilter(event.value);
+  const sortProductHandler = (e) => {
+    setSortBy(e.split(" ")[0]);
+    setSortDir(e.split(" ")[1]);
   };
 
   const formik = useFormik({
@@ -232,24 +139,13 @@ const Home = () => {
     const { name, value } = target;
     formik.setFieldValue(name, value);
   };
+
   const formatRupiah = (value) => {
     return new Intl.NumberFormat("id-ID", {
       style: "currency",
       currency: "IDR",
       minimumFractionDigits: 0,
     }).format(value);
-  };
-  const discountPriceFromBranch = (val) => {
-    return (
-      <>
-        <Text fontWeight={"bold"} textDecorationLine={"line-through"}>
-          {"Rp 9999"}
-        </Text>
-        <Text color="blue.600" fontSize="2xl">
-          {formatRupiah(val.product_price)}
-        </Text>
-      </>
-    );
   };
 
   const renderProduct = () => {
@@ -266,7 +162,6 @@ const Home = () => {
           discount_amount_nominal={val.discount_amount_nominal}
           discount_amount_percentage={val.discount_amount_percentage}
           ProductId={val.Product.id}
-          // priceProduct={discountPriceFromBranch(val)}
         />
       );
     });
@@ -285,14 +180,77 @@ const Home = () => {
       );
     });
   };
-
   useEffect(() => {
     fetchAdminProduct();
-  }, [sortBy, sortDir, filter, currentSearch]);
-
+  }, [sortBy, sortDir, filter, currentSearch, activePage]);
+  // useEffect(() => {
+  //   stickyHeader();
+  // }, []);
   return (
     <Box bgColor={"#81B29A"} mt={"20px"}>
-      <SearchBar />
+      <Box
+        pt={"10px"}
+        backgroundColor={"#81B29A"}
+        height={"75px"}
+        position={"fixed"}
+        top={"0"}
+        right={"0"}
+        left={"0"}
+        fontWeight={"bold"}
+        zIndex={"4"}
+        margin={"auto"}
+        maxWidth={"480px"}
+      >
+        <Flex display={"flex"}>
+          <FormControl pt={"5px"}>
+            <InputGroup size="md">
+              <InputRightElement
+                children={<SearchIcon color="F2CC8F" />}
+                size="md"
+                mr={"5"}
+                onClick={formik.handleSubmit}
+              />
+              <Input
+                ml={"5"}
+                mr={"5"}
+                variant="outline"
+                bgColor={"white"}
+                size="md"
+                placeholder="Search product name"
+                name="search"
+                value={formik.values.search}
+                onChange={formChangeHandler}
+              />
+            </InputGroup>
+          </FormControl>
+          {!authSelector.RoleId == "1" ? (
+            <Box
+              p={"3"}
+              mr={"5"}
+              color="#E07A5F"
+              borderRadius="10px"
+              as="b"
+              _hover={{
+                background: "white",
+                color: "#E07A5F",
+                transition: "all 1000ms ease",
+                cursor: "pointer",
+              }}
+            >
+              <Link to="/login/user">Login</Link>
+            </Box>
+          ) : (
+            <Image
+              src={grocerinLogo}
+              alt="logo"
+              height={"50px"}
+              display={"block"}
+              marginLeft={"auto"}
+              marginRight={5}
+            />
+          )}
+        </Flex>
+      </Box>
       <Box h={"200px"} bgColor={"#F4F1DE"} mt={"75px"}>
         <Carousel />
       </Box>
@@ -375,20 +333,23 @@ const Home = () => {
           </Link>
         </SimpleGrid>
       )}
+
       <Box
         bgColor={"#F4F1DE"}
         mt={"10px"}
-        position={"relative"}
-        h={"100vh"}
-        overflow={"scroll"}
+        mb={"80px"}
+        // position={"relative"}
+        // h={"100vh"}
+        position={"sticky"}
+        top={"80px"}
+        // overflow={"scroll"}
       >
         <Box px={"20px"} mt={"30px"}>
-          <Grid templateColumns="repeat(3, 1fr)" gap={2} mx={"15px"}>
+          <Grid templateColumns="repeat(2, 1fr)" gap={5}>
             <GridItem w="100%" h="10">
               <Grid
                 templateColumns="repeat(1, 1fr)"
                 textAlign={"Left"}
-                bgColor={"#81B29A"}
                 borderRadius={"5px"}
               >
                 <GridItem w="100%" h="10" display={"flex"} ml={"8px"}>
@@ -400,44 +361,67 @@ const Home = () => {
                     mt={"10px"}
                   />
                   <Select
-                    options={optionsSort}
-                    styles={colourStyles}
+                    bgColor={"#81B29A"}
                     placeholder={"Sort"}
-                    onChange={sortProductHandler}
-                  />
+                    onChange={(e) => sortProductHandler(e.target.value)}
+                  >
+                    <option value="product_name ASC">A to Z</option>
+                    <option value="product_name DESC">Z to A</option>
+                    <option value="product_price ASC">
+                      Lowest to Highest price
+                    </option>
+                    <option value="product_price DESC">
+                      Highest to Lowest Price
+                    </option>
+                  </Select>
                 </GridItem>
               </Grid>
             </GridItem>
             <GridItem w="100%" h="10">
-              <Grid
-                templateColumns="repeat(1, 1fr)"
-                textAlign={"Left"}
-                bgColor={"#81B29A"}
-                borderRadius={"5px"}
-              >
-                <GridItem w="100%" h="10" display={"flex"} ml={"8px"}>
-                  <Image
-                    src={filterIcon}
-                    alt="search"
-                    height={"20px"}
-                    ml={"10px"}
-                    mt={"10px"}
-                  />
-                  <Select
-                    options={renderCategory}
-                    styles={colourStyles}
-                    placeholder={"Filter"}
-                    onChange={filterProductHandler}
-                  />
-                </GridItem>
-              </Grid>
+              <ReactPaginate
+                previousLabel={"previous"}
+                nextLabel={"next"}
+                breakLabel={"..."}
+                pageCount={maxPage}
+                marginPagesDisplayed={5}
+                pageRangeDisplayed={1}
+                onPageChange={handlePageClick}
+                containerClassName={"pagination justify-content-center"}
+                pageClassName={"page-item"}
+                pageLinkClassName={"page-link"}
+                previousClassName={"page-item"}
+                previousLinkClassName={"page-link"}
+                nextClassName={"page-item"}
+                nextLinkClassName={"page-link"}
+                breakClassName={"page-item"}
+                breakLinkClassName={"page-link"}
+              />
             </GridItem>
-            <GridItem w="100%" h="10"></GridItem>
           </Grid>
           <SimpleGrid minChildWidth="180px" spacing="10px" mt={"30px"}>
             {renderProductWithoutUser()}
             {renderProduct()}
           </SimpleGrid>
+          <Box marginTop={"20px"}>
+            <ReactPaginate
+              previousLabel={"previous"}
+              nextLabel={"next"}
+              breakLabel={"..."}
+              pageCount={maxPage}
+              marginPagesDisplayed={5}
+              pageRangeDisplayed={1}
+              onPageChange={handlePageClick}
+              containerClassName={"pagination justify-content-center"}
+              pageClassName={"page-item"}
+              pageLinkClassName={"page-link"}
+              previousClassName={"page-item"}
+              previousLinkClassName={"page-link"}
+              nextClassName={"page-item"}
+              nextLinkClassName={"page-link"}
+              breakClassName={"page-item"}
+              breakLinkClassName={"page-link"}
+            />
+          </Box>
         </Box>
       </Box>
 

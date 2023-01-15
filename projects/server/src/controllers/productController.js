@@ -46,73 +46,6 @@ const productController = {
         order: sequelize.col("distance"),
       });
       console.log(JSON.parse(JSON.stringify(pickBranch)));
-      // const coba = JSON.parse(JSON.stringify(pickBranch[0].id));
-      // console.log(coba);
-
-      // let result = [];
-      // if (last_id < 1) {
-      //   const results = await db.Branch.findAndCountAll({
-      //     subQuery: false,
-      //     where: {
-      //       UserId: pickBranch[0].id,
-      //     },
-      //     include: [
-      //       {
-      //         model: db.ProductBranch,
-      //         include: [
-      //           {
-      //             model: db.Product,
-      //             where: {
-      //               [Op.or]: [
-      //                 {
-      //                   product_name: {
-      //                     [Op.like]: "%" + search + "%",
-      //                   },
-      //                 },
-      //                 {
-      //                   product_price: {
-      //                     [Op.like]: "%" + search + "%",
-      //                   },
-      //                 },
-      //               ],
-      //             },
-      //             limit: limit,
-      //             order: [["id", order]],
-      //           },
-      //         ],
-      //       },
-      //     ],
-      //   });
-      //   result = results;
-      // } else {
-      //   const results = await db.Branch.findAndCountAll({
-      //     where: {
-      //       UserId: pickBranch[0].id,
-      //     },
-      //     include: [
-      //       {
-      //         model: db.ProductBranch,
-      //         include: [
-      //           {
-      //             model: db.Product,
-      //             where: {
-      //               id: {
-      //                 [Op.lt]: last_id,
-      //               },
-      //               product_name: {
-      //                 [Op.like]: "%" + search + "%",
-      //               },
-      //             },
-      //             limit: limit,
-      //             order: [["id", order]],
-      //           },
-      //         ],
-      //       },
-      //     ],
-      //   });
-      //   result = results;
-      // }
-      // --------------------------------------------------
 
       const {
         product_name = "",
@@ -120,17 +53,15 @@ const productController = {
         CategoryId = "",
         _sortBy = "product_name",
         _sortDir = "ASC",
-        _limit = 12,
+        _limit = 6,
         _page = 1,
       } = req.query;
 
       if (
         _sortBy === "product_name" ||
-        _sortBy === "CategoryId" ||
         _sortBy === "product_price" ||
         product_name ||
-        product_price ||
-        CategoryId
+        product_price
       ) {
         if (!Number(CategoryId)) {
           const findBranchById = await db.Branch.findAndCountAll({
@@ -231,10 +162,6 @@ const productController = {
           ],
         });
 
-        // const parseFindBranchById = JSON.parse(JSON.stringify(findBranchById));
-
-        // const findBranchData = parseFindBranchById[0].ProductBranches;
-
         return res.status(200).json({
           message: "get branch data",
           data: findBranchById.rows,
@@ -270,11 +197,16 @@ const productController = {
 
       // const findBranchData = parseFindBranchById[0].ProductBranches;
       // --------------------------------------------------
+      // return res.status(200).json({
+      //   message: "Showing all products",
+      //   result: result,
+      //   lastId: result.length ? result[result.length - 1].id : 0,
+      //   hasMore: result.length >= limit ? true : false,
+      // });
       return res.status(200).json({
-        message: "Showing all products",
-        result: result,
-        lastId: result.length ? result[result.length - 1].id : 0,
-        hasMore: result.length >= limit ? true : false,
+        message: "get all product branch",
+        data: findBranchById.rows,
+        dataCount: findBranchById.count,
       });
     } catch (error) {
       console.log(error);
@@ -355,6 +287,15 @@ const productController = {
   },
   getNearestProductByCategory: async (req, res) => {
     try {
+      const {
+        product_name = "",
+        product_price = "",
+        _sortBy = "product_name",
+        _sortDir = "ASC",
+        _limit = 6,
+        _page = 1,
+      } = req.query;
+
       const userCoordinate = await db.Address.findOne({
         where: {
           UserId: req.user.id,
@@ -389,18 +330,7 @@ const productController = {
         order: sequelize.col("distance"),
       });
 
-      const parsePickBranch = JSON.parse(JSON.stringify(pickBranch));
-
-      const {
-        product_name = "",
-        product_price = "",
-        _sortBy = "product_name",
-        _sortDir = "ASC",
-        _limit = 12,
-        _page = 1,
-      } = req.query;
-
-      const { CategoryId } = req.params;
+      // const { CategoryId } = req.params;
 
       if (
         _sortBy === "product_name" ||
@@ -415,9 +345,9 @@ const productController = {
           where: {
             UserId: pickBranch[0].id,
           },
-          attributes: {
-            exclude: ["branch_address", "distance", "createdAt", "updatedAt"],
-          },
+          // attributes: {
+          //   exclude: ["branch_address", "distance", "createdAt", "updatedAt"],
+          // },
           include: [
             {
               model: db.ProductBranch,
@@ -447,8 +377,8 @@ const productController = {
           ],
           order: [
             [
-              { model: db.ProductBranch },
-              { model: db.Product },
+              // { model: db.ProductBranch },
+              // { model: db.Product },
               _sortBy,
               _sortDir,
             ],
@@ -465,13 +395,13 @@ const productController = {
       const findBranchById = await db.Branch.findAndCountAlll({
         limit: Number(_limit),
         offset: (_page - 1) * _limit,
-        subQuery: false,
+        // subQuery: false,
         where: {
           UserId: pickBranch[0].id,
         },
-        attributes: {
-          exclude: ["branch_address", "distance", "createdAt", "updatedAt"],
-        },
+        // attributes: {
+        //   exclude: ["branch_address", "distance", "createdAt", "updatedAt"],
+        // },
         include: [
           {
             model: db.ProductBranch,
