@@ -70,7 +70,15 @@ const SalesHistoryCard = ({
               </Box>
               <Box display={"flex"}>
                 <Text fontWeight={"bold"}>Branch Name: </Text>
-                <Text ml={"5px"}>{branch_name || "Loading..."}</Text>
+                <Text
+                  ml={"5px"}
+                  overflow={"hidden"}
+                  textOverflow={"ellipsis"}
+                  whiteSpace={"nowrap"}
+                  maxWidth={"120px"}
+                >
+                  {branch_name || "Loading..."}
+                </Text>
               </Box>
               <Box
                 display={"flex"}

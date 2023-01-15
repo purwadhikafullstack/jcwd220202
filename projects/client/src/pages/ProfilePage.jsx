@@ -86,7 +86,6 @@ const ProfilePage = () => {
       const responseAddress = await axiosInstance.get(`/profile/activeAddress`);
       console.log(responseAddress);
       setUserLocation(responseAddress.data.data.Addresses[0]);
-
     } catch (err) {
       console.log(err);
     }

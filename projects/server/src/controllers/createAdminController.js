@@ -1,7 +1,6 @@
 const db = require("../../models");
 const bcrypt = require("bcrypt");
 const axios = require("axios");
-const OpenCageKey = process.env.OPENCAGE_API_KEY;
 
 const createAdminController = {
   createAdmin: async (req, res) => {
@@ -17,25 +16,25 @@ const createAdminController = {
       };
 
       const location = await axios.get(
-        `https://api.opencagedata.com/geocode/v1/json?key=${OpenCageKey}&q=${cityName}`
+        `https://api.opencagedata.com/geocode/v1/json?key=deb63d3699474864a43143c467b64441&q=${cityName}`
       );
 
       const latitude = location.data.results[0].geometry.lat;
       const longitude = location.data.results[0].geometry.lng;
-
-      const address = await db.Address.create({
-        address: cityName,
-        latitude: latitude,
-        longitude: longitude,
-        is_active: 1,
-      });
 
       const newAdmin = await db.User.create({
         email: email,
         password: hashedPassword,
         username: defaultUsername(email),
         RoleId: 2,
-        AddressId: address.id,
+      });
+
+      const address = await db.Address.create({
+        UserId: newAdmin.id,
+        address: cityName,
+        latitude: latitude,
+        longitude: longitude,
+        is_active: 1,
       });
 
       const newBranch = await db.Branch.create({

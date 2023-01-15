@@ -23,6 +23,7 @@ router.get("/active/all", verifyToken, categoryController.getAllActiveCategory);
 
 router.patch(
   "/:id",
+  verifyToken,
   uploader({
     acceptedFileTypes: ["png", "jpeg", "jpg"],
     filePrefix: "PROF",

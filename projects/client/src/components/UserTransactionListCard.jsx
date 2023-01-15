@@ -34,20 +34,20 @@ const UserTransactionListCard = ({
   });
 
   const showDiscount = () => {
-    if (showFirstItem[0].applied_discount) {
+    if (showFirstItem[0]?.applied_discount) {
       return (
         <>
           <Text ml={"5px"} textDecoration={"line-through"}>
-            {formatRupiah(showFirstItem[0].original_price) || "Loading..."}
+            {formatRupiah(showFirstItem[0]?.original_price) || "Loading..."}
           </Text>
           <Text ml={"5px"}>
-            {formatRupiah(showFirstItem[0].discounted_product) || "Loading..."}
+            {formatRupiah(showFirstItem[0]?.discounted_product) || "Loading..."}
           </Text>
         </>
       );
     } else {
       <Text ml={"5px"}>
-        {formatRupiah(showFirstItem[0].price_per_product) || "Loading..."}
+        {formatRupiah(showFirstItem[0]?.price_per_product) || "Loading..."}
       </Text>;
     }
   };
@@ -149,7 +149,7 @@ const UserTransactionListCard = ({
           <Box flex="1" mr={"20px"}>
             <Box mt={"10px"}>
               <Image
-                src={showFirstItem[0].product_image || uploadProduct}
+                src={showFirstItem[0]?.product_image || uploadProduct}
                 alt="search"
                 objectFit={"contain"}
                 height={"70px"}
@@ -165,10 +165,10 @@ const UserTransactionListCard = ({
               whiteSpace={"nowrap"}
               maxWidth={"150px"}
             >
-              {showFirstItem[0].product_name || "Loading..."}
+              {showFirstItem[0]?.product_name || "Loading..."}
             </Box>
             <Box display={"flex"}>
-              <Text>{`${showFirstItem[0].quantity}x` || "Loading..."}</Text>
+              <Text>{`${showFirstItem[0]?.quantity}x` || "Loading..."}</Text>
               <Box display={"grid"}>{showDiscount()}</Box>
             </Box>
             <Box

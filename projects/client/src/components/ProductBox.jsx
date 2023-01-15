@@ -28,9 +28,11 @@ const ProductBox = ({
   id,
   product_name,
   product_price,
-  distance,
-  product_description,
   product_image,
+  discountPriceFromBranch,
+  priceProduct,
+  discount_amount_nominal,
+  discount_amount_percentage,
 }) => {
   const authSelector = useSelector((state) => state.auth);
 
@@ -58,45 +60,134 @@ const ProductBox = ({
     }).format(value);
   };
 
+  const priceHandler = () => {
+    priceProduct();
+  };
+
+  // const discountPriceFromBranch = (val) => {
+  //   return (
+  //     <>
+  // <Text fontWeight={"bold"} textDecorationLine={"line-through"}>
+  //   {"Rp 9999"}
+  // </Text>
+  // <Text color="blue.600" fontSize="2xl">
+  //   {formatRupiah(val.product_price)}
+  // </Text>
+  //     </>
+  //   );
+  // };
+
   const toProductDetail = () => {
     if (authSelector.is_verified === true) {
-      return (
-        <Card maxW="sm" onClick={() => navigate(`/product/${id}`)}>
-          <CardBody>
-            <Image
-              src={product_image}
-              alt="Green double couch with wooden legs"
-              borderRadius="lg"
-            />
-            <Stack mt="6" spacing="3">
-              <Heading size="md">{id}</Heading>
+      if (discount_amount_nominal === 0 && discount_amount_percentage === 0) {
+        return (
+          <Card maxW="sm" onClick={() => navigate(`/product/${id}`)}>
+            <CardBody
+              bgColor={"white"}
+              border={"2px solid #E07A5F"}
+              borderRadius={"10px"}
+              boxShadow={"1px 1px 4px #E07A5F"}
+            >
+              <Image src={product_image} borderRadius="lg" />
+              <Stack mt="6" spacing="3">
+                {/* <Heading size="md">{id}</Heading> */}
 
-              <Heading size="md">{product_name}</Heading>
+                <Heading fontSize="20px">{product_name}</Heading>
+                <Box>
+                  {/* <Text fontWeight={"bold"} textDecorationLine={"line-through"}>
+                    {"Rp 9999"}
+                  </Text> */}
+                  <Text color="#E07A5F" fontSize="20px">
+                    {formatRupiah(product_price)}
+                  </Text>
+                </Box>
+              </Stack>
+            </CardBody>
+          </Card>
+        );
+      }
+      if (discount_amount_nominal !== 0) {
+        const total = product_price - discount_amount_nominal;
+        return (
+          <Card maxW="sm" onClick={() => navigate(`/product/${id}`)}>
+            <CardBody
+              bgColor={"white"}
+              border={"2px solid #E07A5F"}
+              borderRadius={"10px"}
+              boxShadow={"1px 1px 4px #E07A5F"}
+            >
+              <Image src={product_image} borderRadius="lg" />
+              <Stack mt="6" spacing="3">
+                {/* <Heading size="md">{id}</Heading> */}
 
-              <Text color="blue.600" fontSize="2xl">
-                {formatRupiah(product_price)}
-              </Text>
-            </Stack>
-          </CardBody>
-        </Card>
-      );
+                <Heading fontSize="20px">{product_name}</Heading>
+                <Box>
+                  <Text
+                    fontWeight={"bold"}
+                    textDecorationLine={"line-through"}
+                    fontSize="20px"
+                  >
+                    {formatRupiah(product_price)}
+                  </Text>
+                  <Text color="#E07A5F" fontSize="20px">
+                    {formatRupiah(total)}
+                  </Text>
+                </Box>
+              </Stack>
+            </CardBody>
+          </Card>
+        );
+      }
+      if (discount_amount_percentage !== 0) {
+        const total = product_price * (1 - discount_amount_percentage / 100);
+        return (
+          <Card maxW="sm" onClick={() => navigate(`/product/${id}`)}>
+            <CardBody
+              bgColor={"white"}
+              border={"2px solid #E07A5F"}
+              borderRadius={"10px"}
+              boxShadow={"1px 1px 4px #E07A5F"}
+            >
+              <Image src={product_image} borderRadius="lg" />
+              <Stack mt="6" spacing="3">
+                {/* <Heading size="md">{id}</Heading> */}
+
+                <Heading fontSize="20px">{product_name}</Heading>
+                <Box>
+                  <Text
+                    fontWeight={"bold"}
+                    textDecorationLine={"line-through"}
+                    fontSize="20px"
+                  >
+                    {formatRupiah(product_price)}
+                  </Text>
+                  <Text color="#E07A5F" fontSize="20px">
+                    {formatRupiah(total)}
+                  </Text>
+                </Box>
+              </Stack>
+            </CardBody>
+          </Card>
+        );
+      }
     }
 
     if (authSelector.is_verified !== true) {
       return (
-        <Card maxW="sm" onClick={openAlert}>
-          <CardBody>
-            <Image
-              src={product_image}
-              alt="Green double couch with wooden legs"
-              borderRadius="lg"
-            />
+        <Card maxW="sm" onClick={openAlert} height={"auto"}>
+          <CardBody
+            bgColor={"white"}
+            border={"2px solid #E07A5F"}
+            borderRadius={"10px"}
+            boxShadow={"1px 1px 4px #E07A5F"}
+          >
+            <Image src={product_image} borderRadius="lg" />
             <Stack mt="6" spacing="3">
-              <Heading size="md">{id}</Heading>
+              {/* <Heading size="md">{id}</Heading> */}
 
-              <Heading size="md">{product_name}</Heading>
+              <Heading fontSize="20px">{product_name}</Heading>
 
-              <Text color="blue.600" fontSize="2xl">
+              <Text color="#E07A5F" fontSize="20px">
                 {formatRupiah(product_price)}
               </Text>
             </Stack>

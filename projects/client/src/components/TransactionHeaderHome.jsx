@@ -3,7 +3,7 @@ import grocerinLogo from "../assets/grocerin_logo_aja.png";
 import backIcon from "../assets/back_icon.png";
 import { useNavigate } from "react-router-dom";
 
-const TransactionListBar = () => {
+const TransactionHeaderHome = () => {
   const navigate = useNavigate();
 
   return (
@@ -26,7 +26,7 @@ const TransactionListBar = () => {
             src={backIcon}
             alt="back"
             height={"40px"}
-            onClick={() => navigate(`/`)}
+            onClick={() => navigate(-1)}
           />
         </Box>
         <Spacer />
@@ -46,4 +46,4 @@ const TransactionListBar = () => {
   );
 };
 
-export default TransactionListBar;
+export default TransactionHeaderHome;

@@ -56,7 +56,7 @@ const Payment = () => {
 
         transactionData.append("payment_proof_img", values.payment_proof_img);
 
-        const response = await axiosInstance.patch(
+        const response = await axiosInstance.put(
           `/transaction/payment-done/check/${params.id}`,
           transactionData
         );
@@ -282,7 +282,7 @@ const Payment = () => {
               mx={5}
               my={4}
               onClick={formik.handleSubmit}
-              // isDisabled={formik.isSubmitting}
+              isDisabled={formik.isSubmitting}
               bgColor={"#81B29A"}
               color={"white"}
               borderRadius={"20px"}
