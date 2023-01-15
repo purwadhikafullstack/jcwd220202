@@ -197,7 +197,7 @@ const App = () => {
             fontFamily={"roboto"}
           >
             <Routes>
-              <Route path="/admin/dashboard" element={<AdminDashboard />} />
+              {/* <Route path="/admin/dashboard" element={<AdminDashboard />} />
               <Route
                 path="/admin/product/:id"
                 element={<ProductDetailAdmin />}
@@ -219,7 +219,7 @@ const App = () => {
                 element={<AdminTransaction />}
               />
               <Route path="/admin/statistic" element={<AdminStatistic />} />
-              <Route path="/admin/product" element={<ProductListAdmin />} />
+              <Route path="/admin/product" element={<ProductListAdmin />} /> */}
             </Routes>
           </Box>
         </>
@@ -239,7 +239,7 @@ const App = () => {
             fontFamily={"roboto"}
           >
             <Routes>
-              <Route
+              {/* <Route
                 path="/super-admin/dashboard"
                 element={<SuperAdminDashboard />}
               />
@@ -278,6 +278,28 @@ const App = () => {
                 path="/super-admin/statistic"
                 element={<SprAdminStatisctic />}
               />
+              <Route
+                path="/admin/product/:id"
+                element={<ProductDetailAdmin />}
+              />
+              <Route
+                path="/admin/transaction/:id"
+                element={<AdminTransactionDetail />}
+              />
+              <Route
+                path="/admin/product-mutation"
+                element={<AdminProductMutation />}
+              />
+              <Route path="/admin/voucher" element={<VoucherAdmin />} />
+              <Route path="/admin/voucher/:url" element={<AddVoucherAdmin />} />
+              <Route path="/admin/voucher" element={<VoucherAdmin />} />
+              <Route path="/admin/voucher/:url" element={<AddVoucherAdmin />} />
+              <Route
+                path="/admin/transaction/"
+                element={<AdminTransaction />}
+              />
+              <Route path="/admin/statistic" element={<AdminStatistic />} />
+              <Route path="/admin/product" element={<ProductListAdmin />} /> */}
             </Routes>
           </Box>
         </>
@@ -364,8 +386,48 @@ const App = () => {
             path="/user/transaction-detail/:id"
             element={<UserTransactionDetail />}
           />
-          {renderAdminRoutes}
-          {renderSuperAdminRoutes}
+          <Route
+            path="/super-admin/dashboard"
+            element={<SuperAdminDashboard />}
+          />
+          <Route path="/admin/dashboard" element={<AdminDashboard />} />
+          <Route path="/admin/product/:id" element={<ProductDetailAdmin />} />
+          <Route path="/super-admin/category" element={<AdminCategory />} />
+          <Route path="/super-admin/category/add" element={<AddCategory />} />
+          <Route path="/super-admin/product" element={<ProductListSprAdm />} />
+          <Route
+            path="/super-admin/product/add"
+            element={<AddProductSprAdm />}
+          />
+          <Route
+            path="/super-admin/product/:id"
+            element={<ProductDetailSprAdm />}
+          />
+          <Route path="/super-admin/category/:id" element={<CategoryEdit />} />
+          <Route path="/super-admin/create-branch" element={<CreateBranch />} />
+          <Route path="/super-admin/branch" element={<UserSprAdmin />} />
+          <Route
+            path="/super-admin/statistic"
+            element={<SprAdminStatisctic />}
+          />
+          <Route path="/admin/product/:id" element={<ProductDetailAdmin />} />
+          <Route
+            path="/admin/transaction/:id"
+            element={<AdminTransactionDetail />}
+          />
+          <Route
+            path="/admin/product-mutation"
+            element={<AdminProductMutation />}
+          />
+          <Route path="/admin/voucher" element={<VoucherAdmin />} />
+          <Route path="/admin/voucher/:url" element={<AddVoucherAdmin />} />
+          <Route path="/admin/voucher" element={<VoucherAdmin />} />
+          <Route path="/admin/voucher/:url" element={<AddVoucherAdmin />} />
+          <Route path="/admin/transaction/" element={<AdminTransaction />} />
+          <Route path="/admin/statistic" element={<AdminStatistic />} />
+          <Route path="/admin/product" element={<ProductListAdmin />} />
+          {/* {renderAdminRoutes}
+          {renderSuperAdminRoutes} */}
         </Routes>
       </Box>
     </>
