@@ -123,6 +123,13 @@ const profileController = {
         { where: { id: req.params.id } }
       );
 
+      await db.User.update(
+        {
+          AddressId: req.params.id,
+        },
+        { where: { id: req.user.id } }
+      );
+
       return res.status(200).json({
         message: "Select user address",
       });
@@ -140,7 +147,7 @@ const profileController = {
         include: [{ model: db.Address, where: { is_active: 1 } }],
       });
       return res.status(200).json({
-        data: findUserAddress
+        data: findUserAddress,
       });
     } catch (err) {
       console.log(err);

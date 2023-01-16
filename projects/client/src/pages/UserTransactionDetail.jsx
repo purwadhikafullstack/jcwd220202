@@ -178,6 +178,7 @@ const UserTransactionDetail = () => {
       }
     }
   };
+
   const showTransactionStatus = () => {
     if (transactionDetail?.transaction_status === "Waiting For Payment") {
       return (
@@ -458,7 +459,7 @@ const UserTransactionDetail = () => {
             </Text>
           </Box>
           <Box>
-            <Text fontWeight={"bold"}>{showVoucher()}</Text>
+            <Box fontWeight={"bold"}>{showVoucher()}</Box>
           </Box>
         </VStack>
         <VStack spacing={4} align="stretch" px={"15px"} mt={"20px"}>

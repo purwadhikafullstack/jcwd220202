@@ -78,6 +78,30 @@ const ProductBox = ({
   // };
 
   const toProductDetail = () => {
+    if (authSelector.id === 0) {
+      return (
+        <Card maxW="sm" onClick={() => navigate("/login/user")} height={"auto"}>
+          <CardBody
+            bgColor={"white"}
+            border={"2px solid #E07A5F"}
+            borderRadius={"10px"}
+            boxShadow={"1px 1px 4px #E07A5F"}
+          >
+            <Image src={product_image} borderRadius="lg" />
+            <Stack mt="6" spacing="3">
+              {/* <Heading size="md">{id}</Heading> */}
+
+              <Heading fontSize="20px">{product_name}</Heading>
+
+              <Text color="#E07A5F" fontSize="20px">
+                {formatRupiah(product_price)}
+              </Text>
+            </Stack>
+          </CardBody>
+        </Card>
+      );
+    }
+
     if (authSelector.is_verified === true) {
       if (discount_amount_nominal === 0 && discount_amount_percentage === 0) {
         return (

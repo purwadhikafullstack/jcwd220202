@@ -9,52 +9,47 @@ import banner3 from "../assets/banner3.png";
 import banner4 from "../assets/banner4.png";
 
 const Carousel = () => {
-    const images = [
-        {
-            src: banner2,
-            alt: "Promotion 1",
-        },
-        {
-            src: banner3,
-            alt: "Promotion 2 ",
-        },
-        {
-            src: banner4,
-            alt: "Promotion 3",
-        },
-    ];
+  const images = [
+    {
+      src: banner2,
+      alt: "Promotion 1",
+    },
+    {
+      src: banner3,
+      alt: "Promotion 2 ",
+    },
+    {
+      src: banner4,
+      alt: "Promotion 3",
+    },
+  ];
 
-    const settings = {
-        infinite: true,
-        // dots: true,
-        slidesToShow: 1,
-        slidesToScroll: 1,
-        lazyLoad: true,
-        autoplay: true,
-        autoplaySpeed: 5000,
-        arrows: false,
-    };
+  const settings = {
+    infinite: true,
+    // dots: true,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    lazyLoad: true,
+    autoplay: true,
+    autoplaySpeed: 5000,
+    arrows: false,
+  };
 
-    const renderImage = () => {
-        return images.map((item) => {
-            return (
-                <Box h={"200px"}>
-                    <Image
-                        src={item.src}
-                        alt={item.alt}
-                        w={"100%"}
-                        h={"100%"}
-                    />
-                </Box>
-            );
-        });
-    };
-
-    return (
-        <Box>
-            <Slider {...settings}>{renderImage()}</Slider>
+  const renderImage = () => {
+    return images.map((item) => {
+      return (
+        <Box h={"200px"} key={item.src}>
+          <Image src={item.src} alt={item.alt} w={"100%"} h={"100%"} />
         </Box>
-    );
+      );
+    });
+  };
+
+  return (
+    <Box>
+      <Slider {...settings}>{renderImage()}</Slider>
+    </Box>
+  );
 };
 
 export default Carousel;

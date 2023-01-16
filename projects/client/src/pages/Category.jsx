@@ -49,6 +49,7 @@ const CategoryList = () => {
           {category.map((item) => {
             return (
               <Box
+                key={item.id}
                 display={"grid"}
                 onClick={() => {
                   redirectCategory(item.id);

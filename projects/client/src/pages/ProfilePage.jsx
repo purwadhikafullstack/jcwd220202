@@ -53,6 +53,7 @@ const ProfilePage = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [userLocation, setUserLocation] = useState();
+  const [birthDate, setBirthDate] = useState("");
   // const { onCopy, copyReferral, setCopyReferral, hasCopied } = useClipboard("");
 
   const togglePassword = () => {
@@ -163,7 +164,7 @@ const ProfilePage = () => {
     formik.setFieldValue(name, value);
   };
   // console.log(formik.values);
-  const [birthDate, setBirthDate] = useState("");
+
   // console.log("ini", birthDate)
 
   const birthChangeHandler = () => {
@@ -203,6 +204,8 @@ const ProfilePage = () => {
     }
   };
 
+  console.log(birthDate);
+
   useEffect(() => {
     fetchProfile();
     fetchAddress();
@@ -215,6 +218,14 @@ const ProfilePage = () => {
         gap={6}
         bgColor={"#81B29A"}
         h={"75px"}
+        position={"fixed"}
+        top={"0"}
+        right={"0"}
+        left={"0"}
+        fontWeight={"bold"}
+        zIndex={"4"}
+        margin={"auto"}
+        maxWidth={"480px"}
       >
         <GridItem>
           <Box marginTop={"20px"} marginLeft={"20px"}>
@@ -228,9 +239,9 @@ const ProfilePage = () => {
           </Box>
         </GridItem>
         <GridItem>
-          <Heading mt={5} textAlign={"center"} fontFamily={"roboto"}>
+          <Box margin={"25px"} textAlign={"center"} fontSize={"18px"}>
             Profile
-          </Heading>
+          </Box>
         </GridItem>
         <GridItem>
           <Image
@@ -244,7 +255,7 @@ const ProfilePage = () => {
           />
         </GridItem>
       </Grid>
-      <Box ml={5} pt={5}>
+      <Box ml={5} pt={"100px"}>
         <Text fontSize={"lg"} as={"b"}>
           Hello, {userData.username}
         </Text>
@@ -339,9 +350,15 @@ const ProfilePage = () => {
 
           <Box>
             <DatePicker
-              defaultValue={moment(userData.birth)}
+              defaultValue={moment(userData?.birth)}
               onChange={(value) => {
                 let newDate = moment(new Date(value)).format("YYYY-MM-DD");
+                setBirthDate(newDate);
+
+                if (newDate === "1970-01-01") {
+                  newDate = null;
+                }
+
                 setBirthDate(newDate);
               }}
             />
