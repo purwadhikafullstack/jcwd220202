@@ -1,6 +1,7 @@
 const db = require("../../models");
 const { Op } = require("sequelize");
 const fs = require("fs");
+const path = require("path");
 const handlebars = require("handlebars");
 const emailer = require("../../lib/emailer");
 
@@ -262,8 +263,22 @@ const adminTransactionController = {
           }
         );
 
+        // const rawHTML = fs.readFileSync(
+        //   "templates/transaction_status.html",
+        //   "utf-8"
+        // );
+
+        // const parentDir = path.resolve(__dirname, "..", "..");
+        // const exactFile = path.join(
+        //   parentDir,
+        //   "templates",
+        //   "transaction_status.html"
+        // );
+
+        // const rawHTML = fs.readFileSync(exactFile, "utf-8");
+
         const rawHTML = fs.readFileSync(
-          "templates/transaction_status.html",
+          path.resolve(__dirname, "../templates/transaction_status.html"),
           "utf-8"
         );
 
@@ -310,8 +325,25 @@ const adminTransactionController = {
           transaction_status === "Waiting For Payment" ||
           transaction_status === "Waiting For Approval"
         ) {
+          // const rawHTML = fs.readFileSync(
+          //   "templates/transaction_status_cancel.html",
+          //   "utf-8"
+          // );
+
+          // const parentDir = path.resolve(__dirname, "..", "..");
+          // const exactFile = path.join(
+          //   parentDir,
+          //   "templates",
+          //   "transaction_status_cancel.html"
+          // );
+
+          // const rawHTML = fs.readFileSync(exactFile, "utf-8");
+
           const rawHTML = fs.readFileSync(
-            "templates/transaction_status_cancel.html",
+            path.resolve(
+              __dirname,
+              "../templates/transaction_status_cancel.html"
+            ),
             "utf-8"
           );
 
@@ -347,8 +379,22 @@ const adminTransactionController = {
           }).format(value);
         };
 
+        // const rawHTML = fs.readFileSync(
+        //   "templates/transaction_status_cancel.html",
+        //   "utf-8"
+        // );
+
+        // const parentDir = path.resolve(__dirname, "..", "..");
+        // const exactFile = path.join(
+        //   parentDir,
+        //   "templates",
+        //   "transaction_status_cancel.html"
+        // );
+
+        // const rawHTML = fs.readFileSync(exactFile, "utf-8");
+
         const rawHTML = fs.readFileSync(
-          "templates/transaction_status_cancel.html",
+          path.resolve(__dirname, "../templates/transaction_status.html"),
           "utf-8"
         );
 

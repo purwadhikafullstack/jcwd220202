@@ -12,5 +12,6 @@ router.get(
   productController.getNearestProductByCategory
 );
 router.get("/all-product/guest", productController.showNoUserProduct);
+router.get("/product-category/guest", productController.ProductGuestByCategory);
 
 module.exports = router;

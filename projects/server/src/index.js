@@ -1,15 +1,15 @@
-require("dotenv/config");
 const express = require("express");
 const cors = require("cors");
 const { join } = require("path");
 const db = require("../models");
-const dotenv = require("dotenv");
 const fs = require("fs");
 const startVoucherScheduler = require("../lib/startVoucherScheduler");
 const endVoucherScheduler = require("../lib/endVoucherSchedule");
 const salesReportScheduler = require("../lib/salesReportScheduler");
-
-dotenv.config();
+const path = require("path");
+const dotenv = require("dotenv").config({
+  path: path.resolve(__dirname, "../.env"),
+});
 
 const PORT = process.env.PORT || 8000;
 const app = express();
@@ -38,7 +38,7 @@ const voucherAdminRoute = require("./routes/voucherAdminRoute.js");
 const transactionRoute = require("./routes/transactionRoute.js");
 const adminSalesRoute = require("./routes/adminSalesRoute");
 
-app.use("/user", loginRoute);
+app.use("/api/user", loginRoute);
 app.use("/profile", profileRoute);
 app.use("/admin", loginAdminRoute);
 app.use("/register", registerRoute);

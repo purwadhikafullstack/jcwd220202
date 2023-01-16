@@ -13,9 +13,13 @@ import { useState } from "react";
 import grocerinLogo from "../assets/grocerin_logo_aja.png";
 import { useSelector } from "react-redux";
 
-const SearchBar = () => {
+const SearchBar = ({ search, setSearch, handleChange }) => {
   const [keywordHandler, setKeywordHandler] = useState("");
   const authSelector = useSelector((state) => state.auth);
+  // const [search, setSearch] = useState("");
+  // const handleChange = (e) => {
+  //   setSearch(e.target.value);
+  // };
 
   return (
     <Box
@@ -48,8 +52,8 @@ const SearchBar = () => {
               size="md"
               placeholder="Search product name"
               name="input"
-              value={keywordHandler}
-              onChange={(event) => setKeywordHandler(event.target.value)}
+              value={search}
+              onChange={handleChange}
             />
           </InputGroup>
         </FormControl>
