@@ -56,7 +56,7 @@ const Payment = () => {
 
         transactionData.append("payment_proof_img", values.payment_proof_img);
 
-        const response = await axiosInstance.patch(
+        const response = await axiosInstance.put(
           `/transaction/payment-done/check/${params.id}`,
           transactionData
         );
