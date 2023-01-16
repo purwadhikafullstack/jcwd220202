@@ -77,6 +77,10 @@ const ProfilePage = () => {
       formik.setFieldValue("username", response.data.data.username);
       formik.setFieldValue("gender", response.data.data.gender);
       formik.setFieldValue("birth", response.data.data.birth);
+      formik.setFieldValue(
+        "profile_picture",
+        response.data.data.profile_image_url
+      );
     } catch (err) {
       console.log(err);
     }
@@ -261,7 +265,7 @@ const ProfilePage = () => {
         </Text>
         <Box display={"flex"} justifyContent={"center"}>
           <Image
-            src={selectedImage || uploadProfile}
+            src={formik.values.profile_picture || uploadProfile}
             width="100px"
             height="100px"
             borderRadius="full"
