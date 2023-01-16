@@ -81,6 +81,7 @@ const ProfilePage = () => {
         "profile_picture",
         response.data.data.profile_image_url
       );
+      setSelectedImage(response.data.data.profile_image_url);
     } catch (err) {
       console.log(err);
     }
@@ -167,7 +168,7 @@ const ProfilePage = () => {
     const { name, value } = target;
     formik.setFieldValue(name, value);
   };
-  // console.log(formik.values);
+  console.log(formik.values);
 
   // console.log("ini", birthDate)
 
@@ -265,7 +266,7 @@ const ProfilePage = () => {
         </Text>
         <Box display={"flex"} justifyContent={"center"}>
           <Image
-            src={formik.values.profile_picture || uploadProfile}
+            src={selectedImage || uploadProfile}
             width="100px"
             height="100px"
             borderRadius="full"
@@ -331,7 +332,9 @@ const ProfilePage = () => {
           <Input
             value={formik.values.username}
             name="username"
-            onChange={formChangeHandler}
+            onChange={(event) => {
+              formik.setFieldValue("username", event.target.value)
+            }}
             placeholder={userData.username}
             size="md"
             bgColor={"white"}
@@ -341,7 +344,9 @@ const ProfilePage = () => {
             name="gender"
             value={formik.values.gender}
             placeholder={userData.gender}
-            onChange={formChangeHandler}
+            onChange={(event) => {
+              formik.setFieldValue("gender", event.target.value)
+            }}
             size="md"
             bgColor={"white"}
           >
@@ -358,12 +363,10 @@ const ProfilePage = () => {
               onChange={(value) => {
                 let newDate = moment(new Date(value)).format("YYYY-MM-DD");
                 setBirthDate(newDate);
-
+                formik.setFieldValue("birth", newDate)
                 if (newDate === "1970-01-01") {
                   newDate = null;
                 }
-
-                setBirthDate(newDate);
               }}
             />
           </Box>

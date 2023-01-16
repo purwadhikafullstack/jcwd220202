@@ -1,6 +1,7 @@
 const db = require("../../models");
 const { Op } = require("sequelize");
 const fs = require("fs");
+const path = require("path");
 
 const adminProductController = {
   createProduct: async (req, res) => {
