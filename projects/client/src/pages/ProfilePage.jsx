@@ -363,7 +363,7 @@ const ProfilePage = () => {
               onChange={(value) => {
                 let newDate = moment(new Date(value)).format("YYYY-MM-DD");
                 setBirthDate(newDate);
-                formik.setFieldValue("gender", newDate)
+                formik.setFieldValue("birth", newDate)
                 if (newDate === "1970-01-01") {
                   newDate = null;
                 }
