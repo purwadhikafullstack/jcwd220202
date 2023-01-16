@@ -5,53 +5,8 @@ import cart from "../assets/cart.png";
 import order from "../assets/order.png";
 import { Link, useLocation } from "react-router-dom";
 
-const items = [
-  {
-    icon: home,
-    label: "Home",
-    path: "/",
-  },
-  {
-    icon: cart,
-    label: "Cart",
-    path: "/user/cart",
-  },
-  {
-    icon: order,
-    label: "Order",
-    path: "/user/transaction-list",
-  },
-  {
-    icon: profile,
-    label: "Profile",
-    path: "/profile",
-  },
-];
-
 const Navigation = () => {
   const location = useLocation();
-
-  const renderIcon = () => {
-    return items.map((item) => {
-      return (
-        <GridItem key={item.path} h="65px">
-          <Link to={item.path}>
-            <Box display={"grid"}>
-              <Image
-                src={item.icon}
-                alt="logo"
-                height={"40px"}
-                justifySelf={"center"}
-              />
-              <Text textAlign={"center"} fontFamily={"roboto"}>
-                {item.label}
-              </Text>
-            </Box>
-          </Link>
-        </GridItem>
-      );
-    });
-  };
 
   return (
     <>

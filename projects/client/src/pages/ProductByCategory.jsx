@@ -26,6 +26,7 @@ import "../style/pagination.css";
 import productNotFound from "../assets/feelsorry.png";
 import ProductCardUser from "../components/ProductCardUser";
 import NavigationBar from "../components/NavigationBar";
+import { useSelector } from "react-redux";
 
 const maxItemsPerPage = 12;
 
@@ -33,10 +34,11 @@ const ProductByCategory = () => {
   const [product, setProduct] = useState([]);
   const [sortBy, setSortBy] = useState("product_name");
   const [sortDir, setSortDir] = useState("ASC");
-  const [filter, setFilter] = useState("All");
   const [currentSearch, setCurrentSearch] = useState("");
   const [totalProducts, setTotalProducts] = useState(0);
   const [activePage, setActivePage] = useState(1);
+  const [productPusat, setProductPusat] = useState([]);
+  const authSelector = useSelector((state) => state.auth);
 
   const toast = useToast();
 
@@ -91,24 +93,36 @@ const ProductByCategory = () => {
   const category_id = new URLSearchParams(search).get("category_id");
 
   const fetchProducts = async () => {
-    try {
-      const response = await axiosInstance.get(
-        `/product/nearest/${category_id}`,
-        {
-          params: {
-            _sortBy: sortBy,
-            _sortDir: sortDir,
-            product_name: currentSearch,
-            _page: activePage,
-            _limit: maxItemsPerPage,
-          },
-        }
-      );
+    if (authSelector.id === 0) {
+      try {
+        const response = await axiosInstance.get(
+          `/product/product-category/guest?category_id=${category_id}`
+        );
 
-      setProduct(response.data.data[0].ProductBranches);
-      setTotalProducts(response.data.dataCount);
-    } catch (error) {
-      console.log(error);
+        setProductPusat(response.data.data);
+      } catch (err) {
+        console.log(err);
+      }
+    } else {
+      try {
+        const response = await axiosInstance.get(
+          `/product/nearest/${category_id}`,
+          {
+            params: {
+              _sortBy: sortBy,
+              _sortDir: sortDir,
+              product_name: currentSearch,
+              _page: activePage,
+              _limit: maxItemsPerPage,
+            },
+          }
+        );
+
+        setProduct(response.data.data[0].ProductBranches);
+        setTotalProducts(response.data.dataCount);
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 
@@ -140,7 +154,7 @@ const ProductByCategory = () => {
   };
 
   const renderProducts = () => {
-    return product.map((val, index) => {
+    return product.map((val) => {
       return (
         <ProductCardUser
           key={val.id.toString()}
@@ -154,9 +168,24 @@ const ProductByCategory = () => {
     });
   };
 
+  const renderProductsWithoutUser = () => {
+    return productPusat.map((val) => {
+      return (
+        <ProductCardUser
+          key={val.id.toString()}
+          id={val.id}
+          product_name={val.product_name}
+          product_price={val.product_price}
+          product_description={val.product_description}
+          product_image={val.product_image}
+        />
+      );
+    });
+  };
+
   useEffect(() => {
     fetchProducts();
-  }, [sortBy, sortDir, filter, currentSearch, activePage]);
+  }, [sortBy, sortDir, currentSearch, activePage]);
 
   return (
     <Box
@@ -257,7 +286,7 @@ const ProductByCategory = () => {
           />
         </Box>
       )}
-      {!product.length ? (
+      {/* {!product.length ? (
         <Box display={"grid"} mt={"15vh"}>
           <Text textAlign={"center"} fontWeight={"bold"}>
             No item(s) found
@@ -270,9 +299,12 @@ const ProductByCategory = () => {
             justifySelf={"center"}
           />
         </Box>
-      ) : (
-        <Box>{renderProducts()}</Box>
-      )}
+      ) : ( */}
+      <Box>
+        {renderProductsWithoutUser()}
+        {renderProducts()}
+      </Box>
+      {/* )} */}
     </Box>
   );
 };
