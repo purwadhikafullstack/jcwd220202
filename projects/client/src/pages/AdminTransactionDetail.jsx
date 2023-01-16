@@ -169,10 +169,7 @@ const AdminTransactionDetail = () => {
     let sumPrice = 0;
 
     for (let i = 0; i < transactionItem.length; i++) {
-      sumPrice =
-        sumPrice +
-        transactionItem[i].current_price +
-        transactionItem[i].applied_discount;
+      sumPrice = sumPrice + transactionItem[i].price_per_product;
     }
 
     return sumPrice;
