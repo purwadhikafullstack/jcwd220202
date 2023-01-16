@@ -470,10 +470,6 @@ const productController = {
         order: sequelize.col("distance"),
       });
 
-      const parsePickBranch = JSON.parse(JSON.stringify(pickBranch));
-
-      console.log(parsePickBranch[0].id);
-
       const {
         product_name = "",
         product_price = "",
@@ -670,6 +666,24 @@ const productController = {
       console.log(error);
       return res.status(500).json({
         message: "Server error showing products",
+      });
+    }
+  },
+  ProductGuestByCategory: async (req, res) => {
+    try {
+      const findProductByCategory = await db.Product.findAll({
+        where: {
+          categoryId: req.query.category_id,
+        },
+      });
+
+      return res.status(200).json({
+        message: "Showing product by category",
+        data: findProductByCategory,
+      });
+    } catch (err) {
+      return res.status(500).json({
+        message: "Server error find product by category",
       });
     }
   },

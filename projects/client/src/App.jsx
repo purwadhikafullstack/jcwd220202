@@ -125,7 +125,6 @@ const App = () => {
           <Route path="/product" element={<ProductPage />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/product/:id" element={<ProductDetailUser />} />
-          <Route path="/404" element={<NotFound />} />
           <Route path="/user/cart" element={<CartUser />} />
           <Route path="/user/order/:id" element={<OrderUser />} />
           <Route path="/user/order" element={<OrderUser />} />

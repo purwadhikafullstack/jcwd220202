@@ -363,7 +363,7 @@ const Home = () => {
         // overflow={"scroll"}
         ref={myRef}
       >
-        <Box px={"20px"} mt={"30px"}>
+        <Box px={"20px"}>
           <Grid templateColumns="repeat(2, 1fr)" gap={5}>
             <GridItem w="100%" h="10">
               <Grid
@@ -424,7 +424,6 @@ const Home = () => {
           </Box>
         </Box>
       </Box>
-
       <Navigation />
     </Box>
   );
