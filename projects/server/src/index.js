@@ -38,7 +38,7 @@ const voucherAdminRoute = require("./routes/voucherAdminRoute.js");
 const transactionRoute = require("./routes/transactionRoute.js");
 const adminSalesRoute = require("./routes/adminSalesRoute");
 
-app.use("/user", loginRoute);
+app.use("/api/user", loginRoute);
 app.use("/profile", profileRoute);
 app.use("/admin", loginAdminRoute);
 app.use("/register", registerRoute);
