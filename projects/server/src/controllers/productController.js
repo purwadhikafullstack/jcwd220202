@@ -591,7 +591,7 @@ const productController = {
         CategoryId = "",
         _sortBy = "product_name",
         _sortDir = "ASC",
-        _limit = 12,
+        _limit = 6,
         _page = 1,
       } = req.query;
 
@@ -646,22 +646,11 @@ const productController = {
         // const findBranchData = parseFindBranchById[0].ProductBranches;
 
         return res.status(200).json({
-          message: "get branch data",
+          message: "showing all products",
           data: findBranchById.rows,
           dataCount: findBranchById.count,
         });
       }
-
-      // const parseFindBranchById = JSON.parse(JSON.stringify(findBranchById));
-
-      // const findBranchData = parseFindBranchById[0].ProductBranches;
-      // --------------------------------------------------
-      return res.status(200).json({
-        message: "Showing all products",
-        result: result,
-        lastId: result.length ? result[result.length - 1].id : 0,
-        hasMore: result.length >= limit ? true : false,
-      });
     } catch (error) {
       console.log(error);
       return res.status(500).json({

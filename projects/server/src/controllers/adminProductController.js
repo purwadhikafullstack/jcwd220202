@@ -20,7 +20,7 @@ const adminProductController = {
         });
       }
 
-      const product_image = `http://localhost:8000/public/${req.file.filename}`;
+      const product_image = `${process.env.SERVER_URL}/${req.file.filename}`;
 
       const newProduct = await db.Product.create({
         product_name: product_name,
@@ -335,7 +335,7 @@ const adminProductController = {
       }
 
       if (req.file) {
-        req.body.product_image = `http://localhost:8000/public/${req.file.filename}`;
+        req.body.product_image = `${process}/public/${req.file.filename}`;
       }
 
       const findProductByName = await db.Product.findOne({

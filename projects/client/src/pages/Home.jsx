@@ -121,8 +121,6 @@ const Home = () => {
     setActivePage(currentPage);
     myRef.current.scrollIntoView();
   };
-  console.log(activePage);
-  console.log(product);
 
   const sortProductHandler = (e) => {
     setSortBy(e.split(" ")[0]);
@@ -144,26 +142,37 @@ const Home = () => {
   };
 
   const pagination = () => {
-    return (
-      <ReactPaginate
-        previousLabel={"<"}
-        nextLabel={">"}
-        breakLabel={"..."}
-        pageCount={maxPage}
-        marginPagesDisplayed={0}
-        pageRangeDisplayed={0}
-        onPageChange={handlePageClick}
-        containerClassName={"pagination justify-content-center"}
-        pageClassName={"page-item"}
-        pageLinkClassName={"page-link"}
-        previousClassName={"page-item"}
-        previousLinkClassName={"page-link"}
-        nextClassName={"page-item"}
-        nextLinkClassName={"page-link"}
-        breakClassName={"page-item"}
-        breakLinkClassName={"page-link"}
-      />
-    );
+    if (
+      product.length !== 0 ||
+      authSelector.is_verified !== false ||
+      authSelector.id !== 0
+    ) {
+      return (
+        <>
+          <ReactPaginate
+            previousLabel={"<"}
+            nextLabel={">"}
+            breakLabel={"..."}
+            pageCount={maxPage}
+            marginPagesDisplayed={1}
+            pageRangeDisplayed={2}
+            onPageChange={handlePageClick}
+            containerClassName={"pagination justify-content-center"}
+            pageClassName={"page-item"}
+            pageLinkClassName={"page-link"}
+            previousClassName={"page-item"}
+            previousLinkClassName={"page-link"}
+            nextClassName={"page-item"}
+            nextLinkClassName={"page-link"}
+            breakClassName={"page-item"}
+            breakLinkClassName={"page-link"}
+            activeClassName={"active"}
+          />
+        </>
+      );
+    } else {
+      return null;
+    }
   };
 
   const renderProduct = () => {
@@ -198,12 +207,29 @@ const Home = () => {
       );
     });
   };
+  const userIsNotLegible = () => {
+    if (authSelector.id !== 0) {
+      if (product.length === 0 || authSelector.is_verified === false) {
+        return (
+          <>
+            <Box display={"grid"} mt={"10vh"}>
+              <Text textAlign={"center"} fontWeight={"bold"}>
+                Please verify account and choose address <br />
+                in the profile.
+              </Text>
+            </Box>
+          </>
+        );
+      } else {
+        return null;
+      }
+    }
+  };
+
   useEffect(() => {
     fetchAdminProduct();
   }, [sortBy, sortDir, filter, currentSearch, activePage]);
-  // useEffect(() => {
-  //   stickyHeader();
-  // }, []);
+
   return (
     <Box bgColor={"#81B29A"} mt={"20px"}>
       <Box
@@ -242,6 +268,7 @@ const Home = () => {
             </InputGroup>
           </FormControl>
           {!authSelector.RoleId == "1" ? (
+            // <Link to="/login/user" mt={"30px"}>
             <Box
               p={"3"}
               mr={"5"}
@@ -249,15 +276,17 @@ const Home = () => {
               borderRadius="10px"
               as="b"
               _hover={{
-                background: "white",
-                color: "#E07A5F",
+                // background: "white",
+                color: "white",
                 transition: "all 1000ms ease",
                 cursor: "pointer",
               }}
+              onClick={() => navigate("/login/user")}
             >
-              <Link to="/login/user">Login</Link>
+              Login
             </Box>
           ) : (
+            // </Link>
             <Image
               src={grocerinLogo}
               alt="logo"
@@ -285,6 +314,7 @@ const Home = () => {
           {category.slice(0, 3).map((item) => {
             return (
               <Box
+                key={item.id.toString()}
                 display={"grid"}
                 onClick={() => {
                   redirectCategory(item.id);
@@ -324,6 +354,7 @@ const Home = () => {
           {category.slice(0, 7).map((item) => {
             return (
               <Box
+                key={item.id.toString()}
                 display={"grid"}
                 onClick={() => {
                   redirectCategory(item.id);
@@ -355,7 +386,7 @@ const Home = () => {
       <Box
         bgColor={"#F4F1DE"}
         mt={"10px"}
-        mb={"80px"}
+        pb={"80px"}
         // position={"relative"}
         // h={"100vh"}
         position={"sticky"}
@@ -371,14 +402,13 @@ const Home = () => {
                 textAlign={"Left"}
                 borderRadius={"5px"}
               >
-                <GridItem w="100%" h="10" display={"flex"} ml={"8px"}>
-                  <Image
-                    src={sortIcon}
-                    alt="search"
-                    height={"20px"}
-                    ml={"10px"}
-                    mt={"10px"}
-                  />
+                <GridItem
+                  w="100%"
+                  h="10"
+                  display={"flex"}
+                  ml={"8px"}
+                  mt={"10px"}
+                >
                   <Select
                     bgColor={"#81B29A"}
                     placeholder={"Sort"}
@@ -397,31 +427,12 @@ const Home = () => {
               </Grid>
             </GridItem>
           </Grid>
+          {userIsNotLegible()}
           <SimpleGrid minChildWidth="180px" spacing="10px" mt={"30px"}>
             {renderProductWithoutUser()}
             {renderProduct()}
           </SimpleGrid>
-          <Box marginTop={"20px"}>
-            <ReactPaginate
-              previousLabel={"<"}
-              nextLabel={">"}
-              breakLabel={"..."}
-              pageCount={maxPage}
-              marginPagesDisplayed={1}
-              pageRangeDisplayed={2}
-              onPageChange={handlePageClick}
-              containerClassName={"pagination justify-content-center"}
-              pageClassName={"page-item"}
-              pageLinkClassName={"page-link"}
-              previousClassName={"page-item"}
-              previousLinkClassName={"page-link"}
-              nextClassName={"page-item"}
-              nextLinkClassName={"page-link"}
-              breakClassName={"page-item"}
-              breakLinkClassName={"page-link"}
-              activeClassName={"active"}
-            />
-          </Box>
+          <Box marginTop={"20px"}>{pagination()}</Box>
         </Box>
       </Box>
       <Navigation />
