@@ -278,7 +278,7 @@ const adminTransactionController = {
         // const rawHTML = fs.readFileSync(exactFile, "utf-8");
 
         const rawHTML = fs.readFileSync(
-          path.resolve(__dirname, "../templates/transaction_status.html"),
+          path.resolve(__dirname, "../../templates/transaction_status.html"),
           "utf-8"
         );
 
@@ -342,7 +342,7 @@ const adminTransactionController = {
           const rawHTML = fs.readFileSync(
             path.resolve(
               __dirname,
-              "../templates/transaction_status_cancel.html"
+              "../../templates/transaction_status_cancel.html"
             ),
             "utf-8"
           );
@@ -394,7 +394,7 @@ const adminTransactionController = {
         // const rawHTML = fs.readFileSync(exactFile, "utf-8");
 
         const rawHTML = fs.readFileSync(
-          path.resolve(__dirname, "../templates/transaction_status.html"),
+          path.resolve(__dirname, "../../templates/transaction_status.html"),
           "utf-8"
         );
 
