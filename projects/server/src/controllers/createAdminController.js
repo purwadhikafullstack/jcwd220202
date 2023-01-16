@@ -15,8 +15,10 @@ const createAdminController = {
         return splitEmail[0];
       };
 
+      const openCageKey = process.env.OPENCAGE_API_KEY;
+
       const location = await axios.get(
-        `https://api.opencagedata.com/geocode/v1/json?key=deb63d3699474864a43143c467b64441&q=${cityName}`
+        `https://api.opencagedata.com/geocode/v1/json?key=${openCageKey}&q=${cityName}`
       );
 
       const latitude = location.data.results[0].geometry.lat;

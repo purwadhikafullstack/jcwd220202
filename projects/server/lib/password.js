@@ -3,7 +3,7 @@ const dotenv = require("dotenv");
 
 dotenv.config();
 
-const SECRET_KEY = "121212";
+const SECRET_KEY = `${process.env.SECRET_KEY}`;
 
 const signToken = (payload) => {
   return jwt.sign(payload, SECRET_KEY, { expiresIn: "24h" });

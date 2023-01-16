@@ -6,7 +6,7 @@ const fs = require("fs");
 const startVoucherScheduler = require("../lib/startVoucherScheduler");
 const endVoucherScheduler = require("../lib/endVoucherSchedule");
 const salesReportScheduler = require("../lib/salesReportScheduler");
-const path = "path";
+const path = require("path");
 const dotenv = require("dotenv").config({
   path: path.resolve(__dirname, "../.env"),
 });
