@@ -26,7 +26,7 @@ const TransactionHeaderHome = () => {
             src={backIcon}
             alt="back"
             height={"40px"}
-            onClick={() => navigate(-1)}
+            onClick={() => navigate("/")}
           />
         </Box>
         <Spacer />

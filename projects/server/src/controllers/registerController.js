@@ -6,6 +6,7 @@ const {
   validateVerificationToken,
 } = require("../../lib/verification");
 const fs = require("fs");
+const path = require("path");
 const handlebars = require("handlebars");
 const emailer = require("../../lib/emailer");
 
@@ -71,11 +72,14 @@ const registerContoller = {
 
         const verificationLink = `http://localhost:8000/register/user/verification?verification_token=${verification_token}`;
 
-        const rawHTML = fs.readFileSync(
-          "templates/register_user.html",
-          "utf-8"
+        const parentDir = path.resolve(__dirname, "..", "..");
+        const exactFile = path.join(
+          parentDir,
+          "templates",
+          "register_user.html"
         );
 
+        const rawHTML = fs.readFileSync(exactFile, "utf-8");
         const compiledHTML = handlebars.compile(rawHTML);
 
         const htmlResult = compiledHTML({
@@ -140,7 +144,10 @@ const registerContoller = {
 
       const verificationLink = `http://localhost:8000/register/user/verification?verification_token=${verification_token}`;
 
-      const rawHTML = fs.readFileSync("templates/register_user.html", "utf-8");
+      const parentDir = path.resolve(__dirname, "..", "..");
+      const exactFile = path.join(parentDir, "templates", "register_user.html");
+
+      const rawHTML = fs.readFileSync(exactFile, "utf-8");
 
       const compiledHTML = handlebars.compile(rawHTML);
 
@@ -206,7 +213,11 @@ const registerContoller = {
 
       const verificationLink = `http://localhost:8000/register/user/reverification-account?verification_token=${verification_token}`;
 
-      const rawHTML = fs.readFileSync("templates/register_user.html", "utf-8");
+      const parentDir = path.resolve(__dirname, "..", "..");
+      const exactFile = path.join(parentDir, "templates", "register_user.html");
+
+      const rawHTML = fs.readFileSync(exactFile, "utf-8");
+
       const compiledHTML = handlebars.compile(rawHTML);
       const htmlResult = compiledHTML({
         username: findUserById.username,
