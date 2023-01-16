@@ -1,6 +1,7 @@
 const { Op, where } = require("sequelize");
 const db = require("../../models");
 const fs = require("fs");
+const path = require("path");
 
 const categoryController = {
   createCategory: async (req, res) => {
@@ -19,9 +20,10 @@ const categoryController = {
         });
       }
 
-      const icon_url = `${"https://jcwd220202.purwadhikabootcamp.com"}/${
-        req.file.filename
-      }`;
+      const icon_url = path.resolve(
+        __dirname,
+        `../../public//${req.file.filename}`
+      );
 
       const newCategory = await db.Category.create({
         category_name: category_name,
@@ -42,7 +44,10 @@ const categoryController = {
   updateCategory: async (req, res) => {
     try {
       if (req.file) {
-        req.body.icon_url = `${process.env.SERVER_URL}/${req.file.filename}`;
+        req.body.icon_url = path.resolve(
+          __dirname,
+          `../../public//${req.file.filename}`
+        );
       }
 
       const { category_name, icon_url } = req.body;
@@ -56,7 +61,12 @@ const categoryController = {
       if (req.body.icon_url) {
         const findCategory = await db.Category.findByPk(req.params.id);
 
-        fs.unlinkSync(`public/${findCategory.icon_url.split("/")[4]}`);
+        fs.unlinkSync(
+          path.resolve(
+            __dirname,
+            `../../public/${findCategory.icon_url.split("/")[4]}`
+          )
+        );
       }
 
       await db.Category.update(
@@ -84,7 +94,12 @@ const categoryController = {
     try {
       const findCategory = await db.Category.findByPk(req.params.id);
 
-      fs.unlinkSync(`public/${findCategory.icon_url.split("/")[4]}`);
+      fs.unlinkSync(
+        path.resolve(
+          __dirname,
+          `../../public/${findCategory.icon_url.split("/")[4]}`
+        )
+      );
 
       await db.Category.destroy({
         where: {

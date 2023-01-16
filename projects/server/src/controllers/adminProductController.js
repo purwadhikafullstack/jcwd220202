@@ -335,7 +335,7 @@ const adminProductController = {
       }
 
       if (req.file) {
-        req.body.product_image = `${process}/public/${req.file.filename}`;
+        req.body.product_image = `${process.env.SERVER_URL}/${req.file.filename}`;
       }
 
       const findProductByName = await db.Product.findOne({
@@ -353,7 +353,12 @@ const adminProductController = {
       if (req.body.product_image) {
         const findProduct = await db.Product.findByPk(req.params.id);
 
-        fs.unlinkSync(`public/${findProduct.product_image.split("/")[4]}`);
+        fs.unlinkSync(
+          path.resolve(
+            __dirname,
+            `../../public/${findProduct.product_image.split("/")[4]}`
+          )
+        );
       }
 
       await db.Product.update(
