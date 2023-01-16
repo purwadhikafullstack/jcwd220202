@@ -268,14 +268,19 @@ const adminTransactionController = {
         //   "utf-8"
         // );
 
-        const parentDir = path.resolve(__dirname, "..", "..");
-        const exactFile = path.join(
-          parentDir,
-          "templates",
-          "transaction_status.html"
-        );
+        // const parentDir = path.resolve(__dirname, "..", "..");
+        // const exactFile = path.join(
+        //   parentDir,
+        //   "templates",
+        //   "transaction_status.html"
+        // );
 
-        const rawHTML = fs.readFileSync(exactFile, "utf-8");
+        // const rawHTML = fs.readFileSync(exactFile, "utf-8");
+
+        const rawHTML = fs.readFileSync(
+          path.resolve(__dirname, "../templates/transaction_status.html"),
+          "utf-8"
+        );
 
         const compiledHTML = handlebars.compile(rawHTML);
 
@@ -325,14 +330,22 @@ const adminTransactionController = {
           //   "utf-8"
           // );
 
-          const parentDir = path.resolve(__dirname, "..", "..");
-          const exactFile = path.join(
-            parentDir,
-            "templates",
-            "transaction_status_cancel.html"
-          );
+          // const parentDir = path.resolve(__dirname, "..", "..");
+          // const exactFile = path.join(
+          //   parentDir,
+          //   "templates",
+          //   "transaction_status_cancel.html"
+          // );
 
-          const rawHTML = fs.readFileSync(exactFile, "utf-8");
+          // const rawHTML = fs.readFileSync(exactFile, "utf-8");
+
+          const rawHTML = fs.readFileSync(
+            path.resolve(
+              __dirname,
+              "../templates/transaction_status_cancel.html"
+            ),
+            "utf-8"
+          );
 
           const compiledHTML = handlebars.compile(rawHTML);
 
@@ -371,14 +384,19 @@ const adminTransactionController = {
         //   "utf-8"
         // );
 
-        const parentDir = path.resolve(__dirname, "..", "..");
-        const exactFile = path.join(
-          parentDir,
-          "templates",
-          "transaction_status_cancel.html"
-        );
+        // const parentDir = path.resolve(__dirname, "..", "..");
+        // const exactFile = path.join(
+        //   parentDir,
+        //   "templates",
+        //   "transaction_status_cancel.html"
+        // );
 
-        const rawHTML = fs.readFileSync(exactFile, "utf-8");
+        // const rawHTML = fs.readFileSync(exactFile, "utf-8");
+
+        const rawHTML = fs.readFileSync(
+          path.resolve(__dirname, "../templates/transaction_status.html"),
+          "utf-8"
+        );
 
         const compiledHTML = handlebars.compile(rawHTML);
 

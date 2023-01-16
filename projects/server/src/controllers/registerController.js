@@ -72,14 +72,20 @@ const registerContoller = {
 
         const verificationLink = `http://localhost:8000/register/user/verification?verification_token=${verification_token}`;
 
-        const parentDir = path.resolve(__dirname, "..", "..");
-        const exactFile = path.join(
-          parentDir,
-          "templates",
-          "register_user.html"
+        // const parentDir = path.resolve(__dirname, "..", "..");
+        // const exactFile = path.join(
+        //   parentDir,
+        //   "templates",
+        //   "register_user.html"
+        // );
+
+        // const rawHTML = fs.readFileSync(exactFile, "utf-8");
+
+        const rawHTML = fs.readFileSync(
+          path.resolve(__dirname, "../templates/register_user.html"),
+          "utf-8"
         );
 
-        const rawHTML = fs.readFileSync(exactFile, "utf-8");
         const compiledHTML = handlebars.compile(rawHTML);
 
         const htmlResult = compiledHTML({
@@ -144,10 +150,15 @@ const registerContoller = {
 
       const verificationLink = `http://localhost:8000/register/user/verification?verification_token=${verification_token}`;
 
-      const parentDir = path.resolve(__dirname, "..", "..");
-      const exactFile = path.join(parentDir, "templates", "register_user.html");
+      // const parentDir = path.resolve(__dirname, "..", "..");
+      // const exactFile = path.join(parentDir, "templates", "register_user.html");
 
-      const rawHTML = fs.readFileSync(exactFile, "utf-8");
+      // const rawHTML = fs.readFileSync(exactFile, "utf-8");
+
+      const rawHTML = fs.readFileSync(
+        path.resolve(__dirname, "../templates/register_user.html"),
+        "utf-8"
+      );
 
       const compiledHTML = handlebars.compile(rawHTML);
 
@@ -213,10 +224,13 @@ const registerContoller = {
 
       const verificationLink = `http://localhost:8000/register/user/reverification-account?verification_token=${verification_token}`;
 
-      const parentDir = path.resolve(__dirname, "..", "..");
-      const exactFile = path.join(parentDir, "templates", "register_user.html");
+      // const parentDir = path.resolve(__dirname, "..", "..");
+      // const exactFile = path.join(parentDir, "templates", "register_user.html");
 
-      const rawHTML = fs.readFileSync(exactFile, "utf-8");
+      const rawHTML = fs.readFileSync(
+        path.resolve(__dirname, "../templates/register_user.html"),
+        "utf-8"
+      );
 
       const compiledHTML = handlebars.compile(rawHTML);
       const htmlResult = compiledHTML({
