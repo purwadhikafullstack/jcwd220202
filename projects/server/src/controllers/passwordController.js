@@ -25,7 +25,9 @@ const PasswordController = {
 
         const resetPassLink = `${process.env.DOMAIN_NAME}/reentry-password?token=${token}`;
 
-        const rawHTML = fs.readFileSync("templates/forgot_pass.html", "utf-8");
+        const rawHTML = fs.readFileSync(
+          path.resolve(__dirname, "../../templates/forgot_pass.html", "utf-8")
+        );
         const compiledHTML = handlebars.compile(rawHTML);
         const htmlResult = compiledHTML({
           resetPassLink,

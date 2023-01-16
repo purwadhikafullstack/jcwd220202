@@ -110,7 +110,7 @@ const ProfilePage = () => {
 
         userData.append("username", values.username);
         userData.append("gender", values.gender);
-        userData.append("birth", birthDate);
+        userData.append("birth", values.birth);
         userData.append("profile_picture", values.profile_picture);
 
         await axiosInstance.patch(`/profile`, userData);

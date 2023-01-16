@@ -82,7 +82,7 @@ const registerContoller = {
         // const rawHTML = fs.readFileSync(exactFile, "utf-8");
 
         const rawHTML = fs.readFileSync(
-          path.resolve(__dirname, "../templates/register_user.html"),
+          path.resolve(__dirname, "../../templates/register_user.html"),
           "utf-8"
         );
 
@@ -156,7 +156,7 @@ const registerContoller = {
       // const rawHTML = fs.readFileSync(exactFile, "utf-8");
 
       const rawHTML = fs.readFileSync(
-        path.resolve(__dirname, "../templates/register_user.html"),
+        path.resolve(__dirname, "../../templates/register_user.html"),
         "utf-8"
       );
 
@@ -228,7 +228,7 @@ const registerContoller = {
       // const exactFile = path.join(parentDir, "templates", "register_user.html");
 
       const rawHTML = fs.readFileSync(
-        path.resolve(__dirname, "../templates/register_user.html"),
+        path.resolve(__dirname, "../../templates/register_user.html"),
         "utf-8"
       );
 
