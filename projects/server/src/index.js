@@ -2,13 +2,14 @@ const express = require("express");
 const cors = require("cors");
 const { join } = require("path");
 const db = require("../models");
-const dotenv = require("dotenv");
 const fs = require("fs");
 const startVoucherScheduler = require("../lib/startVoucherScheduler");
 const endVoucherScheduler = require("../lib/endVoucherSchedule");
 const salesReportScheduler = require("../lib/salesReportScheduler");
 const path = "path";
-require("dotenv").config({ path: path.resolve(__dirname, "../.env") });
+const dotenv = require("dotenv").config({
+  path: path.resolve(__dirname, "../.env"),
+});
 
 const PORT = process.env.PORT || 8000;
 const app = express();
