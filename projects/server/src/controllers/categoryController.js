@@ -19,7 +19,9 @@ const categoryController = {
         });
       }
 
-      const icon_url = `http://localhost:8000/public/${req.file.filename}`;
+      const icon_url = `${"https://jcwd220202.purwadhikabootcamp.com"}/${
+        req.file.filename
+      }`;
 
       const newCategory = await db.Category.create({
         category_name: category_name,
@@ -40,7 +42,7 @@ const categoryController = {
   updateCategory: async (req, res) => {
     try {
       if (req.file) {
-        req.body.icon_url = `http://localhost:8000/public/${req.file.filename}`;
+        req.body.icon_url = `${process.env.SERVER_URL}/${req.file.filename}`;
       }
 
       const { category_name, icon_url } = req.body;
