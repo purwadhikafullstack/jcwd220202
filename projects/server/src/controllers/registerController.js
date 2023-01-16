@@ -70,7 +70,7 @@ const registerContoller = {
           id: newUser.id,
         });
 
-        const verificationLink = `http://localhost:8000/register/user/verification?verification_token=${verification_token}`;
+        const verificationLink = `${process.env.SERVER_URL}/register/user/verification?verification_token=${verification_token}`;
 
         // const parentDir = path.resolve(__dirname, "..", "..");
         // const exactFile = path.join(
@@ -148,7 +148,7 @@ const registerContoller = {
         id: newUser.id,
       });
 
-      const verificationLink = `http://localhost:8000/register/user/verification?verification_token=${verification_token}`;
+      const verificationLink = `${process.env.SERVER_URL}/register/user/verification?verification_token=${verification_token}`;
 
       // const parentDir = path.resolve(__dirname, "..", "..");
       // const exactFile = path.join(parentDir, "templates", "register_user.html");
@@ -207,7 +207,7 @@ const registerContoller = {
         }
       );
 
-      return res.redirect("http://localhost:3000/login/user");
+      return res.redirect(`${process.env.DOMAIN_NAME}/login/user`);
     } catch (error) {
       return res.status(500).json({
         message: "server error",
@@ -222,7 +222,7 @@ const registerContoller = {
         id: findUserById.id,
       });
 
-      const verificationLink = `http://localhost:8000/register/user/reverification-account?verification_token=${verification_token}`;
+      const verificationLink = `${process.env.SERVER_URL}/register/user/reverification-account?verification_token=${verification_token}`;
 
       // const parentDir = path.resolve(__dirname, "..", "..");
       // const exactFile = path.join(parentDir, "templates", "register_user.html");
@@ -276,7 +276,7 @@ const registerContoller = {
         }
       );
 
-      return res.redirect("http://localhost:3000/profile");
+      return res.redirect(`${process.env.DOMAIN_NAME}/profile`);
     } catch (error) {
       console.log(error);
       return res.status(500).json({

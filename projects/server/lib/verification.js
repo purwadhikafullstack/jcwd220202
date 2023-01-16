@@ -1,7 +1,4 @@
 const jwt = require("jsonwebtoken");
-const dotenv = require("dotenv");
-
-dotenv.config();
 
 // const VERIFICATION_KEY = "123123";
 const VERIFICATION_KEY = `${process.env.SECRET_KEY}`;

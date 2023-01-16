@@ -55,8 +55,6 @@ app.use("/api/admin-voucher", voucherAdminRoute);
 app.use("/api/transaction", transactionRoute);
 app.use("/api/admin-sales", adminSalesRoute);
 
-app.use("/api/public", express.static("../public"));
-
 app.get("/api", (req, res) => {
   res.send(`Hello, this is my API`);
 });
