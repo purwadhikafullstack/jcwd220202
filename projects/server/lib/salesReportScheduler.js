@@ -45,7 +45,6 @@ const salesReportScheduler = schedule.scheduleJob(
     const sales = await db.SalesReport.bulkCreate(values);
 
     const parseSales = JSON.parse(JSON.stringify(sales));
-
     const findBranchDoTrans = parseSales.map((val) => {
       return val.BranchId;
     });
@@ -73,6 +72,30 @@ const salesReportScheduler = schedule.scheduleJob(
         today_gross_income: 0,
       };
     });
+
+    if (!parseGetNoTrans.length) {
+      // const arrUniq = [
+      //   ...new Map(salesNoTransaction.map((v) => [v.BranchId, v])).values(),
+      // ];
+
+      const res = await db.Branch.findAll({
+        where: {
+          id: {
+            [Op.not]: findBranchDoTrans,
+          },
+        },
+      });
+
+      const branchWithOutAnyTransaction = res.map((val) => {
+        return {
+          today: moment(new Date().setHours(0, 0, 0, 0)),
+          BranchId: val.id,
+          today_gross_income: 0,
+        };
+      });
+
+      await db.SalesReport.bulkCreate(branchWithOutAnyTransaction);
+    }
 
     const arrUniq = [
       ...new Map(salesNoTransaction.map((v) => [v.BranchId, v])).values(),
