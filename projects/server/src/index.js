@@ -39,23 +39,23 @@ const transactionRoute = require("./routes/transactionRoute.js");
 const adminSalesRoute = require("./routes/adminSalesRoute");
 
 app.use("/api/user", loginRoute);
-app.use("/profile", profileRoute);
-app.use("/admin", loginAdminRoute);
-app.use("/register", registerRoute);
-app.use("/category", categoryRoute);
-app.use("/admin-product", adminProductRoute);
-app.use("/product", productRoute);
-app.use("/geocode", geocodeRoute);
-app.use("/create-admin", createAdminRoute);
-app.use("/admin-branch", adminBranchRoute);
-app.use("/product-history", productHistoryRoute);
-app.use("/admin-transaction", adminTransactionRoute);
-app.use("/password", passwordRoute);
-app.use("/admin-voucher", voucherAdminRoute);
-app.use("/transaction", transactionRoute);
-app.use("/admin-sales", adminSalesRoute);
+app.use("/api/profile", profileRoute);
+app.use("/api/admin", loginAdminRoute);
+app.use("/api/register", registerRoute);
+app.use("/api/category", categoryRoute);
+app.use("/api/admin-product", adminProductRoute);
+app.use("/api/product", productRoute);
+app.use("/api/geocode", geocodeRoute);
+app.use("/api/create-admin", createAdminRoute);
+app.use("/api/admin-branch", adminBranchRoute);
+app.use("/api/product-history", productHistoryRoute);
+app.use("/api/admin-transaction", adminTransactionRoute);
+app.use("/api/password", passwordRoute);
+app.use("/api/admin-voucher", voucherAdminRoute);
+app.use("/api/transaction", transactionRoute);
+app.use("/api/admin-sales", adminSalesRoute);
 
-app.use("/public", express.static("public"));
+app.use("/api/public", express.static("public"));
 
 app.get("/api", (req, res) => {
   res.send(`Hello, this is my API`);
