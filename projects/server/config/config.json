@@ -1,25 +1,25 @@
 {
   "development": {
-    "username": "root",
-    "password": "password",
-    "database": "grocerin",
+    "username": "group2jcwd220202",
+    "password": "asd123",
+    "database": "jcwd220202",
     "host": "127.0.0.1",
     "dialect": "mysql",
     "logging": false,
     "timezone": "+07:00"
   },
   "test": {
-    "username": "root",
-    "password": null,
-    "database": "database_test",
+    "username": "group2jcwd220202",
+    "password": "asd123",
+    "database": "jcwd220202",
     "host": "127.0.0.1",
     "dialect": "mysql",
     "timezone": "+07:00"
   },
   "production": {
-    "username": "root",
-    "password": null,
-    "database": "database_production",
+    "username": "group2jcwd220202",
+    "password": "asd123",
+    "database": "jcwd220202",
     "host": "127.0.0.1",
     "dialect": "mysql",
     "timezone": "+07:00"
