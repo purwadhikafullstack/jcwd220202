@@ -168,7 +168,7 @@ const ProfilePage = () => {
     const { name, value } = target;
     formik.setFieldValue(name, value);
   };
-  // console.log(formik.values);
+  console.log(formik.values);
 
   // console.log("ini", birthDate)
 
@@ -266,7 +266,7 @@ const ProfilePage = () => {
         </Text>
         <Box display={"flex"} justifyContent={"center"}>
           <Image
-            src={formik.values.profile_picture || uploadProfile}
+            src={selectedImage || uploadProfile}
             width="100px"
             height="100px"
             borderRadius="full"
