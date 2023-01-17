@@ -50,7 +50,6 @@ const UserTransactionDetail = () => {
       console.log(err);
     }
   };
-  console.log(transactionDetail);
 
   const totalPrice = () => {
     let sumPrice = 0;
@@ -58,8 +57,9 @@ const UserTransactionDetail = () => {
     for (let i = 0; i < transactionItem.length; i++) {
       sumPrice =
         sumPrice +
-        transactionItem[i].current_price +
-        transactionItem[i].applied_discount;
+        (transactionItem[i].applied_discount +
+          transactionItem[i].current_price) *
+          transactionItem[i].quantity;
     }
 
     return sumPrice;
@@ -69,7 +69,9 @@ const UserTransactionDetail = () => {
     let discount = 0;
 
     for (let i = 0; i < transactionItem.length; i++) {
-      discount = discount + transactionItem[i].applied_discount;
+      discount =
+        discount +
+        transactionItem[i].applied_discount * transactionItem[i].quantity;
     }
 
     return discount;
@@ -80,6 +82,10 @@ const UserTransactionDetail = () => {
       await axiosInstance.post(`/transaction/history/${params.id}`);
 
       fetchTransactionDetail();
+      toast({
+        title: "Order Received",
+        status: "success",
+      });
     } catch (err) {
       console.log(err);
     }

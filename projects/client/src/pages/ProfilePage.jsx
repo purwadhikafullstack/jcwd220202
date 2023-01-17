@@ -110,7 +110,7 @@ const ProfilePage = () => {
 
         userData.append("username", values.username);
         userData.append("gender", values.gender);
-        userData.append("birth", values.birth);
+        userData.append("birth", birthDate);
         userData.append("profile_picture", values.profile_picture);
 
         await axiosInstance.patch(`/profile`, userData);
@@ -279,6 +279,7 @@ const ProfilePage = () => {
             bgColor="#81B29A"
             color={"white"}
             onClick={() => setUpdateProfile(true)}
+            display={updateProfile ? "none" : "grid"}
           >
             Edit
           </Button>
@@ -333,7 +334,7 @@ const ProfilePage = () => {
             value={formik.values.username}
             name="username"
             onChange={(event) => {
-              formik.setFieldValue("username", event.target.value)
+              formik.setFieldValue("username", event.target.value);
             }}
             placeholder={userData.username}
             size="md"
@@ -345,7 +346,7 @@ const ProfilePage = () => {
             value={formik.values.gender}
             placeholder={userData.gender}
             onChange={(event) => {
-              formik.setFieldValue("gender", event.target.value)
+              formik.setFieldValue("gender", event.target.value);
             }}
             size="md"
             bgColor={"white"}
@@ -359,14 +360,17 @@ const ProfilePage = () => {
 
           <Box>
             <DatePicker
-              defaultValue={moment(userData?.birth)}
+              // defaultValue={moment(userData?.birth)}
+              placeholder={birthDate ? userData?.birth : "Select Date"}
               onChange={(value) => {
                 let newDate = moment(new Date(value)).format("YYYY-MM-DD");
-                setBirthDate(newDate);
-                formik.setFieldValue("birth", newDate)
+                // setBirthDate(newDate);
+                // formik.setFieldValue("birth", newDate);
                 if (newDate === "1970-01-01") {
-                  newDate = null;
+                  newDate = "";
                 }
+
+                setBirthDate(newDate);
               }}
             />
           </Box>
