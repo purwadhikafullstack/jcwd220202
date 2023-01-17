@@ -57,6 +57,7 @@ const LoginPage = () => {
           status: "success",
           title: "Login Success",
           description: response.data.message,
+          duration: 500,
         });
       } catch (err) {
         console.log(err);
